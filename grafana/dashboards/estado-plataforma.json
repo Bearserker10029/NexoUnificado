@@ -1,0 +1,60 @@
+{
+  "uid": "nexo-estado",
+  "title": "Nexo Unificado · Estado de la plataforma",
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": false,
+  "refresh": "10s",
+  "time": { "from": "now-30m", "to": "now" },
+  "tags": ["nexo", "sla"],
+  "panels": [
+    {
+      "id": 1, "type": "stat", "title": "Portal disponible (HTTPS)",
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 5 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "refId": "A", "expr": "probe_success{instance=\"https://proxy/\"}" }],
+      "fieldConfig": { "defaults": {
+        "mappings": [{ "type": "value", "options": { "0": { "text": "CAÍDO", "color": "red" }, "1": { "text": "ACTIVO", "color": "green" } } }],
+        "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] }
+      } },
+      "options": { "colorMode": "background", "graphMode": "none" }
+    },
+    {
+      "id": 2, "type": "stat", "title": "Disponibilidad (últimos 30 min)",
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 5 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "refId": "A", "expr": "avg_over_time(probe_success{instance=\"https://proxy/\"}[30m]) * 100" }],
+      "fieldConfig": { "defaults": { "unit": "percent", "decimals": 2,
+        "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "orange", "value": 99 }, { "color": "green", "value": 99.5 }] } } }
+    },
+    {
+      "id": 3, "type": "stat", "title": "Versión de TLS negociada",
+      "gridPos": { "x": 12, "y": 0, "w": 6, "h": 5 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "refId": "A", "expr": "probe_tls_version_info{instance=\"https://proxy/\"}", "legendFormat": "{{version}}", "instant": true }],
+      "options": { "textMode": "name", "colorMode": "none", "graphMode": "none" }
+    },
+    {
+      "id": 4, "type": "gauge", "title": "CPU del host (%)",
+      "gridPos": { "x": 18, "y": 0, "w": 6, "h": 5 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "refId": "A", "expr": "100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[1m])) * 100)" }],
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100,
+        "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "orange", "value": 70 }, { "color": "red", "value": 90 }] } } }
+    },
+    {
+      "id": 5, "type": "timeseries", "title": "Tiempo de respuesta del portal (s)",
+      "gridPos": { "x": 0, "y": 5, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "refId": "A", "expr": "probe_duration_seconds{job=\"blackbox_https\"}", "legendFormat": "{{instance}}" }],
+      "fieldConfig": { "defaults": { "unit": "s" } }
+    },
+    {
+      "id": 6, "type": "timeseries", "title": "Memoria disponible del host",
+      "gridPos": { "x": 12, "y": 5, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "refId": "A", "expr": "node_memory_MemAvailable_bytes", "legendFormat": "disponible" }],
+      "fieldConfig": { "defaults": { "unit": "bytes" } }
+    }
+  ]
+}
