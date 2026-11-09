@@ -1,0 +1,9 @@
+
+  Contact:  <Aor/ContactUri..............................> <Hash....> <Status> <RTT(ms)..>
+==========================================================================================
+
+  Contact:  100/sip:100@172.20.0.1:59998;transport=TLS;x-a ac9b8c9586 Avail         3.815
+  Contact:  101/sip:101@172.20.0.1:34122;transport=TLS;x-a 51a093ec4c Avail         3.833
+
+Objects found: 2
+

@@ -1,0 +1,1 @@
+Asterisk 20.21.0 built by root @ buildkitsandbox on a x86_64 running Linux on 2026-11-04 15:53:48 UTC

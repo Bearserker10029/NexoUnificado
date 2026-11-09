@@ -1,0 +1,16 @@
+Cliente WebRTC: Tryit-JsSIP 1.0.3
+Proyecto original: https://github.com/versatica/tryit-jssip
+Autor: Iñaki Baz Castillo
+Licencia: MIT (ver LICENSE)
+Commit utilizado: 98487147f220607a3eb8ff68490f8d97651d6c83
+
+Adaptaciones de Nexo Unificado:
+- WebSocket WSS en /asterisk/ws del host que sirve la página.
+- Dominio SIP nexo.local, sin STUN ni Callstats externos.
+- Session Timers desactivado y rtcpMuxPolicy=require.
+- Sin depuración que exponga credenciales.
+- Las preferencias se conservan sin almacenar la contraseña SIP.
+- Scripts en línea extraídos para funcionar con la CSP de Nginx.
+
+Las credenciales 1100 y 1101 son perfiles WebRTC de las extensiones
+lógicas 100 y 101. No son extensiones adicionales para marcación interna.

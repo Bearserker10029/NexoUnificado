@@ -1,0 +1,18 @@
+
+      Aor:  <Aor..............................................>  <MaxContact>
+    Contact:  <Aor/ContactUri............................> <Hash....> <Status> <RTT(ms)..>
+==========================================================================================
+
+      Aor:  100                                                  1
+    Contact:  100/sip:100@172.20.0.1:59998;transport=TLS;x ac9b8c9586 Avail         3.815
+
+      Aor:  101                                                  1
+    Contact:  101/sip:101@172.20.0.1:34122;transport=TLS;x 51a093ec4c Avail         3.833
+
+      Aor:  1100                                                 1
+
+      Aor:  1101                                                 1
+
+
+Objects found: 4
+

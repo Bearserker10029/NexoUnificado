@@ -12,6 +12,9 @@ networks:
 volumes:
   prometheus_data:
   grafana_data:
+  asterisk_lib:
+  asterisk_spool:
+  asterisk_logs:
 
 services:
   certs:
@@ -24,6 +27,46 @@ services:
     command: ["sh", "/gen-cert.sh"]
     networks: [pub]
 
+  asterisk:
+    image: andrius/asterisk:20.21.0_debian-trixie
+    container_name: nexo-asterisk
+    restart: unless-stopped
+    entrypoint: ["/bin/sh", "/usr/local/bin/nexo-entrypoint.sh"]
+    command: ["/usr/sbin/asterisk", "-vvvdddf", "-T", "-n", "-U", "asterisk", "-p"]
+    environment:
+      ASTERISK_TERMINAL_OPTS: "-n"
+      ASTERISK_PUBLIC_IP: ${ASTERISK_PUBLIC_IP:-127.0.0.1}
+      SIP_PASSWORD_100: ${SIP_PASSWORD_100:?Define SIP_PASSWORD_100 en .env}
+      SIP_PASSWORD_101: ${SIP_PASSWORD_101:?Define SIP_PASSWORD_101 en .env}
+      WEBRTC_PASSWORD_100: ${WEBRTC_PASSWORD_100:?Define WEBRTC_PASSWORD_100 en .env}
+      WEBRTC_PASSWORD_101: ${WEBRTC_PASSWORD_101:?Define WEBRTC_PASSWORD_101 en .env}
+    ports:
+      - "5061:5061/tcp"
+      - "20000-20199:20000-20199/udp"
+    volumes:
+      - ./asterisk/nexo-entrypoint.sh:/usr/local/bin/nexo-entrypoint.sh:ro
+      - ./asterisk/pjsip.conf.template:/etc/asterisk/pjsip.conf.template:ro
+      - ./asterisk/extensions.conf:/etc/asterisk/extensions.conf:ro
+      - ./asterisk/http.conf:/etc/asterisk/http.conf:ro
+      - ./asterisk/rtp.conf:/etc/asterisk/rtp.conf:ro
+      - ./asterisk/modules.conf:/etc/asterisk/modules.conf:ro
+      - ./asterisk/logger.conf:/etc/asterisk/logger.conf:ro
+      - ./certs:/certs:ro
+      - asterisk_lib:/var/lib/asterisk
+      - asterisk_spool:/var/spool/asterisk
+      - asterisk_logs:/var/log/asterisk
+    security_opt: ["no-new-privileges:true"]
+    depends_on:
+      certs:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "asterisk -rx 'core show uptime' >/dev/null 2>&1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks: [srv]
+
   proxy:
     image: nginx:1.27-alpine
     container_name: nexo-proxy
@@ -35,12 +78,15 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx/snippets:/etc/nginx/snippets:ro
       - ./portal:/usr/share/nginx/html:ro
+      - ./voip:/usr/share/nginx/voip:ro
       - ./certs:/certs:ro
     security_opt: ["no-new-privileges:true"]
     depends_on:
       certs:
         condition: service_completed_successfully
       grafana:
+        condition: service_healthy
+      asterisk:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1/healthz"]
