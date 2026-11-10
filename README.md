@@ -9,7 +9,7 @@ TLS + SDES-SRTP y un cliente WebRTC basado en Tryit-JsSIP.
 - Docker Desktop con WSL2.
 - PhonerLite 3.46 para las pruebas SIP del laboratorio.
 - Wireshark/TShark para las evidencias.
-- Puertos libres: 8080, 8443, 5061/TCP y 20000–20199/UDP.
+- Puertos libres: 8081, 8443, 5061/TCP y 20000–20199/UDP.
 
 ## Configuración y arranque
 

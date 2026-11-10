@@ -12,8 +12,8 @@ Add-Content $salida ("Fecha  : " + (Get-Date -Format "yyyy-MM-dd HH:mm:ss"))
 Seccion "docker compose ps"
 docker compose ps 2>&1 | Add-Content $salida
 
-Seccion "Redirección HTTP -> HTTPS (curl -I http://localhost:8080)"
-curl.exe -s -I http://localhost:8080 2>&1 | Add-Content $salida
+Seccion "Redirección HTTP -> HTTPS (curl -I http://localhost:8081)"
+curl.exe -s -I http://localhost:8081 2>&1 | Add-Content $salida
 
 Seccion "Cabeceras de seguridad HTTPS (curl -k -I https://localhost:8443)"
 curl.exe -k -s -I https://localhost:8443 2>&1 | Add-Content $salida
