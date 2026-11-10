@@ -127,7 +127,7 @@ password=${WEBRTC_PASSWORD_100}
 type=aor
 max_contacts=1
 remove_existing=yes
-qualify_frequency=30
+qualify_frequency=0
 
 [1101]
 type=endpoint
@@ -168,4 +168,4 @@ password=${WEBRTC_PASSWORD_101}
 type=aor
 max_contacts=1
 remove_existing=yes
-qualify_frequency=30
+qualify_frequency=0
