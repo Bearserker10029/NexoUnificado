@@ -200,6 +200,8 @@ prueba, como en los laboratorios.
 cabeceras de seguridad y versión TLS. El tablero de Grafana está en la carpeta
 “Nexo Unificado” → “Estado de la plataforma”.
 
+## Evidencias H3
+
 ## Estructura y apagado
 
 - `docker-compose.yml`: servicios y redes `pub`, `srv`, `mgmt`.
