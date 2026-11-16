@@ -1,0 +1,125 @@
+---
+# Nexo Unificado · H12 · Aprovisionamiento reproducible del entorno base (H2 + H3)
+# Despliega la pila de docker-compose.yml en un directorio limpio, genera los secretos
+# una sola vez, levanta los servicios y verifica su salud. Es idempotente: una segunda
+# ejecucion no debe reportar cambios.
+- name: Aprovisionar el entorno base de Nexo Unificado
+  hosts: nexo
+  gather_facts: false
+  vars:
+    nexo_src: "{{ playbook_dir }}/.."
+    nexo_dir: "{{ lookup('ansible.builtin.env', 'HOME') }}/nexo-h12"
+    secrets_dir: "{{ playbook_dir }}/.secrets"
+    asterisk_public_ip: "127.0.0.1"
+    health_url: "http://127.0.0.1:8081/healthz"
+    contenido:            # solo lo necesario para el entorno base; sin secretos ni evidencias
+      - docker-compose.yml
+      - asterisk
+      - blackbox
+      - grafana
+      - nginx
+      - portal
+      - prometheus
+      - scripts
+      - voip
+      - firewall
+
+  tasks:
+    - name: Verificar que Docker Compose esta disponible
+      ansible.builtin.command: docker compose version
+      register: compose_v
+      changed_when: false
+
+    - name: Detectar una pila "nexo" desplegada desde otro directorio
+      ansible.builtin.command:
+        argv: [docker, ps, -a, --filter, label=com.docker.compose.project=nexo,
+               --format, '{% raw %}{{ .Label "com.docker.compose.project.working_dir" }}{% endraw %}']
+      register: otras
+      changed_when: false
+
+    - name: Detener el aprovisionamiento si hay otra pila nexo activa
+      ansible.builtin.assert:
+        that: otras.stdout_lines | reject('equalto', nexo_dir) | list | length == 0
+        fail_msg: >-
+          Hay contenedores de otra pila nexo ({{ otras.stdout_lines | unique | join(', ') }}).
+          Ejecute "docker compose down" en ese directorio antes de aprovisionar.
+        success_msg: "No hay otra pila nexo en conflicto."
+
+    - name: Crear el directorio de despliegue
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - "{{ nexo_dir }}"
+        - "{{ nexo_dir }}/certs"
+        - "{{ secrets_dir }}"
+
+    - name: Copiar configuracion y codigo del entorno
+      ansible.builtin.copy:
+        src: "{{ nexo_src }}/{{ item }}"
+        dest: "{{ nexo_dir }}/"
+        mode: "0644"
+        directory_mode: "0755"
+      loop: "{{ contenido }}"
+
+    - name: Generar el .env con secretos (se crean una sola vez y se reutilizan)
+      ansible.builtin.template:
+        src: env.j2
+        dest: "{{ nexo_dir }}/.env"
+        mode: "0600"
+      no_log: true
+
+    - name: Validar el archivo compose
+      ansible.builtin.command:
+        cmd: docker compose config -q
+        chdir: "{{ nexo_dir }}"
+      changed_when: false
+
+    - name: Levantar los servicios
+      ansible.builtin.command:
+        cmd: docker compose up -d --remove-orphans
+        chdir: "{{ nexo_dir }}"
+      register: up
+      # certs es un contenedor de una sola ejecucion y siempre aparece como Started
+      changed_when: >-
+        (up.stdout_lines + up.stderr_lines)
+        | reject('search', 'nexo-certs')
+        | select('search', 'Created|Recreated|Pulled|Started')
+        | list | length > 0
+
+    - name: Esperar a que el portal responda
+      ansible.builtin.uri:
+        url: "{{ health_url }}"
+        status_code: 200
+      register: salud
+      retries: 30
+      delay: 5
+      until: salud.status == 200
+
+    - name: Contar servicios saludables
+      ansible.builtin.command:
+        argv: [docker, ps, --filter, label=com.docker.compose.project=nexo,
+               --filter, health=healthy, --format, '{% raw %}{{ .Names }}{% endraw %}']
+      register: sanos
+      retries: 20
+      delay: 6
+      until: sanos.stdout_lines | length >= 4
+      changed_when: false
+
+    - name: Contar servicios en ejecucion
+      ansible.builtin.command:
+        argv: [docker, ps, --filter, label=com.docker.compose.project=nexo,
+               --filter, status=running, --format, '{% raw %}{{ .Names }}{% endraw %}']
+      register: corriendo
+      changed_when: false
+
+    - name: Verificar el estado final
+      ansible.builtin.assert:
+        that:
+          - corriendo.stdout_lines | length == 6
+          - sanos.stdout_lines | length >= 4
+        success_msg: >-
+          {{ corriendo.stdout_lines | length }} servicios en ejecucion,
+          {{ sanos.stdout_lines | length }} con healthcheck en verde
+          ({{ sanos.stdout_lines | sort | join(', ') }}).

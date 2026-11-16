@@ -1,0 +1,14 @@
+H8 - Voz bajo congestión (cuello de botella, por fase)
+
+SIN QoS:
+  Jitter de la voz ........ 15.12 ms   (objetivo <= 30 ms)
+  Pérdida de la voz ....... 0.00 %    (objetivo <= 1 %)
+  Latencia un sentido ..... 62.6 ms promedio, 80.2 ms máximo (RTT/2 de un ping EF; objetivo <= 150 ms)
+  Factor R / MOS estimado . 91.7 / 4.38   (objetivo MOS >= 3,8)
+
+CON QoS:
+  Jitter de la voz ........ 3.53 ms   (objetivo <= 30 ms)
+  Pérdida de la voz ....... 0.00 %    (objetivo <= 1 %)
+  Latencia un sentido ..... 0.0 ms promedio, 0.1 ms máximo (RTT/2 de un ping EF; objetivo <= 150 ms)
+  Factor R / MOS estimado . 93.2 / 4.41   (objetivo MOS >= 3,8)
+

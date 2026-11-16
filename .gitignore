@@ -2,3 +2,7 @@
 certs/*
 !certs/.gitkeep
 tools/
+matrix/usuarios.txt
+jitsi/
+
+ansible/.secrets/

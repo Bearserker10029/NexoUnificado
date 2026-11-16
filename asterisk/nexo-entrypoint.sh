@@ -10,6 +10,9 @@ chown -R asterisk:asterisk /etc/asterisk/keys
 chmod 0700 /etc/asterisk/keys
 chmod 0600 /etc/asterisk/keys/server.key
 chmod 0644 /etc/asterisk/keys/server.crt
+# Directorio del CDR (cdr_csv escribe aqui); sin el, el registro de llamadas falla.
+mkdir -p /var/log/asterisk/cdr-csv
+chown -R asterisk:asterisk /var/log/asterisk
 envsubst < /etc/asterisk/pjsip.conf.template > /etc/asterisk/pjsip.conf
 chown asterisk:asterisk /etc/asterisk/pjsip.conf
 chmod 0640 /etc/asterisk/pjsip.conf

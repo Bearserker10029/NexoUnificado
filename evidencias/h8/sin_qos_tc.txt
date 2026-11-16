@@ -1,0 +1,5 @@
+qdisc tbf 8001: root refcnt 33 rate 10Mbit burst 15Kb lat 152ms 
+ Sent 42993834 bytes 29896 pkt (dropped 223, overlimits 54793 requeues 0) 
+ backlog 0b 0p requeues 0
+class tbf 8001:1 parent 8001: 
+
