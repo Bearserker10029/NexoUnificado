@@ -18,6 +18,10 @@ volumes:
   asterisk_spool:
   asterisk_logs:
   synapse_data:
+  keycloak_dev_data:
+  nextcloud_db_data:
+  nextcloud_data:
+  clamav_signatures:
 
 services:
   certs:
@@ -93,6 +97,14 @@ services:
         condition: service_healthy
       asterisk:
         condition: service_healthy
+      keycloak:
+        condition: service_started
+      nextcloud:
+        condition: service_started
+      element:
+        condition: service_started
+      jitsi-web:
+        condition: service_started
     healthcheck:
       test: [ "CMD", "wget", "-q", "-O", "-", "http://127.0.0.1/healthz" ]
       interval: 15s
@@ -177,6 +189,34 @@ services:
       - synapse_data:/data
     networks: [ srv ]
 
+  # Agrega el inicio de sesion unico (SSO) contra Keycloak al homeserver.yaml
+  # generado por synapse-init, sin tocar su generacion. Tarea unica e idempotente.
+  synapse-oidc-patch:
+    image: alpine:3.20
+    container_name: nexo-synapse-oidc-patch
+    restart: "no"
+    depends_on:
+      synapse-init:
+        condition: service_completed_successfully
+    environment:
+      NEXO_URL: ${NEXO_URL:-https://localhost:8443}
+      KC_SYNAPSE_CLIENT_SECRET: ${KC_SYNAPSE_CLIENT_SECRET:?Define KC_SYNAPSE_CLIENT_SECRET en el archivo .env}
+    volumes:
+      - synapse_data:/data
+      - ./matrix/oidc-providers.yaml.template:/oidc-providers.yaml.template:ro
+    entrypoint: [ "/bin/sh", "-c" ]
+    command:
+      - |
+        set -eu
+        apk add --no-cache gettext >/dev/null
+        if ! grep -q '^oidc_providers:' /data/homeserver.yaml; then
+          envsubst < /oidc-providers.yaml.template >> /data/homeserver.yaml
+          echo "oidc_providers agregado a homeserver.yaml"
+        else
+          echo "oidc_providers ya existe, no se modifica"
+        fi
+    networks: [ srv ]
+
   synapse:
     image: matrixdotorg/synapse:latest
     container_name: nexo-synapse
@@ -191,6 +231,8 @@ services:
     security_opt: [ "no-new-privileges:true" ]
     depends_on:
       synapse-init:
+        condition: service_completed_successfully
+      synapse-oidc-patch:
         condition: service_completed_successfully
     networks: [ srv ]
 
@@ -269,4 +311,119 @@ services:
     ports:
       - "10000:10000/udp"
     depends_on: [ jitsi-prosody ]
+    networks: [ srv ]
+
+  # ---- H9 · Identidad unica (Keycloak) y menu unificado (Nextcloud) ----
+  # Adaptado del aporte de la rama "desarrollo" (hitos H5/H7/H14), integrado
+  # aqui en docker-compose.yml y detras del mismo proxy Nginx en vez de
+  # puertos sueltos en 127.0.0.1, para que todo quede bajo un solo dominio.
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.2
+    container_name: nexo-keycloak
+    restart: unless-stopped
+    entrypoint: [ "/bin/sh", "/opt/keycloak/nexo/nexo-entrypoint.sh" ]
+    command:
+      - start-dev
+      - --http-relative-path=/keycloak
+      - --hostname=${NEXO_URL:-https://localhost:8443}
+      - --hostname-strict=false
+      - --proxy-headers=xforwarded
+      - --import-realm
+    environment:
+      NEXO_URL: ${NEXO_URL:-https://localhost:8443}
+      HOST_IP: ${HOST_IP:-127.0.0.1}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_ADMIN_USER:-nexo_admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD:?Define KC_ADMIN_PASSWORD en el archivo .env}
+      KC_NEXTCLOUD_CLIENT_SECRET: ${KC_NEXTCLOUD_CLIENT_SECRET:?Define KC_NEXTCLOUD_CLIENT_SECRET en el archivo .env}
+      KC_SYNAPSE_CLIENT_SECRET: ${KC_SYNAPSE_CLIENT_SECRET:?Define KC_SYNAPSE_CLIENT_SECRET en el archivo .env}
+      KC_TEST_USER1_USERNAME: ${KC_TEST_USER1_USERNAME:-usuario1}
+      KC_TEST_USER1_PASSWORD: ${KC_TEST_USER1_PASSWORD:?Define KC_TEST_USER1_PASSWORD en el archivo .env}
+      KC_TEST_USER2_USERNAME: ${KC_TEST_USER2_USERNAME:-usuario2}
+      KC_TEST_USER2_PASSWORD: ${KC_TEST_USER2_PASSWORD:?Define KC_TEST_USER2_PASSWORD en el archivo .env}
+    volumes:
+      - ./keycloak/realm-nexo.json.template:/opt/keycloak/nexo/realm-nexo.json.template:ro
+      - ./keycloak/nexo-entrypoint.sh:/opt/keycloak/nexo/nexo-entrypoint.sh:ro
+      - keycloak_dev_data:/opt/keycloak/data
+    security_opt: [ "no-new-privileges:true" ]
+    networks: [ srv ]
+
+  nextcloud-db:
+    image: mariadb:11.4
+    container_name: nexo-nextcloud-db
+    restart: unless-stopped
+    command: [ "--transaction-isolation=READ-COMMITTED", "--binlog-format=ROW" ]
+    environment:
+      MARIADB_ROOT_PASSWORD: ${NC_DB_ROOT_PASSWORD:?Define NC_DB_ROOT_PASSWORD en el archivo .env}
+      MARIADB_DATABASE: nextcloud
+      MARIADB_USER: nextcloud
+      MARIADB_PASSWORD: ${NC_DB_PASSWORD:?Define NC_DB_PASSWORD en el archivo .env}
+    volumes:
+      - nextcloud_db_data:/var/lib/mysql
+    security_opt: [ "no-new-privileges:true" ]
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      interval: 15s
+      timeout: 10s
+      retries: 25
+      start_period: 30s
+    networks: [ srv ]
+
+  nextcloud:
+    image: nextcloud:35-apache
+    container_name: nexo-nextcloud
+    restart: unless-stopped
+    depends_on:
+      nextcloud-db:
+        condition: service_healthy
+    environment:
+      MYSQL_HOST: nextcloud-db
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: ${NC_DB_PASSWORD:?Define NC_DB_PASSWORD en el archivo .env}
+      NEXTCLOUD_ADMIN_USER: ${NC_ADMIN_USER:?Define NC_ADMIN_USER en el archivo .env}
+      NEXTCLOUD_ADMIN_PASSWORD: ${NC_ADMIN_PASSWORD:?Define NC_ADMIN_PASSWORD en el archivo .env}
+      NEXTCLOUD_TRUSTED_DOMAINS: "${HOST_IP:-127.0.0.1} localhost"
+      OVERWRITEHOST: "${HOST_IP:-127.0.0.1}:8443"
+      OVERWRITEPROTOCOL: https
+      OVERWRITEWEBROOT: /docs
+      OVERWRITECLIURL: ${NEXO_URL:-https://localhost:8443}/docs
+      # Rango privado del bridge de Docker: permite que Nextcloud confie en el
+      # proxy Nginx para leer X-Forwarded-*. Ajustar si Docker asigna otra subred.
+      TRUSTED_PROXIES: "10.0.0.0/8 172.16.0.0/12 192.168.0.0/16"
+    volumes:
+      - nextcloud_data:/var/www/html
+    security_opt: [ "no-new-privileges:true" ]
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -q -O - http://127.0.0.1/status.php | grep -q installed" ]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    networks: [ srv ]
+
+  # Deja configurado el proveedor OIDC de Keycloak en Nextcloud (app user_oidc)
+  # para que el login visible sea el de Keycloak. Tarea unica, no persistente.
+  nextcloud-init:
+    image: nextcloud:35-apache
+    container_name: nexo-nextcloud-init
+    restart: "no"
+    depends_on: [ nextcloud, keycloak ]
+    environment:
+      NEXO_URL: ${NEXO_URL:-https://localhost:8443}
+      KC_NEXTCLOUD_CLIENT_SECRET: ${KC_NEXTCLOUD_CLIENT_SECRET:?Define KC_NEXTCLOUD_CLIENT_SECRET en el archivo .env}
+    volumes:
+      - nextcloud_data:/var/www/html
+      - ./nextcloud/nexo-oidc-setup.sh:/nexo-oidc-setup.sh:ro
+    entrypoint: [ "/bin/sh", "/nexo-oidc-setup.sh" ]
+    networks: [ srv ]
+
+  # H14 (rama "desarrollo"): antivirus de red interno, sin exponer puertos.
+  # No se conecta todavia a ninguna app; ver README para habilitarlo en Nextcloud.
+  clamav:
+    image: clamav/clamav:stable
+    container_name: nexo-clamav
+    restart: unless-stopped
+    volumes:
+      - clamav_signatures:/var/lib/clamav
+    security_opt: [ "no-new-privileges:true" ]
     networks: [ srv ]

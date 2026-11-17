@@ -1,0 +1,69 @@
+{
+  "realm": "nexo",
+  "enabled": true,
+  "displayName": "Nexo Unificado",
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "otpPolicyType": "totp",
+  "otpPolicyAlgorithm": "HmacSHA1",
+  "otpPolicyDigits": 6,
+  "otpPolicyPeriod": 30,
+  "requiredCredentials": ["password"],
+  "users": [
+    {
+      "username": "${KC_TEST_USER1_USERNAME}",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "${KC_TEST_USER1_USERNAME}@nexo.local",
+      "firstName": "Usuario",
+      "lastName": "Uno",
+      "credentials": [
+        { "type": "password", "value": "${KC_TEST_USER1_PASSWORD}", "temporary": false }
+      ],
+      "requiredActions": ["CONFIGURE_TOTP"],
+      "realmRoles": ["offline_access", "uma_authorization"]
+    },
+    {
+      "username": "${KC_TEST_USER2_USERNAME}",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "${KC_TEST_USER2_USERNAME}@nexo.local",
+      "firstName": "Usuario",
+      "lastName": "Dos",
+      "credentials": [
+        { "type": "password", "value": "${KC_TEST_USER2_PASSWORD}", "temporary": false }
+      ],
+      "requiredActions": ["CONFIGURE_TOTP"],
+      "realmRoles": ["offline_access", "uma_authorization"]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "nextcloud",
+      "name": "Nextcloud (menu unificado)",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "${KC_NEXTCLOUD_CLIENT_SECRET}",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": ["${NEXO_URL}/docs/apps/user_oidc/code*"],
+      "webOrigins": ["${NEXO_URL}"],
+      "rootUrl": "${NEXO_URL}/docs/",
+      "baseUrl": "/docs/"
+    },
+    {
+      "clientId": "synapse",
+      "name": "Matrix Synapse (chat Element)",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "${KC_SYNAPSE_CLIENT_SECRET}",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": ["http://${HOST_IP}:8008/_synapse/client/oidc/callback"],
+      "webOrigins": ["${NEXO_URL}", "http://${HOST_IP}:8008"]
+    }
+  ]
+}

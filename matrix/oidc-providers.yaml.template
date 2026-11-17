@@ -1,0 +1,14 @@
+
+# Agregado por nexo-synapse-oidc-patch: delega el login de Matrix/Element en
+# Keycloak para que, tras entrar a Nextcloud, Element quede con sesion abierta.
+oidc_providers:
+  - idp_id: keycloak
+    idp_name: "Nexo Unificado"
+    issuer: "${NEXO_URL}/keycloak/realms/nexo"
+    client_id: "synapse"
+    client_secret: "${KC_SYNAPSE_CLIENT_SECRET}"
+    scopes: ["openid", "profile", "email"]
+    user_mapping_provider:
+      config:
+        localpart_template: "{{ user.preferred_username }}"
+        display_name_template: "{{ user.name }}"

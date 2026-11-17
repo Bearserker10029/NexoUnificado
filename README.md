@@ -1,15 +1,19 @@
-# Nexo Unificado · Entorno base y VoIP (H2 + H3)
+# Nexo Unificado · Entorno base, VoIP e identidad única (H2 + H3 + H9)
 
 Entorno Docker Compose con Nginx como proxy TLS, portal estático, Prometheus,
 Grafana y Blackbox. H3 añade **Asterisk 20.21.0**, dos extensiones SIP con
-TLS + SDES-SRTP y un cliente WebRTC basado en Tryit-JsSIP.
+TLS + SDES-SRTP y un cliente WebRTC basado en Tryit-JsSIP. H4/H6 añaden
+mensajería (Matrix Synapse + Element) y videoconferencia (Jitsi Meet). H9
+añade **inicio de sesión único**: Nextcloud como menú unificado y Keycloak
+como único proveedor de identidad (ver [H9](#h9-identidad-única-keycloak-y-menú-unificado-nextcloud)).
 
 ## Requisitos
 
 - Docker Desktop con WSL2.
 - PhonerLite 3.46 para las pruebas SIP del laboratorio.
 - Wireshark/TShark para las evidencias.
-- Puertos libres: 8081, 8443, 5061/TCP y 20000–20199/UDP.
+- Puertos libres: 8081, 8443, 5061/TCP, 8000, 8008, 8090, 8444, 10000/UDP y
+  20000–20199/UDP.
 
 ## Configuración y arranque
 
@@ -29,11 +33,16 @@ docker compose ps
 Los valores `CAMBIAR_...` de `.env.example` son ejemplos públicos, no claves del
 despliegue. `.env` y los certificados están excluidos de Git.
 
-Servicios:
+Servicios (sustituye `localhost` por el `HOST_IP`/`NEXO_URL` configurado en `.env`):
 
-- Portal: <https://localhost:8443>
+- **Menú unificado (entrada principal): <https://localhost:8443/docs/>** — Nextcloud,
+  con login delegado en Keycloak. Ver [H9](#h9-identidad-única-keycloak-y-menú-unificado-nextcloud).
+- Keycloak (identidad): <https://localhost:8443/keycloak/>
+- Portal estático de respaldo: <https://localhost:8443>
 - Grafana: <https://localhost:8443/grafana/> (usuario `admin`; clave en `.env`).
-- Cliente WebRTC: <https://localhost:8443/voip/>
+- Cliente WebRTC: <https://localhost:8443/voip/> (embebido en Nextcloud en `/voip/embed.html`).
+- Chat (Element): <https://localhost:8443/element/>, respaldo directo en `:8090`.
+- Videoconferencia (Jitsi): <https://localhost:8443/jitsi/>, respaldo directo en `:8444`.
 - SIP sobre TLS: `localhost:5061`.
 - Audio SRTP: UDP 20000–20199.
 
@@ -181,6 +190,126 @@ se haya señalizado correctamente. Tampoco basta con que Wireshark etiquete UDP 
 forma genérica. Las capturas anteriores a corregir la IP de SDP se conservan solo
 como diagnóstico y no prueban flujo de audio.
 
+## H9: Identidad única (Keycloak) y menú unificado (Nextcloud)
+
+Diseño de acceso (no cambia por servicio):
+
+- **Nextcloud** es el menú unificado donde vive la persona usuaria. Desde ahí
+  salta a cada servicio con la app **External Sites**, cada uno con su propia
+  plataforma detrás.
+- **Keycloak** es el único proveedor de identidad. Nextcloud delega su login
+  en Keycloak con la app **OpenID Connect user backend** (`user_oidc`): la
+  pantalla que ve la persona es la de Keycloak, no la de Nextcloud.
+- Nextcloud **nunca** es proveedor de identidad de los demás servicios.
+- El portal estático (`https://localhost:8443/`) se conserva como entrada de
+  respaldo, documentado más abajo.
+- La voz no pasa por Keycloak: las extensiones SIP se autentican contra
+  Asterisk por **digest** (ver H3). El cliente web solo hereda la identidad de
+  sesión para precargar la red de conexión (WebSocket WSS, registrar, realm),
+  no la extensión ni la contraseña SIP.
+
+### Mapa de rutas (todas detrás de `https://localhost:8443`, el mismo dominio de laboratorio)
+
+| Ruta | Servicio | Rol |
+|---|---|---|
+| `/docs/` | Nextcloud | Menú unificado / punto de entrada tras login |
+| `/keycloak/` | Keycloak | Proveedor de identidad (OIDC) |
+| `/jitsi/` | Jitsi Meet web | Videoconferencia (respaldo directo: `:8444`) |
+| `/element/` | Element Web | Chat/Matrix (respaldo directo: `:8090`) |
+| `/grafana/` | Grafana | Monitoreo (H2) |
+| `/voip/` | Tryit-JsSIP | Cliente WebRTC (H3), también embebido en `/voip/embed.html` |
+| `/` | Portal estático | Entrada de respaldo (H2), sin SSO |
+
+### Flujo de login único
+
+1. La persona abre `https://localhost:8443/docs/`.
+2. Nextcloud redirige a Keycloak (`/keycloak/realms/nexo/...`), que muestra su
+   propio formulario con la marca "Nexo Unificado".
+3. Primer ingreso: Keycloak exige configurar **TOTP** (segundo factor) porque
+   los usuarios de prueba tienen la acción requerida `CONFIGURE_TOTP`.
+4. Tras autenticarse, Keycloak redirige de vuelta a Nextcloud
+   (`/docs/apps/user_oidc/code`), que abre sesión sin pedir usuario/clave propios.
+5. Desde el menú de Nextcloud (External Sites, paso siguiente), al entrar a
+   **Chat** (Element/Matrix), Synapse también delega en el mismo Keycloak
+   (`oidc_providers`, ver `matrix/oidc-providers.yaml.template`): como la
+   sesión de Keycloak ya está abierta, Element entra sin pedir credenciales.
+6. **Videoconferencia** (Jitsi) y **Telefonía** (voip) no piden login propio
+   en este laboratorio (Jitsi corre sin autenticación de sala; la voz usa
+   digest SIP), así que no hay una segunda pantalla de credenciales que evitar.
+
+Cookies/redirecciones: todo vive bajo el mismo origen `https://localhost:8443`
+(mismo esquema, host y puerto para Nextcloud, Keycloak, Jitsi y Element), por
+lo que no hace falta `SameSite=None`; el valor por defecto `Lax` de cada app
+alcanza. Si se despliega con un dominio DNS real en vez de `NEXO_URL=https://localhost:8443`,
+usar ese mismo dominio para los tres antes de pasar a producción.
+
+### Cómo levantarlo
+
+Variables nuevas en `.env` (ver `.env.example`): `KC_ADMIN_USER`,
+`KC_ADMIN_PASSWORD`, `KC_NEXTCLOUD_CLIENT_SECRET`, `KC_SYNAPSE_CLIENT_SECRET`,
+`KC_TEST_USER1_USERNAME`/`PASSWORD`, `KC_TEST_USER2_USERNAME`/`PASSWORD`,
+`NC_DB_ROOT_PASSWORD`, `NC_DB_PASSWORD`, `NC_ADMIN_USER`, `NC_ADMIN_PASSWORD`.
+
+```powershell
+docker compose up -d
+docker compose logs -f nextcloud-init   # confirma que el proveedor OIDC quedo creado
+docker compose logs -f synapse-oidc-patch
+```
+
+`nextcloud-init` y `synapse-oidc-patch` son tareas de un solo uso (idempotentes):
+configuran el proveedor OIDC `keycloak` en Nextcloud (`occ user_oidc:provider`,
+ver `nextcloud/nexo-oidc-setup.sh`) y agregan `oidc_providers` al
+`homeserver.yaml` de Synapse (ver `matrix/oidc-providers.yaml.template`) la
+primera vez que corren. Si la versión instalada de la app `user_oidc` cambió
+los parámetros de su comando `occ`, revisa
+`docker exec nexo-nextcloud occ user_oidc:provider --help` y ajusta el script.
+
+### Menú de Nextcloud (External Sites) — pasos manuales
+
+La app **External sites** no tiene un comando `occ` estable entre versiones,
+así que sus entradas se configuran una vez desde la interfaz: entra a
+Nextcloud como `NC_ADMIN_USER`, habilita la app **External sites** en
+*Aplicaciones*, y en *Ajustes → Administración → Sitios externos* agrega:
+
+| Nombre | URL | Ícono |
+|---|---|---|
+| Videoconferencia | `/jitsi/` | video |
+| Chat | `/element/` | chat |
+| Monitoreo | `/grafana/` | grafico |
+| Documentos | `/docs/apps/files` (o deja la app Archivos de Nextcloud como inicio) | carpeta |
+| Telefonía | `/voip/embed.html` | telefono |
+
+`Telefonía` abre la página embebible (`voip/embed.html`) con el softphone en
+un `<iframe allow="microphone; camera">`; si el navegador bloquea el
+micrófono dentro del iframe, esa misma página ofrece el enlace "ábrelo en
+pestaña nueva" como respaldo, igual que la URL directa `/voip/`.
+
+### Licencias y copyleft de red (Anexo B)
+
+Todo lo añadido en H9 es software libre: Keycloak (Apache 2.0), Nextcloud
+Server y la app `user_oidc` (**AGPLv3**), MariaDB (GPLv2), ClamAV (GPLv2).
+
+**Nota de cumplimiento AGPL (Nextcloud):** al ejecutar Nextcloud como servicio
+de red modificado únicamente por configuración (sin tocar su código fuente),
+el código fuente correspondiente sigue siendo el publicado por Nextcloud GmbH
+en <https://github.com/nextcloud/server>, con la versión exacta fijada por la
+imagen `nextcloud:35-apache` del `docker-compose.yml`. Este repositorio no
+modifica el código de Nextcloud; solo lo configura (variables de entorno,
+`occ user_oidc:provider`, External Sites), por lo que no genera código
+derivado propio que deba publicarse aparte.
+
+### Qué no se integró de la rama `desarrollo`
+
+Del aporte de H5 en `desarrollo` se adaptaron Nextcloud+MariaDB (H5), Keycloak
+(H7) y ClamAV (H14) a este `docker-compose.yml` único, detrás de Nginx y bajo
+el mismo dominio. **No** se incorporaron `compose.h5.collabora.yml` ni
+`compose.h5.office.yml` (Collabora/Nextcloud Office): asumen Nextcloud expuesto
+directo en `127.0.0.1:18085` sin proxy, lo que choca con el diseño de un solo
+dominio de este hito. Quedan como trabajo futuro si se requiere edición de
+documentos ofimáticos. ClamAV queda desplegado pero sin conectar todavía a
+ninguna app: para usarlo, instala la app `files_antivirus` en Nextcloud y
+apúntala al host `clamav`, puerto `3310`, modo *Daemon*.
+
 ## Licencias
 
 Asterisk es software libre bajo GPLv2 (con componentes bajo otras licencias). Se
@@ -202,12 +331,34 @@ cabeceras de seguridad y versión TLS. El tablero de Grafana está en la carpeta
 
 ## Evidencias H3
 
+## Evidencias H9
+
+No se generaron en este cambio: levantar Keycloak + Nextcloud + Synapse con
+OIDC implica descargar varias imágenes grandes y completar un flujo de login
+real en el navegador, algo que debe hacerse en la máquina donde corre Docker
+Desktop (`docker compose config --quiet` sí se validó al preparar este cambio).
+Al correr `docker compose up -d`, captura:
+
+1. **Login único entre dos servicios**: abre `/docs/`, inicia sesión en la
+   pantalla de Keycloak (incluye el paso de TOTP la primera vez), y una vez
+   dentro de Nextcloud entra a **Chat** desde el menú de External Sites;
+   Element debe abrir sin pedir usuario/clave otra vez. Captura ambas
+   pantallas (Keycloak y Element ya autenticado).
+2. **Llamada de prueba desde el menú unificado**: desde Nextcloud, abre
+   **Telefonía** (`voip/embed.html`), regístrate como 1100/1101 (ver
+   [Cliente WebRTC reutilizado](#cliente-webrtc-reutilizado)) y marca entre
+   dos sesiones. Captura la llamada activa dentro del iframe.
+
+Guarda las imágenes en `evidencias/h9/` (carpeta nueva, no toca `h3/` ni `h8/`).
+
 ## Estructura y apagado
 
 - `docker-compose.yml`: servicios y redes `pub`, `srv`, `mgmt`.
 - `nginx/`, `portal/`: proxy TLS y portal.
 - `asterisk/`, `voip/`: VoIP SIP y WebRTC de H3.
+- `matrix/`, `jitsi/`: mensajería (H4) y videoconferencia (H6).
 - `prometheus/`, `blackbox/`, `grafana/`: monitoreo para el SLA.
+- `keycloak/`, `nextcloud/`: identidad única y menú unificado de H9.
 - `firewall/nexo.nft`: reglas para el servidor Ubuntu del V305.
 
 ```powershell

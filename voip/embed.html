@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Telefonía · Nexo Unificado</title>
+		<meta charset='UTF-8'>
+		<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>
+		<style>
+			html, body { margin: 0; height: 100%; background: #1b1b1b; }
+			#aviso {
+				font-family: sans-serif; color: #eee; background: #2a2a2a;
+				padding: 8px 12px; font-size: 13px; display: flex;
+				justify-content: space-between; align-items: center; gap: 8px;
+			}
+			#aviso a { color: #8ecbff; text-decoration: none; }
+			iframe {
+				width: 100%; height: calc(100% - 38px); border: 0; display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<div id='aviso'>
+			<span>Softphone WebRTC (Nexo Unificado)</span>
+			<a href='/voip/' target='_blank' rel='noopener'>Si el micrófono no funciona aquí, ábrelo en pestaña nueva ↗</a>
+		</div>
+		<!-- Mismo origen que /docs/ (Nextcloud): el iframe hereda la política
+		     de cabeceras de /voip/ (frame-ancestors 'self', X-Frame-Options
+		     SAMEORIGIN), por eso solo se embebe desde este mismo dominio. -->
+		<iframe src='/voip/' allow='microphone; camera' allowfullscreen></iframe>
+	</body>
+</html>
