@@ -1,0 +1,35 @@
+#!/usr/sbin/nft -f
+# Nexo Unificado · Firewall base para el servidor Ubuntu del laboratorio V305 (hito H9).
+# No aplica en Docker Desktop de Windows. No usa "flush ruleset" para no borrar las
+# reglas que Docker crea. Los puertos publicados por Docker pasan por la cadena
+# FORWARD (DOCKER-USER); su filtrado fino se trata en el hito H8.
+#
+# Aplicar:   sudo nft -f firewall/nexo.nft
+# Revisar:   sudo nft list table inet nexo
+
+add table inet nexo
+delete table inet nexo
+
+table inet nexo {
+    chain entrada {
+        type filter hook input priority filter; policy drop;
+
+        iif "lo" accept
+        ct state established,related accept
+        ct state invalid drop
+
+        ip protocol icmp icmp type echo-request limit rate 10/second accept
+        meta l4proto ipv6-icmp accept
+
+        # Administración solo desde el segmento de gestión
+        tcp dport 22 ip saddr 192.168.99.0/24 accept
+
+        # Servicios de la plataforma
+        tcp dport { 80, 443, 5061 } accept
+        udp dport 10000 accept            # medios de Jitsi
+        udp dport 20000-20199 accept      # RTP/SRTP de Asterisk
+        udp dport 51820 accept            # WireGuard
+
+        limit rate 5/minute log prefix "nexo-drop: "
+    }
+}

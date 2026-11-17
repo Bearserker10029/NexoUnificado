@@ -1,0 +1,113 @@
+# Nexo Unificado · Hito H2 · Entorno base
+# Proxy inverso con TLS, portal web, monitoreo (Prometheus + Grafana + Blackbox)
+# y redes separadas que reproducen la segmentación del diseño (Figura 2).
+
+name: nexo
+
+networks:
+  pub:     # único segmento expuesto: solo el proxy publica puertos
+  srv:     # servicios de comunicaciones (se irán sumando en H3 a H7)
+  mgmt:    # gestión y monitoreo
+
+volumes:
+  prometheus_data:
+  grafana_data:
+
+services:
+  certs:
+    image: alpine:3.20
+    container_name: nexo-certs
+    restart: "no"
+    volumes:
+      - ./certs:/certs
+      - ./scripts/gen-cert.sh:/gen-cert.sh:ro
+    command: ["sh", "/gen-cert.sh"]
+    networks: [pub]
+
+  proxy:
+    image: nginx:1.27-alpine
+    container_name: nexo-proxy
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/snippets:/etc/nginx/snippets:ro
+      - ./portal:/usr/share/nginx/html:ro
+      - ./certs:/certs:ro
+    security_opt: ["no-new-privileges:true"]
+    depends_on:
+      certs:
+        condition: service_completed_successfully
+      grafana:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1/healthz"]
+      interval: 15s
+      timeout: 3s
+      retries: 5
+    networks: [pub, srv, mgmt]
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    container_name: nexo-prometheus
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=15d
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1:9090/-/healthy"]
+      interval: 15s
+      timeout: 3s
+      retries: 5
+    networks: [mgmt]
+
+  node-exporter:
+    image: prom/node-exporter:v1.8.2
+    container_name: nexo-node-exporter
+    restart: unless-stopped
+    security_opt: ["no-new-privileges:true"]
+    networks: [mgmt]
+
+  blackbox:
+    image: prom/blackbox-exporter:v0.25.0
+    container_name: nexo-blackbox
+    restart: unless-stopped
+    command: ["--config.file=/etc/blackbox/blackbox.yml"]
+    volumes:
+      - ./blackbox/blackbox.yml:/etc/blackbox/blackbox.yml:ro
+    security_opt: ["no-new-privileges:true"]
+    networks: [mgmt]
+
+  grafana:
+    image: grafana/grafana:11.3.0
+    container_name: nexo-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:?Define GRAFANA_PASSWORD en el archivo .env}
+      GF_SERVER_ROOT_URL: https://localhost:8443/grafana/
+      GF_SERVER_SERVE_FROM_SUB_PATH: "true"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    security_opt: ["no-new-privileges:true"]
+    depends_on:
+      prometheus:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1:3000/api/health"]
+      interval: 15s
+      timeout: 3s
+      retries: 10
+    networks: [mgmt]

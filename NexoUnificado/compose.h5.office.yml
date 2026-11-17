@@ -1,0 +1,6 @@
+# H5: habilita el puerto 18085 tambien DENTRO del contenedor Nextcloud.
+# No cambia los puertos publicados en Windows ni modifica el H2.
+services:
+  nextcloud:
+    volumes:
+      - ./nexo-apache-18085.conf:/etc/apache2/conf-enabled/zz-nexo-port-18085.conf:ro

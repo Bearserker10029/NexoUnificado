@@ -1,0 +1,14 @@
+# Nexo Unificado — H14 ClamAV (laboratorio local)
+# El daemon antivirus solo se conecta a la red interna "srv".
+# No publica el puerto 3310 en Windows ni en Internet.
+services:
+  clamav:
+    image: clamav/clamav:stable
+    container_name: nexo-clamav
+    restart: unless-stopped
+    volumes:
+      - clamav_signatures:/var/lib/clamav
+    networks: [srv]
+
+volumes:
+  clamav_signatures:

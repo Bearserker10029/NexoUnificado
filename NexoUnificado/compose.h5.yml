@@ -1,0 +1,49 @@
+# Nexo Unificado · H5 (laboratorio): Nextcloud + MariaDB.
+# Conserva docker-compose.yml de H2 sin modificaciones.
+# Nextcloud Office + Collabora Online Built-in CODE se instalan DESPUES
+# desde la interfaz de Nextcloud (ver INSTRUCCIONES_H5.md).
+# IMPORTANTE: Nextcloud se expone SOLO en el equipo local (http://localhost).
+
+services:
+  nextcloud-db:
+    image: mariadb:11.4
+    restart: unless-stopped
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    environment:
+      MARIADB_ROOT_PASSWORD: ${NC_DB_ROOT_PASSWORD:?Agrega NC_DB_ROOT_PASSWORD al archivo .env}
+      MARIADB_DATABASE: nextcloud
+      MARIADB_USER: nextcloud
+      MARIADB_PASSWORD: ${NC_DB_PASSWORD:?Agrega NC_DB_PASSWORD al archivo .env}
+    volumes:
+      - nextcloud_db_data:/var/lib/mysql
+    networks: [srv]
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 15s
+      timeout: 10s
+      retries: 25
+      start_period: 30s
+
+  nextcloud:
+    image: nextcloud:35-apache
+    restart: unless-stopped
+    depends_on:
+      nextcloud-db:
+        condition: service_healthy
+    environment:
+      MYSQL_HOST: nextcloud-db
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: ${NC_DB_PASSWORD:?Agrega NC_DB_PASSWORD al archivo .env}
+      NEXTCLOUD_ADMIN_USER: ${NC_ADMIN_USER:?Agrega NC_ADMIN_USER al archivo .env}
+      NEXTCLOUD_ADMIN_PASSWORD: ${NC_ADMIN_PASSWORD:?Agrega NC_ADMIN_PASSWORD al archivo .env}
+      NEXTCLOUD_TRUSTED_DOMAINS: localhost
+    ports:
+      - "127.0.0.1:18085:80"
+    volumes:
+      - nextcloud_data:/var/www/html
+    networks: [srv]
+
+volumes:
+  nextcloud_db_data:
+  nextcloud_data:
