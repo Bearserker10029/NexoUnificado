@@ -1,13 +1,15 @@
 # Nexo Unificado · Hito H2 · Entorno base
-# Proxy inverso con TLS, portal web, monitoreo (Prometheus + Grafana + Blackbox)
-# y redes separadas que reproducen la segmentación del diseño.
+# Proxy inverso con TLS, portal web, monitoreo (Prometheus + Grafana + Blackbox),
+# voz (Asterisk), mensajería (Matrix + Element) y videoconferencia (Jitsi Meet),
+# con redes separadas que reproducen la segmentación del diseño.
 
 name: nexo
 
 networks:
-  pub:     # único segmento expuesto: solo el proxy publica puertos
-  srv:     # servicios de comunicaciones (se irán sumando en H3 a H7)
-  mgmt:    # gestión y monitoreo
+  pub: # único segmento expuesto: solo el proxy publica puertos
+  srv: # servicios de comunicaciones (se irán sumando en H3 a H7)
+  mgmt:
+    # gestión y monitoreo
 
 volumes:
   prometheus_data:
@@ -15,24 +17,27 @@ volumes:
   asterisk_lib:
   asterisk_spool:
   asterisk_logs:
+  synapse_data:
 
 services:
   certs:
     image: alpine:3.20
     container_name: nexo-certs
     restart: "no"
+    environment:
+      HOST_IP: ${HOST_IP:-127.0.0.1}
     volumes:
       - ./certs:/certs
       - ./scripts/gen-cert.sh:/gen-cert.sh:ro
-    command: ["sh", "/gen-cert.sh"]
-    networks: [pub]
+    command: [ "sh", "/gen-cert.sh" ]
+    networks: [ pub ]
 
   asterisk:
     image: andrius/asterisk:20.21.0_debian-trixie
     container_name: nexo-asterisk
     restart: unless-stopped
-    entrypoint: ["/bin/sh", "/usr/local/bin/nexo-entrypoint.sh"]
-    command: ["/usr/sbin/asterisk", "-vvvdddf", "-T", "-n", "-U", "asterisk", "-p"]
+    entrypoint: [ "/bin/sh", "/usr/local/bin/nexo-entrypoint.sh" ]
+    command: [ "/usr/sbin/asterisk", "-vvvdddf", "-T", "-n", "-U", "asterisk", "-p" ]
     environment:
       ASTERISK_TERMINAL_OPTS: "-n"
       ASTERISK_PUBLIC_IP: ${ASTERISK_PUBLIC_IP:-127.0.0.1}
@@ -55,17 +60,17 @@ services:
       - asterisk_lib:/var/lib/asterisk
       - asterisk_spool:/var/spool/asterisk
       - asterisk_logs:/var/log/asterisk
-    security_opt: ["no-new-privileges:true"]
+    security_opt: [ "no-new-privileges:true" ]
     depends_on:
       certs:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD-SHELL", "asterisk -rx 'core show uptime' >/dev/null 2>&1"]
+      test: [ "CMD-SHELL", "asterisk -rx 'core show uptime' >/dev/null 2>&1" ]
       interval: 15s
       timeout: 5s
       retries: 10
       start_period: 20s
-    networks: [srv]
+    networks: [ srv ]
 
   proxy:
     image: nginx:1.27-alpine
@@ -80,7 +85,7 @@ services:
       - ./portal:/usr/share/nginx/html:ro
       - ./voip:/usr/share/nginx/voip:ro
       - ./certs:/certs:ro
-    security_opt: ["no-new-privileges:true"]
+    security_opt: [ "no-new-privileges:true" ]
     depends_on:
       certs:
         condition: service_completed_successfully
@@ -89,11 +94,11 @@ services:
       asterisk:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1/healthz"]
+      test: [ "CMD", "wget", "-q", "-O", "-", "http://127.0.0.1/healthz" ]
       interval: 15s
       timeout: 3s
       retries: 5
-    networks: [pub, srv, mgmt]
+    networks: [ pub, srv, mgmt ]
 
   prometheus:
     image: prom/prometheus:v2.55.1
@@ -106,30 +111,30 @@ services:
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
-    security_opt: ["no-new-privileges:true"]
+    security_opt: [ "no-new-privileges:true" ]
     healthcheck:
-      test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1:9090/-/healthy"]
+      test: [ "CMD", "wget", "-q", "-O", "-", "http://127.0.0.1:9090/-/healthy" ]
       interval: 15s
       timeout: 3s
       retries: 5
-    networks: [mgmt]
+    networks: [ mgmt ]
 
   node-exporter:
     image: prom/node-exporter:v1.8.2
     container_name: nexo-node-exporter
     restart: unless-stopped
-    security_opt: ["no-new-privileges:true"]
-    networks: [mgmt]
+    security_opt: [ "no-new-privileges:true" ]
+    networks: [ mgmt ]
 
   blackbox:
     image: prom/blackbox-exporter:v0.25.0
     container_name: nexo-blackbox
     restart: unless-stopped
-    command: ["--config.file=/etc/blackbox/blackbox.yml"]
+    command: [ "--config.file=/etc/blackbox/blackbox.yml" ]
     volumes:
       - ./blackbox/blackbox.yml:/etc/blackbox/blackbox.yml:ro
-    security_opt: ["no-new-privileges:true"]
-    networks: [mgmt]
+    security_opt: [ "no-new-privileges:true" ]
+    networks: [ mgmt ]
 
   grafana:
     image: grafana/grafana:11.3.0
@@ -138,7 +143,7 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_USER:-admin}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:?Define GRAFANA_PASSWORD en el archivo .env}
-      GF_SERVER_ROOT_URL: https://localhost:8443/grafana/
+      GF_SERVER_ROOT_URL: ${NEXO_URL:-https://localhost:8443}/grafana/
       GF_SERVER_SERVE_FROM_SUB_PATH: "true"
       GF_USERS_ALLOW_SIGN_UP: "false"
       GF_ANALYTICS_REPORTING_ENABLED: "false"
@@ -147,13 +152,121 @@ services:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
       - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
-    security_opt: ["no-new-privileges:true"]
+    security_opt: [ "no-new-privileges:true" ]
     depends_on:
       prometheus:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1:3000/api/health"]
+      test: [ "CMD", "wget", "-q", "-O", "-", "http://127.0.0.1:3000/api/health" ]
       interval: 15s
       timeout: 3s
       retries: 10
-    networks: [mgmt]
+    networks: [ mgmt ]
+
+  # ---- H4 · Mensajería y presencia (Matrix Synapse + Element Web) ----
+  synapse-init:
+    image: matrixdotorg/synapse:latest
+    container_name: nexo-synapse-init
+    restart: "no"
+    entrypoint: [ "/bin/sh", "-c" ]
+    command: [ "test -f /data/homeserver.yaml && echo 'Config ya existe' || /start.py generate" ]
+    environment:
+      SYNAPSE_SERVER_NAME: nexo.local
+      SYNAPSE_REPORT_STATS: "no"
+    volumes:
+      - synapse_data:/data
+    networks: [ srv ]
+
+  synapse:
+    image: matrixdotorg/synapse:latest
+    container_name: nexo-synapse
+    restart: unless-stopped
+    environment:
+      SYNAPSE_SERVER_NAME: nexo.local
+      SYNAPSE_REPORT_STATS: "no"
+    ports:
+      - "8008:8008"
+    volumes:
+      - synapse_data:/data
+    security_opt: [ "no-new-privileges:true" ]
+    depends_on:
+      synapse-init:
+        condition: service_completed_successfully
+    networks: [ srv ]
+
+  element:
+    image: vectorim/element-web:latest
+    container_name: nexo-element
+    restart: unless-stopped
+    ports:
+      - "8090:80"
+    volumes:
+      - ./matrix/element-config.json:/app/config.json:ro
+    security_opt: [ "no-new-privileges:true" ]
+    depends_on: [ synapse ]
+    networks: [ srv ]
+
+  # ---- H6 · Videoconferencia (Jitsi Meet: web, prosody, jicofo, jvb) ----
+  jitsi-web:
+    image: ghcr.io/jitsi/web:stable-11509
+    container_name: nexo-jitsi-web
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: https://localhost:8444
+      XMPP_SERVER: jitsi-prosody
+      HTTP_PORT: "8000"
+      HTTPS_PORT: "8443"
+      TZ: America/Lima
+    ports:
+      - "8000:8000"
+      - "8444:8443"
+    depends_on: [ jitsi-prosody ]
+    networks: [ srv ]
+
+  jitsi-prosody:
+    image: ghcr.io/jitsi/prosody:stable-11509
+    container_name: nexo-jitsi-prosody
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: https://localhost:8444
+      XMPP_SERVER: jitsi-prosody
+      JICOFO_AUTH_USER: ${JICOFO_AUTH_USER:-focus}
+      JICOFO_AUTH_PASSWORD: ${JICOFO_AUTH_PASSWORD:?Define JICOFO_AUTH_PASSWORD en el archivo .env}
+      JICOFO_COMPONENT_SECRET: ${JICOFO_COMPONENT_SECRET:?Define JICOFO_COMPONENT_SECRET en el archivo .env}
+      JVB_AUTH_USER: ${JVB_AUTH_USER:-jvb}
+      JVB_AUTH_PASSWORD: ${JVB_AUTH_PASSWORD:?Define JVB_AUTH_PASSWORD en el archivo .env}
+      TZ: America/Lima
+    networks:
+      srv:
+        aliases:
+          - xmpp.meet.jitsi
+
+  jicofo:
+    image: ghcr.io/jitsi/jicofo:stable-11509
+    container_name: nexo-jicofo
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: https://localhost:8444
+      XMPP_SERVER: jitsi-prosody
+      JICOFO_AUTH_PASSWORD: ${JICOFO_AUTH_PASSWORD:?Define JICOFO_AUTH_PASSWORD en el archivo .env}
+      JICOFO_COMPONENT_SECRET: ${JICOFO_COMPONENT_SECRET:?Define JICOFO_COMPONENT_SECRET en el archivo .env}
+      TZ: America/Lima
+    depends_on: [ jitsi-prosody ]
+    networks: [ srv ]
+
+  jvb:
+    image: ghcr.io/jitsi/jvb:stable-11509
+    container_name: nexo-jvb
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: https://localhost:8444
+      XMPP_SERVER: jitsi-prosody
+      DOCKER_HOST_ADDRESS: ${DOCKER_HOST_ADDRESS:?Define DOCKER_HOST_ADDRESS en el archivo .env}
+      JVB_ADVERTISE_IPS: ${DOCKER_HOST_ADDRESS}
+      JVB_PORT: "10000"
+      JVB_AUTH_PASSWORD: ${JVB_AUTH_PASSWORD:?Define JVB_AUTH_PASSWORD en el archivo .env}
+      TZ: America/Lima
+    ports:
+      - "10000:10000/udp"
+    depends_on: [ jitsi-prosody ]
+    networks: [ srv ]
