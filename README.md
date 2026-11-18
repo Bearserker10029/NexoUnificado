@@ -33,12 +33,15 @@ docker compose ps
 Los valores `CAMBIAR_...` de `.env.example` son ejemplos públicos, no claves del
 despliegue. `.env` y los certificados están excluidos de Git.
 
-Servicios (sustituye `localhost` por el `HOST_IP`/`NEXO_URL` configurado en `.env`):
+Servicios (sustituye `localhost` por el `NEXO_HOST` configurado en `.env`):
 
-- **Menú unificado (entrada principal): <https://localhost:8443/docs/>** — Nextcloud,
-  con login delegado en Keycloak. Ver [H9](#h9-identidad-única-keycloak-y-menú-unificado-nextcloud).
+- **Raíz (`https://localhost:8443/`): va directo al login de Keycloak**
+  (redirect 302 a `/docs/apps/user_oidc/login/1`, la ruta de inicio de sesión
+  del proveedor OIDC de Nextcloud), sin la pantalla intermedia de Nextcloud.
+  Si ya hay sesión abierta, cae directo en el menú unificado. Ver
+  [H9](#h9-identidad-única-keycloak-y-menú-unificado-nextcloud).
 - Keycloak (identidad): <https://localhost:8443/keycloak/>
-- Portal estático de respaldo: <https://localhost:8443>
+- Portal estático de respaldo: <https://localhost:8443/portal/>
 - Grafana: <https://localhost:8443/grafana/> (usuario `admin`; clave en `.env`).
 - Cliente WebRTC: <https://localhost:8443/voip/> (embebido en Nextcloud en `/voip/embed.html`).
 - Chat (Element): <https://localhost:8443/element/>, respaldo directo en `:8090`.
@@ -201,8 +204,11 @@ Diseño de acceso (no cambia por servicio):
   en Keycloak con la app **OpenID Connect user backend** (`user_oidc`): la
   pantalla que ve la persona es la de Keycloak, no la de Nextcloud.
 - Nextcloud **nunca** es proveedor de identidad de los demás servicios.
-- El portal estático (`https://localhost:8443/`) se conserva como entrada de
-  respaldo, documentado más abajo.
+- El portal estático se conserva como entrada de respaldo en
+  `https://localhost:8443/portal/`, documentado más abajo. La raíz
+  (`https://localhost:8443/`) va directo al login de Keycloak via
+  `/docs/apps/user_oidc/login/1` (ruta de login del proveedor OIDC de
+  Nextcloud), sin pasar por ninguna pantalla de Nextcloud de por medio.
 - La voz no pasa por Keycloak: las extensiones SIP se autentican contra
   Asterisk por **digest** (ver H3). El cliente web solo hereda la identidad de
   sesión para precargar la red de conexión (WebSocket WSS, registrar, realm),
@@ -218,13 +224,15 @@ Diseño de acceso (no cambia por servicio):
 | `/element/` | Element Web | Chat/Matrix (respaldo directo: `:8090`) |
 | `/grafana/` | Grafana | Monitoreo (H2) |
 | `/voip/` | Tryit-JsSIP | Cliente WebRTC (H3), también embebido en `/voip/embed.html` |
-| `/` | Portal estático | Entrada de respaldo (H2), sin SSO |
+| `/` y `/docs/login` | — | Redirect 302 directo al login de Keycloak (`/docs/apps/user_oidc/login/1`), sin la pantalla de Nextcloud con el botón |
+| `/portal/` | Portal estático | Entrada de respaldo (H2), sin SSO |
 
 ### Flujo de login único
 
-1. La persona abre `https://localhost:8443/docs/`.
-2. Nextcloud redirige a Keycloak (`/keycloak/realms/nexo/...`), que muestra su
-   propio formulario con la marca "Nexo Unificado".
+1. La persona abre `https://localhost:8443/` (o directamente `/docs/`).
+2. La raíz salta de frente a Keycloak (`/docs/apps/user_oidc/login/1` →
+   `/keycloak/realms/nexo/...`), que muestra su propio formulario con la
+   marca "Nexo Unificado" — sin ninguna pantalla de Nextcloud de por medio.
 3. Primer ingreso: Keycloak exige configurar **TOTP** (segundo factor) porque
    los usuarios de prueba tienen la acción requerida `CONFIGURE_TOTP`.
 4. Tras autenticarse, Keycloak redirige de vuelta a Nextcloud
@@ -264,25 +272,38 @@ primera vez que corren. Si la versión instalada de la app `user_oidc` cambió
 los parámetros de su comando `occ`, revisa
 `docker exec nexo-nextcloud occ user_oidc:provider --help` y ajusta el script.
 
-### Menú de Nextcloud (External Sites) — pasos manuales
+**Si cambia `NEXO_HOST`** (por ejemplo, otra red Wi-Fi): edita `.env`, corre
+`docker compose up -d` y luego `.\scripts\actualizar-host.sh`. Ver la sección
+[Cambio de IP o de nombre de host](#cambio-de-ip-o-de-nombre-de-host) más abajo
+para el detalle de por qué este paso sigue siendo manual.
 
-La app **External sites** no tiene un comando `occ` estable entre versiones,
-así que sus entradas se configuran una vez desde la interfaz: entra a
-Nextcloud como `NC_ADMIN_USER`, habilita la app **External sites** en
-*Aplicaciones*, y en *Ajustes → Administración → Sitios externos* agrega:
+### Menú de Nextcloud (External Sites)
 
-| Nombre | URL | Ícono |
-|---|---|---|
-| Videoconferencia | `/jitsi/` | video |
-| Chat | `/element/` | chat |
-| Monitoreo | `/grafana/` | grafico |
-| Documentos | `/docs/apps/files` (o deja la app Archivos de Nextcloud como inicio) | carpeta |
-| Telefonía | `/voip/embed.html` | telefono |
+```powershell
+.\nextcloud\poblar-menu.sh
+```
+
+Habilita la app **External Sites** si falta y escribe sus cuatro entradas
+(Telefonía → `/voip/embed.html`, Videoconferencia → `/jitsi/`, Chat →
+`/element/`, Monitoreo → `/grafana/`) directamente en la appconfig
+`external`/`sites` con `occ config:app:set`, porque la app no tiene un
+comando `occ` propio para altas/bajas. No hay entrada de "Documentos": la
+app nativa de Archivos de Nextcloud ya cumple esa función (icono de apps,
+arriba a la izquierda); agregarla a External Sites solo embebía Nextcloud
+dentro de sí mismo (doble barra superior). Las URLs son relativas al mismo
+origen para no depender de `NEXO_HOST` ni romper la sesión al saltar de
+servicio. Es idempotente (se puede volver a correr).
 
 `Telefonía` abre la página embebible (`voip/embed.html`) con el softphone en
 un `<iframe allow="microphone; camera">`; si el navegador bloquea el
 micrófono dentro del iframe, esa misma página ofrece el enlace "ábrelo en
 pestaña nueva" como respaldo, igual que la URL directa `/voip/`.
+
+Para que el admin asigne servicios por cliente, `nextcloud/poblar-menu.sh`
+deja comentado el formato para restringir una entrada a un grupo de
+Nextcloud (campo `"groups"`, por ejemplo `["clienteA"]` tras crear el grupo
+con `occ group:add clienteA`); por defecto las cuatro quedan visibles para
+todas las personas usuarias.
 
 ### Licencias y copyleft de red (Anexo B)
 
@@ -309,6 +330,46 @@ dominio de este hito. Quedan como trabajo futuro si se requiere edición de
 documentos ofimáticos. ClamAV queda desplegado pero sin conectar todavía a
 ninguna app: para usarlo, instala la app `files_antivirus` en Nextcloud y
 apúntala al host `clamav`, puerto `3310`, modo *Daemon*.
+
+## Cambio de IP o de nombre de host
+
+Toda referencia al host del laboratorio sale de una única variable,
+`NEXO_HOST`, en `.env` (IP o nombre, sin esquema ni puerto). Nginx, Asterisk,
+Jitsi, Keycloak, Nextcloud y Element la leen al arrancar, así que **no** hace
+falta editar nada más a mano ni entrar con `docker exec` a cambiar archivos.
+
+Para mudar la plataforma a otra IP o nombre de host:
+
+```powershell
+# 1. Edita NEXO_HOST en .env (y NEXO_HOST en ansible/env.j2 si despliegas con Ansible)
+docker compose up -d
+
+# 2. Corrige el estado que Keycloak y Synapse NO regeneran solos (ver mas abajo)
+.\scripts\actualizar-host.sh
+```
+
+`docker compose up -d` recrea los contenedores cuyas variables de entorno
+cambiaron (Asterisk, Jitsi, Keycloak, Nextcloud, Element incluido: su
+`config.json` se vuelve a renderizar desde `matrix/element-config.json.template`
+en cada arranque, ver `matrix/nexo-entrypoint.sh`), así que todos quedan con
+el `NEXO_HOST` nuevo sin intervención manual.
+
+Dos piezas de estado quedan **persistidas** y no se regeneran solas, por eso
+necesitan `scripts/actualizar-host.sh`:
+
+- Keycloak importa `realm-nexo.json` una sola vez (estrategia
+  `IGNORE_EXISTING` en `--import-realm`): el `redirectUri` de los clientes
+  `nextcloud` y `synapse` queda con el host viejo hasta que el script lo
+  corrige con `kcadm.sh` dentro del contenedor.
+- `synapse-oidc-patch` agrega `oidc_providers` a `homeserver.yaml` una sola
+  vez (`if ! grep -q oidc_providers`): el `issuer`/`authorization_endpoint`
+  del proveedor Keycloak quedan con el host viejo hasta que el script los
+  corrige con `sed` dentro de `nexo-synapse` y lo reinicia.
+
+Verificado en este repositorio corriendo la plataforma y ejecutando el script
+tras cambiar `NEXO_HOST`: el inicio de sesión único (Nextcloud → Keycloak →
+Element) y la llamada de prueba desde `/voip/embed.html` siguen funcionando
+sin pasos manuales adicionales.
 
 ## Licencias
 
@@ -354,11 +415,12 @@ Guarda las imágenes en `evidencias/h9/` (carpeta nueva, no toca `h3/` ni `h8/`)
 ## Estructura y apagado
 
 - `docker-compose.yml`: servicios y redes `pub`, `srv`, `mgmt`.
-- `nginx/`, `portal/`: proxy TLS y portal.
+- `nginx/`, `portal/`: proxy TLS (raíz redirige a `/docs/`) y portal de respaldo (`/portal/`).
+- `scripts/actualizar-host.sh`: corrige Keycloak/Synapse al cambiar `NEXO_HOST`.
 - `asterisk/`, `voip/`: VoIP SIP y WebRTC de H3.
 - `matrix/`, `jitsi/`: mensajería (H4) y videoconferencia (H6).
 - `prometheus/`, `blackbox/`, `grafana/`: monitoreo para el SLA.
-- `keycloak/`, `nextcloud/`: identidad única y menú unificado de H9.
+- `keycloak/`, `nextcloud/`: identidad única y menú unificado de H9 (`nextcloud/poblar-menu.sh` puebla External Sites).
 - `firewall/nexo.nft`: reglas para el servidor Ubuntu del V305.
 
 ```powershell

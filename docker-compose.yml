@@ -29,7 +29,7 @@ services:
     container_name: nexo-certs
     restart: "no"
     environment:
-      HOST_IP: ${HOST_IP:-127.0.0.1}
+      HOST_IP: ${NEXO_HOST:-127.0.0.1}
     volumes:
       - ./certs:/certs
       - ./scripts/gen-cert.sh:/gen-cert.sh:ro
@@ -44,7 +44,7 @@ services:
     command: [ "/usr/sbin/asterisk", "-vvvdddf", "-T", "-n", "-U", "asterisk", "-p" ]
     environment:
       ASTERISK_TERMINAL_OPTS: "-n"
-      ASTERISK_PUBLIC_IP: ${ASTERISK_PUBLIC_IP:-127.0.0.1}
+      ASTERISK_PUBLIC_IP: ${NEXO_HOST:-127.0.0.1}
       SIP_PASSWORD_100: ${SIP_PASSWORD_100:?Define SIP_PASSWORD_100 en .env}
       SIP_PASSWORD_101: ${SIP_PASSWORD_101:?Define SIP_PASSWORD_101 en .env}
       WEBRTC_PASSWORD_100: ${WEBRTC_PASSWORD_100:?Define WEBRTC_PASSWORD_100 en .env}
@@ -155,8 +155,12 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_USER:-admin}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:?Define GRAFANA_PASSWORD en el archivo .env}
-      GF_SERVER_ROOT_URL: ${NEXO_URL:-https://localhost:8443}/grafana/
+      GF_SERVER_ROOT_URL: https://${NEXO_HOST:-localhost}:8443/grafana/
       GF_SERVER_SERVE_FROM_SUB_PATH: "true"
+      # Sin esto, Grafana manda "X-Frame-Options: deny" y el navegador
+      # bloquea el <iframe> del menu unificado (External Sites) aunque sea
+      # el mismo origen; ver tambien proxy_hide_header en nginx/conf.d.
+      GF_SECURITY_ALLOW_EMBEDDING: "true"
       GF_USERS_ALLOW_SIGN_UP: "false"
       GF_ANALYTICS_REPORTING_ENABLED: "false"
       GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
@@ -199,7 +203,7 @@ services:
       synapse-init:
         condition: service_completed_successfully
     environment:
-      NEXO_URL: ${NEXO_URL:-https://localhost:8443}
+      NEXO_URL: https://${NEXO_HOST:-localhost}:8443
       KC_SYNAPSE_CLIENT_SECRET: ${KC_SYNAPSE_CLIENT_SECRET:?Define KC_SYNAPSE_CLIENT_SECRET en el archivo .env}
     volumes:
       - synapse_data:/data
@@ -240,10 +244,19 @@ services:
     image: vectorim/element-web:latest
     container_name: nexo-element
     restart: unless-stopped
+    entrypoint: [ "/bin/sh", "/nexo/nexo-entrypoint.sh" ]
+    # La imagen corre de fabrica como el usuario "nginx" (sin permiso de
+    # escritura en /app), pero el entrypoint necesita volver a escribir
+    # config.json en cada arranque. nginx.conf sigue bajando los workers a
+    # "nginx"; esto solo afecta al proceso master.
+    user: root
+    environment:
+      NEXO_HOST: ${NEXO_HOST:-localhost}
     ports:
       - "8090:80"
     volumes:
-      - ./matrix/element-config.json:/app/config.json:ro
+      - ./matrix/element-config.json.template:/nexo/element-config.json.template:ro
+      - ./matrix/nexo-entrypoint.sh:/nexo/nexo-entrypoint.sh:ro
     security_opt: [ "no-new-privileges:true" ]
     depends_on: [ synapse ]
     networks: [ srv ]
@@ -254,7 +267,7 @@ services:
     container_name: nexo-jitsi-web
     restart: unless-stopped
     environment:
-      PUBLIC_URL: https://localhost:8444
+      PUBLIC_URL: https://${NEXO_HOST:-localhost}:8444
       XMPP_SERVER: jitsi-prosody
       HTTP_PORT: "8000"
       HTTPS_PORT: "8443"
@@ -270,7 +283,7 @@ services:
     container_name: nexo-jitsi-prosody
     restart: unless-stopped
     environment:
-      PUBLIC_URL: https://localhost:8444
+      PUBLIC_URL: https://${NEXO_HOST:-localhost}:8444
       XMPP_SERVER: jitsi-prosody
       JICOFO_AUTH_USER: ${JICOFO_AUTH_USER:-focus}
       JICOFO_AUTH_PASSWORD: ${JICOFO_AUTH_PASSWORD:?Define JICOFO_AUTH_PASSWORD en el archivo .env}
@@ -288,7 +301,7 @@ services:
     container_name: nexo-jicofo
     restart: unless-stopped
     environment:
-      PUBLIC_URL: https://localhost:8444
+      PUBLIC_URL: https://${NEXO_HOST:-localhost}:8444
       XMPP_SERVER: jitsi-prosody
       JICOFO_AUTH_PASSWORD: ${JICOFO_AUTH_PASSWORD:?Define JICOFO_AUTH_PASSWORD en el archivo .env}
       JICOFO_COMPONENT_SECRET: ${JICOFO_COMPONENT_SECRET:?Define JICOFO_COMPONENT_SECRET en el archivo .env}
@@ -301,10 +314,10 @@ services:
     container_name: nexo-jvb
     restart: unless-stopped
     environment:
-      PUBLIC_URL: https://localhost:8444
+      PUBLIC_URL: https://${NEXO_HOST:-localhost}:8444
       XMPP_SERVER: jitsi-prosody
-      DOCKER_HOST_ADDRESS: ${DOCKER_HOST_ADDRESS:?Define DOCKER_HOST_ADDRESS en el archivo .env}
-      JVB_ADVERTISE_IPS: ${DOCKER_HOST_ADDRESS}
+      DOCKER_HOST_ADDRESS: ${NEXO_HOST:-127.0.0.1}
+      JVB_ADVERTISE_IPS: ${NEXO_HOST:-127.0.0.1}
       JVB_PORT: "10000"
       JVB_AUTH_PASSWORD: ${JVB_AUTH_PASSWORD:?Define JVB_AUTH_PASSWORD en el archivo .env}
       TZ: America/Lima
@@ -324,14 +337,22 @@ services:
     entrypoint: [ "/bin/sh", "/opt/keycloak/nexo/nexo-entrypoint.sh" ]
     command:
       - start-dev
-      - --http-relative-path=/keycloak
-      - --hostname=${NEXO_URL:-https://localhost:8443}
+      - --hostname=https://${NEXO_HOST:-localhost}:8443/keycloak
       - --hostname-strict=false
+      # Sin esto, el discovery document anuncia el token_endpoint con la URL
+      # externa (https://NEXO_HOST:8443/keycloak/...) para TODO el mundo, y
+      # Nextcloud/Synapse al llamarlo servidor-a-servidor chocan con el
+      # certificado autofirmado (cURL error 60). Con backchannel-dynamic,
+      # Keycloak responde ese endpoint segun el Host con el que lo llamen: la
+      # red interna "srv" (keycloak:8080, por docker-compose) recibe URLs
+      # internas sin TLS, el navegador (via Nginx) sigue recibiendo la URL
+      # externa para el authorization_endpoint.
+      - --hostname-backchannel-dynamic=true
       - --proxy-headers=xforwarded
       - --import-realm
     environment:
-      NEXO_URL: ${NEXO_URL:-https://localhost:8443}
-      HOST_IP: ${HOST_IP:-127.0.0.1}
+      NEXO_URL: https://${NEXO_HOST:-localhost}:8443
+      HOST_IP: ${NEXO_HOST:-localhost}
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_ADMIN_USER:-nexo_admin}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD:?Define KC_ADMIN_PASSWORD en el archivo .env}
       KC_NEXTCLOUD_CLIENT_SECRET: ${KC_NEXTCLOUD_CLIENT_SECRET:?Define KC_NEXTCLOUD_CLIENT_SECRET en el archivo .env}
@@ -382,11 +403,11 @@ services:
       MYSQL_PASSWORD: ${NC_DB_PASSWORD:?Define NC_DB_PASSWORD en el archivo .env}
       NEXTCLOUD_ADMIN_USER: ${NC_ADMIN_USER:?Define NC_ADMIN_USER en el archivo .env}
       NEXTCLOUD_ADMIN_PASSWORD: ${NC_ADMIN_PASSWORD:?Define NC_ADMIN_PASSWORD en el archivo .env}
-      NEXTCLOUD_TRUSTED_DOMAINS: "${HOST_IP:-127.0.0.1} localhost"
-      OVERWRITEHOST: "${HOST_IP:-127.0.0.1}:8443"
+      NEXTCLOUD_TRUSTED_DOMAINS: "${NEXO_HOST:-localhost} localhost 127.0.0.1"
+      OVERWRITEHOST: "${NEXO_HOST:-localhost}:8443"
       OVERWRITEPROTOCOL: https
       OVERWRITEWEBROOT: /docs
-      OVERWRITECLIURL: ${NEXO_URL:-https://localhost:8443}/docs
+      OVERWRITECLIURL: https://${NEXO_HOST:-localhost}:8443/docs
       # Rango privado del bridge de Docker: permite que Nextcloud confie en el
       # proxy Nginx para leer X-Forwarded-*. Ajustar si Docker asigna otra subred.
       TRUSTED_PROXIES: "10.0.0.0/8 172.16.0.0/12 192.168.0.0/16"
@@ -394,7 +415,7 @@ services:
       - nextcloud_data:/var/www/html
     security_opt: [ "no-new-privileges:true" ]
     healthcheck:
-      test: [ "CMD-SHELL", "wget -q -O - http://127.0.0.1/status.php | grep -q installed" ]
+      test: [ "CMD-SHELL", "curl -sf http://127.0.0.1/status.php | grep -q installed" ]
       interval: 15s
       timeout: 5s
       retries: 20
@@ -409,12 +430,34 @@ services:
     restart: "no"
     depends_on: [ nextcloud, keycloak ]
     environment:
-      NEXO_URL: ${NEXO_URL:-https://localhost:8443}
+      NEXO_URL: https://${NEXO_HOST:-localhost}:8443
       KC_NEXTCLOUD_CLIENT_SECRET: ${KC_NEXTCLOUD_CLIENT_SECRET:?Define KC_NEXTCLOUD_CLIENT_SECRET en el archivo .env}
     volumes:
       - nextcloud_data:/var/www/html
       - ./nextcloud/nexo-oidc-setup.sh:/nexo-oidc-setup.sh:ro
     entrypoint: [ "/bin/sh", "/nexo-oidc-setup.sh" ]
+    networks: [ srv ]
+
+  # Puebla el menu unificado (External Sites) con Telefonia, Videoconferencia,
+  # Chat y Monitoreo. Tarea unica: reescribe la lista completa en cada
+  # arranque, asi que un cambio manual con occ (grupos, iconos) se revierte
+  # al volver a correr "docker compose up -d" salvo que tambien se edite
+  # nextcloud/poblar-menu-entrypoint.sh.
+  nextcloud-menu-init:
+    image: nextcloud:35-apache
+    container_name: nexo-nextcloud-menu-init
+    restart: "no"
+    # service_completed_successfully (no solo "arranco"): nextcloud-init
+    # tambien escribe config.php (occ config:system:set reescribe el
+    # archivo entero); si ambos corren en paralelo se pisan las escrituras
+    # entre si y una de las dos se pierde en silencio.
+    depends_on:
+      nextcloud-init:
+        condition: service_completed_successfully
+    volumes:
+      - nextcloud_data:/var/www/html
+      - ./nextcloud/poblar-menu-entrypoint.sh:/poblar-menu-entrypoint.sh:ro
+    entrypoint: [ "/bin/sh", "/poblar-menu-entrypoint.sh" ]
     networks: [ srv ]
 
   # H14 (rama "desarrollo"): antivirus de red interno, sin exponer puertos.

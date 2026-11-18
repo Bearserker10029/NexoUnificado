@@ -1,6 +1,6 @@
 {
   "default_server_config": {
-    "m.homeserver": { "base_url": "http://192.168.1.35:8008", "server_name": "nexo.local" }
+    "m.homeserver": { "base_url": "http://${NEXO_HOST}:8008", "server_name": "nexo.local" }
   },
   "brand": "Nexo Unificado",
   "disable_guests": true,

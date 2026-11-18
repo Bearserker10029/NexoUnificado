@@ -25,6 +25,7 @@
   a.card:hover{border-top-color:var(--amber);background:var(--tint)}
   .card.pend{border-top-color:var(--line);color:var(--mute)}
   footer{border-top:1px solid var(--line);padding:16px 20px;font-size:.8rem;color:var(--mute)}
+  footer a{color:var(--navy)}
   @media (max-width:480px){h1{font-size:1.7rem}}
 </style>
 </head>
@@ -38,12 +39,12 @@
   <h2>Servicios de la plataforma</h2>
   <div class="grid">
     <a class="card" href="/grafana/"><h3>Monitoreo y SLA</h3><p>Disponibilidad, tiempos de respuesta y estado del servidor.</p><span class="tag on">Activo · H2</span></a>
-    <a class="card" href="/voip/"><h3>Voz y telefonía</h3><p>Central IP, extensiones y llamadas.</p><span class="tag on">Activo · H3</span></a>
-    <div class="card pend"><h3>Chat y presencia</h3><p>Mensajería persistente y estado de disponibilidad.</p><span class="tag off">Hito H4</span></div>
-    <div class="card pend"><h3>Documentos</h3><p>Archivos y edición compartida en tiempo real.</p><span class="tag off">Hito H5</span></div>
-    <div class="card pend"><h3>Videoconferencia</h3><p>Reuniones con video desde el navegador.</p><span class="tag off">Hito H6</span></div>
+    <a class="card" href="/voip/embed.html"><h3>Voz y telefonía</h3><p>Central IP, extensiones y llamadas.</p><span class="tag on">Activo · H3</span></a>
+    <a class="card" href="/element/"><h3>Chat y presencia</h3><p>Mensajería persistente y estado de disponibilidad.</p><span class="tag on">Activo · H4</span></a>
+    <a class="card" href="/docs/"><h3>Documentos</h3><p>Archivos y edición compartida en tiempo real.</p><span class="tag on">Activo · H5</span></a>
+    <a class="card" href="/jitsi/"><h3>Videoconferencia</h3><p>Reuniones con video desde el navegador.</p><span class="tag on">Activo · H6</span></a>
   </div>
 </div></main>
-<footer><div class="wrap">Entorno base H2 · conexión cifrada con TLS 1.2 o superior</div></footer>
+<footer><div class="wrap">Entrada de respaldo (H2) · el menú unificado vive en <a href="/docs/">/docs/</a> (Nextcloud) · conexión cifrada con TLS 1.2 o superior</div></footer>
 </body>
 </html>
