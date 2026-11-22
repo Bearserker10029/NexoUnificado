@@ -9,6 +9,18 @@
         "chat",
         "telefonia",
         "videoconferencia"
+      ],
+      "sectors": [
+        {
+          "name": "direccion",
+          "range": "1000-1499",
+          "allow_intercompany": true
+        },
+        {
+          "name": "gestion",
+          "range": "1500-1999",
+          "allow_intercompany": false
+        }
       ]
     },
     {

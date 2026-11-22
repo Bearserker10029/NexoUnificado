@@ -14,7 +14,7 @@ media_encryption=sdes
 
 [1001](tenant-acme-endpoint)
 auth=auth-1001
-aors=1001
+aors=aor-1001
 callerid="ACME 1001" <1001>
 
 [auth-1001]
@@ -23,7 +23,7 @@ auth_type=userpass
 username=1001
 password=${TENANT_ACME_SIP_PASSWORD}
 
-[1001]
+[aor-1001]
 type=aor
 max_contacts=1
 remove_existing=yes

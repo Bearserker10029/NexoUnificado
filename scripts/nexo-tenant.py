@@ -64,11 +64,65 @@ def add_tenant(args: argparse.Namespace) -> None:
     print("Defina sus secretos SIP en .env y ejecute docker compose up -d --build.")
 
 
+def tenant_sectors(tenant: dict) -> list[dict]:
+    """Valida y normaliza los sectores opcionales de una empresa."""
+    prefix = int(tenant["range_prefix"])
+    low, high = prefix * 1000, prefix * 1000 + 999
+    sectors, names, used = [], set(), []
+    for raw in tenant.get("sectors", []):
+        name = str(raw.get("name", "")).lower()
+        if not re.fullmatch(r"[a-z][a-z0-9-]{0,30}", name) or name in names:
+            raise ValueError(f"Sector invalido o duplicado en {tenant['name']}: {raw.get('name')!r}")
+        names.add(name)
+        match = re.fullmatch(r"(\d{4})-(\d{4})", str(raw.get("range", "")))
+        if not match:
+            raise ValueError(f"Sector {name}: range debe tener formato 'NNNN-NNNN'")
+        start, end = int(match.group(1)), int(match.group(2))
+        if not low <= start <= end <= high:
+            raise ValueError(f"Sector {name}: el subrango debe quedar dentro de {low}-{high}")
+        if any(start <= u_end and u_start <= end for u_start, u_end in used):
+            raise ValueError(f"Sector {name}: el subrango se solapa con otro sector")
+        used.append((start, end))
+        allow = raw.get("allow_intercompany", False)
+        if not isinstance(allow, bool):
+            raise ValueError(f"Sector {name}: allow_intercompany debe ser booleano")
+        sectors.append({"name": name, "start": start, "end": end, "allow": allow})
+    return sectors
+
+
+def intercompany_class_of_service(sectors: list[dict]) -> str:
+    """Lineas de dialplan que aplican la clase de servicio interempresas.
+
+    Sin sectores se conserva el comportamiento tradicional (todas las extensiones pueden marcar 9).
+    """
+    if not sectors:
+        return ""
+    lines = [" same => n,Set(CALLER_NUM=${FILTER(0-9,${CALLERID(num)})})",
+             " same => n,GotoIf($[\"${CALLER_NUM}\" = \"\"]?sector-denegado)"]
+    for sector in sectors:
+        if sector["allow"]:
+            lines.append(f" same => n,GotoIf($[${{CALLER_NUM}} >= {sector['start']} & ${{CALLER_NUM}} <= {sector['end']}]"
+                         f"?sector-permitido)")
+    lines.append(" same => n,Goto(sector-denegado)")
+    lines.append(" same => n(sector-permitido),NoOp(Sector con allow_intercompany)")
+    return "\n".join(lines) + "\n"
+
+
+def sector_denied_block(sectors: list[dict]) -> str:
+    if not sectors:
+        return ""
+    return (" same => n(sector-denegado),Log(WARNING,Interempresas denegada por clase de servicio: "
+            "${CALLERID(num)} -> ${EXTEN})\n same => n,Playback(invalid)\n same => n,Hangup(21)\n")
+
+
 def render_asterisk(tenant: dict) -> None:
     name = tenant["name"]
     prefix = int(tenant["range_prefix"])
     target = TENANTS / name / "asterisk"
     target.mkdir(parents=True, exist_ok=True)
+    sectors = tenant_sectors(tenant)
+    cos = intercompany_class_of_service(sectors)
+    cos_denied = sector_denied_block(sectors)
     (target / "extensions.conf").write_text(f"""; Generado por scripts/nexo-tenant.py. No editar a mano.
 [tenant-{name}]
 exten => _{prefix}XXX,1,NoOp(Llamada interna de {name}: ${{CALLERID(num)}} -> ${{EXTEN}})
@@ -79,7 +133,7 @@ exten => _{prefix}XXX,1,NoOp(Llamada interna de {name}: ${{CALLERID(num)}} -> ${
 exten => _9ZXXX,1,Set(TENANT_ORIGEN={name})
  same => n,Set(TENANT_PREFIJO={prefix})
  same => n,GotoIf($[\"${{EXTEN:1:1}}\" = \"${{TENANT_PREFIJO}}\"]?misma-empresa)
- same => n,Set(CHANNEL(accountcode)={name})
+{cos} same => n,Set(CHANNEL(accountcode)={name})
  same => n,Set(CDR(userfield)=origen=${{CALLERID(num)}},destino=${{EXTEN:1}},tipo=interempresas)
  same => n,Set(CDR(tenant_origen)={name})
  same => n,Set(CDR(origen)=${{CALLERID(num)}})
@@ -91,7 +145,7 @@ exten => _9ZXXX,1,Set(TENANT_ORIGEN={name})
  same => n(misma-empresa),Log(WARNING,Ruta interempresas innecesaria denegada: ${{EXTEN}})
  same => n,Playback(invalid)
  same => n,Hangup(21)
-
+{cos_denied}
 ; Denegar por defecto: PSTN y otros rangos no son alcanzables sin el prefijo 9.
 exten => _X.,1,Log(WARNING,Destino no autorizado en {name} desde ${{CALLERID(num)}}: ${{EXTEN}})
  same => n,Playback(invalid)
@@ -116,7 +170,7 @@ media_encryption=sdes
 
 [{extension}](tenant-{name}-endpoint)
 auth=auth-{extension}
-aors={extension}
+aors=aor-{extension}
 callerid=\"{name.upper()} {extension}\" <{extension}>
 
 [auth-{extension}]
@@ -125,7 +179,7 @@ auth_type=userpass
 username={extension}
 password=${{{secret}}}
 
-[{extension}]
+[aor-{extension}]
 type=aor
 max_contacts=1
 remove_existing=yes

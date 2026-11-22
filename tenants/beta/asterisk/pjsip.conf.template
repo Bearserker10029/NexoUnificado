@@ -14,7 +14,7 @@ media_encryption=sdes
 
 [2001](tenant-beta-endpoint)
 auth=auth-2001
-aors=2001
+aors=aor-2001
 callerid="BETA 2001" <2001>
 
 [auth-2001]
@@ -23,7 +23,7 @@ auth_type=userpass
 username=2001
 password=${TENANT_BETA_SIP_PASSWORD}
 
-[2001]
+[aor-2001]
 type=aor
 max_contacts=1
 remove_existing=yes
