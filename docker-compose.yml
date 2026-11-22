@@ -155,6 +155,11 @@ services:
         condition: service_healthy
       voip-gateway:
         condition: service_healthy
+        # --build recrea voip-gateway con una IP nueva; nginx resuelve el
+        # nombre una sola vez al arrancar y se queda con la IP vieja (502
+        # Connection refused) hasta que algo lo reinicie. restart:true hace
+        # que Compose reinicie el proxy automaticamente cuando eso pasa.
+        restart: true
       keycloak:
         condition: service_started
       nextcloud:
@@ -271,11 +276,15 @@ services:
       - |
         set -eu
         apk add --no-cache gettext >/dev/null
+        envsubst < /oidc-providers.yaml.template > /tmp/oidc-providers.yaml
         if ! grep -q '^oidc_providers:' /data/homeserver.yaml; then
-          envsubst < /oidc-providers.yaml.template >> /data/homeserver.yaml
-          echo "oidc_providers agregado a homeserver.yaml"
+          cat /tmp/oidc-providers.yaml >> /data/homeserver.yaml
+          echo "oidc_providers y sso agregados a homeserver.yaml"
+        elif ! grep -q '^sso:' /data/homeserver.yaml; then
+          sed -n '/^sso:/,$$p' /tmp/oidc-providers.yaml >> /data/homeserver.yaml
+          echo "sso agregado a homeserver.yaml"
         else
-          echo "oidc_providers ya existe, no se modifica"
+          echo "oidc_providers y sso ya existen, no se modifican"
         fi
     networks: [ srv ]
 
@@ -283,11 +292,17 @@ services:
     image: matrixdotorg/synapse:latest
     container_name: nexo-synapse
     restart: unless-stopped
+    entrypoint: [ "/bin/sh", "-c" ]
+    command:
+      - 'cat "$(python -c ''import certifi; print(certifi.where())'')" /certs/server.crt > /data/nexo-ca-bundle.pem && exec /start.py'
     environment:
       SYNAPSE_SERVER_NAME: nexo.local
       SYNAPSE_REPORT_STATS: "no"
+      SSL_CERT_FILE: /data/nexo-ca-bundle.pem
+      REQUESTS_CA_BUNDLE: /data/nexo-ca-bundle.pem
     volumes:
       - synapse_data:/data
+      - ./certs/server.crt:/certs/server.crt:ro
     security_opt: [ "no-new-privileges:true" ]
     depends_on:
       synapse-init:

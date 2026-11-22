@@ -1,21 +1,15 @@
 
-# Agregado por nexo-synapse-oidc-patch: delega el login de Matrix/Element en
-# Keycloak para que, tras entrar a Nextcloud, Element quede con sesion abierta.
-# discover:false + endpoints manuales: el navegador necesita la URL externa
-# (NEXO_URL, vía Nginx) para authorization_endpoint, pero Synapse llama a los
-# demas endpoints servidor-a-servidor; usando esa misma URL externa esas
-# llamadas internas se van por el host y Docker Desktop no siempre enruta
-# ese "hairpin" de vuelta al propio contenedor de Keycloak. Por eso
-# token/userinfo/jwks usan el nombre interno "keycloak" de la red srv.
+# Synapse exige HTTPS en todos los endpoints OIDC. Las llamadas internas
+# atraviesan Nginx y confían explícitamente en el certificado del laboratorio.
 oidc_providers:
   - idp_id: keycloak
     idp_name: "Nexo Unificado"
     issuer: "${NEXO_URL}/keycloak/realms/nexo"
     discover: false
     authorization_endpoint: "${NEXO_URL}/keycloak/realms/nexo/protocol/openid-connect/auth"
-    token_endpoint: "http://keycloak:8080/realms/nexo/protocol/openid-connect/token"
-    userinfo_endpoint: "http://keycloak:8080/realms/nexo/protocol/openid-connect/userinfo"
-    jwks_uri: "http://keycloak:8080/realms/nexo/protocol/openid-connect/certs"
+    token_endpoint: "${NEXO_URL}/keycloak/realms/nexo/protocol/openid-connect/token"
+    userinfo_endpoint: "${NEXO_URL}/keycloak/realms/nexo/protocol/openid-connect/userinfo"
+    jwks_uri: "${NEXO_URL}/keycloak/realms/nexo/protocol/openid-connect/certs"
     client_id: "synapse"
     client_secret: "${KC_SYNAPSE_CLIENT_SECRET}"
     scopes: ["openid", "profile", "email"]
@@ -23,3 +17,9 @@ oidc_providers:
       config:
         localpart_template: "{{ user.preferred_username }}"
         display_name_template: "{{ user.name }}"
+
+# Element es un cliente propio de la plataforma: no requiere una segunda
+# confirmacion para concederle acceso a la cuenta Matrix despues del OIDC.
+sso:
+  client_whitelist:
+    - "${NEXO_URL}/element/"

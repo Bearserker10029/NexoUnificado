@@ -283,6 +283,18 @@ def voip_config():
         "register": True,
         "register_expires": 600,
         "session_timers": False,
+        "contact_uri": None,
+        "instance_id": None,
+        "use_preloaded_route": False,
+        "pcConfig": {
+            "rtcpMuxPolicy": "require",
+            "iceServers": [],
+        },
+        "callstats": {
+            "enabled": False,
+            "AppID": None,
+            "AppSecret": None,
+        },
         "uri": f"sip:{entry['extension']}@nexo.local",
         "authorization_user": entry["extension"],
         "password": entry["sip_password"],

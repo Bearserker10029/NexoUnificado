@@ -13,6 +13,9 @@ la misma plataforma sin una cuenta adicional.
 
 ## Configuración y arranque
 
+Para una instalación completa en equipos nuevos, incluidos el certificado, el
+firewall y la configuración inicial de Element, sigue [Guia.md](Guia.md).
+
 En PowerShell, dentro del repositorio:
 
 ```powershell

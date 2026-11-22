@@ -32,6 +32,14 @@ done
 echo "Habilitando la app External Sites..."
 occ app:install external >/dev/null 2>&1 || occ app:enable external
 
+# Nextcloud crea el iframe exterior; sin este allow, Chromium bloquea el
+# microfono aunque /voip/embed.html lo habilite en su propio iframe interior.
+EXTERNAL_FRAME="/var/www/html/custom_apps/external/templates/frame.php"
+if [ -f "$EXTERNAL_FRAME" ] && ! grep -q 'allow="microphone; camera"' "$EXTERNAL_FRAME"; then
+  sed -i 's/allowfullscreen><\/iframe>/allow="microphone; camera" allowfullscreen><\/iframe>/' "$EXTERNAL_FRAME"
+  echo "Permisos de microfono/camara habilitados en el iframe de External Sites."
+fi
+
 SITES_JSON=$(cat <<'JSON'
 {
   "1": {"id": 1, "name": "Telefonía", "url": "/voip/embed.html", "lang": "", "type": "link", "device": "", "icon": "external.svg", "groups": [], "redirect": false},

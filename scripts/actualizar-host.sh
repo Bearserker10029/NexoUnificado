@@ -84,12 +84,20 @@ docker exec nexo-synapse sh -c "
   sed -i -E \
     -e \"s#issuer: \\\"https://[^/\\\"]+/keycloak/realms/nexo\\\"#issuer: \\\"${NEXO_URL}/keycloak/realms/nexo\\\"#\" \
     -e \"s#authorization_endpoint: \\\"https://[^/\\\"]+/keycloak/realms/nexo/protocol/openid-connect/auth\\\"#authorization_endpoint: \\\"${NEXO_URL}/keycloak/realms/nexo/protocol/openid-connect/auth\\\"#\" \
+    -e \"s#token_endpoint: \\\"[^\\\"]+\\\"#token_endpoint: \\\"${NEXO_URL}/keycloak/realms/nexo/protocol/openid-connect/token\\\"#\" \
+    -e \"s#userinfo_endpoint: \\\"[^\\\"]+\\\"#userinfo_endpoint: \\\"${NEXO_URL}/keycloak/realms/nexo/protocol/openid-connect/userinfo\\\"#\" \
+    -e \"s#jwks_uri: \\\"[^\\\"]+\\\"#jwks_uri: \\\"${NEXO_URL}/keycloak/realms/nexo/protocol/openid-connect/certs\\\"#\" \
     -e \"s#x_forwarded: false#x_forwarded: true#g\" \
     /data/homeserver.yaml
   if grep -q '^public_baseurl:' /data/homeserver.yaml; then
     sed -i -E \"s#^public_baseurl:.*#public_baseurl: '${NEXO_URL}/'#\" /data/homeserver.yaml
   else
     sed -i \"/^server_name:/a public_baseurl: '${NEXO_URL}/'\" /data/homeserver.yaml
+  fi
+  if ! grep -q '^sso:' /data/homeserver.yaml; then
+    printf '\nsso:\n  client_whitelist:\n    - \"%s/element/\"\n' '${NEXO_URL}' >> /data/homeserver.yaml
+  else
+    sed -i -E \"s#- \\\"https://[^\\\"]+/element/\\\"#- \\\"${NEXO_URL}/element/\\\"#\" /data/homeserver.yaml
   fi
 "
 docker restart nexo-synapse >/dev/null
