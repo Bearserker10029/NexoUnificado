@@ -8,4 +8,17 @@ external_media_address=${ASTERISK_PUBLIC_IP}
 external_signaling_address=${ASTERISK_PUBLIC_IP}
 external_signaling_port=8443
 
+; SIP TLS interno para terminales de empresa. No se publica UDP 5060 ni TCP 5060.
+[transport-tls]
+type=transport
+protocol=tls
+bind=0.0.0.0:5061
+cert_file=/etc/asterisk/keys/server.crt
+priv_key_file=/etc/asterisk/keys/server.key
+method=tlsv1_2
+verify_client=no
+external_media_address=${ASTERISK_PUBLIC_IP}
+external_signaling_address=${ASTERISK_PUBLIC_IP}
+
 #include /etc/asterisk/dynamic/pjsip-users.conf
+#include /etc/asterisk/dynamic/tenants-pjsip.conf

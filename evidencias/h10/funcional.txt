@@ -1,0 +1,21 @@
+URL: https://192.168.1.39:8443
+
+IDENTIDAD ACME1: @acme1:acme.nexo.local
+IDENTIDAD ACME2: @acme2:acme.nexo.local
+IDENTIDAD BETA1: @beta1:beta.nexo.local
+DM ACME creada: !EqjYl-LeKIb2eCRg_soqMOw6_8UkjpV_xVw-rrx5nrI
+ACME2 aceptó la sala directa
+SEÑALIZACIÓN m.call.invite ACME1->ACME2: $ulWZwYlsiYhqIdU-iHI-0E6PSDGjOdAmL9cXP28VPco (audio/video se verifica en Element)
+CHAT ACME->BETA BLOQUEADO: HTTP 502 {"errcode": "M_UNKNOWN", "error": "Can't connect to server beta.nexo.local"}
+DIRECTORIO ACME: beta1 no visible
+CONTACTOS SIP:
+No objects found.
+
+
+LLAMADA ACME 1001 -> BETA 2001 mediante 92001 (canal Local temporal; sin audio si no hay registros SIP)
+
+CDR INTEREMPRESAS:
+"2026-11-22 18:34:50",""""" <1001>","1001","92001","acme","","FAILED","0","1795372490.5"
+"2026-11-22 18:34:50",""""" <>","","9100","","","FAILED","0","1795372490.4"
+"2026-11-22 18:38:11",""""" <1001>","1001","92001","acme","origen=1001,destino=2001,tipo=interempresas","FAILED","0","1795372691.7"
+"2026-11-22 18:38:11",""""" <>","","9100","","","FAILED","0","1795372691.6"

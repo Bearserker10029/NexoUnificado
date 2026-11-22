@@ -1,0 +1,43 @@
+# Generado: homeserver exclusivo de acme.
+server_name: "acme.nexo.local"
+public_baseurl: "${NEXO_URL}/acme/"
+report_stats: false
+pid_file: /data/homeserver.pid
+media_store_path: /data/media_store
+signing_key_path: /data/acme.signing.key
+database:
+  name: sqlite3
+  args:
+    database: /data/homeserver.db
+listeners:
+  - port: 8008
+    tls: false
+    type: http
+    x_forwarded: true
+    resources:
+      - names: [client, media]
+        compress: false
+registration_shared_secret: "${KC_SYNAPSE_CLIENT_SECRET}"
+enable_registration: false
+enable_registration_without_verification: false
+user_directory:
+  search_all_users: false
+oidc_providers:
+  - idp_id: keycloak
+    idp_name: "ACME"
+    issuer: "${NEXO_URL}/keycloak/realms/nexo-acme"
+    discover: false
+    authorization_endpoint: "${NEXO_URL}/keycloak/realms/nexo-acme/protocol/openid-connect/auth"
+    token_endpoint: "${NEXO_URL}/keycloak/realms/nexo-acme/protocol/openid-connect/token"
+    userinfo_endpoint: "${NEXO_URL}/keycloak/realms/nexo-acme/protocol/openid-connect/userinfo"
+    jwks_uri: "${NEXO_URL}/keycloak/realms/nexo-acme/protocol/openid-connect/certs"
+    client_id: "synapse"
+    client_secret: "${KC_SYNAPSE_CLIENT_SECRET}"
+    scopes: ["openid", "profile", "email"]
+    user_mapping_provider:
+      config:
+        localpart_template: "{{ user.preferred_username }}"
+        display_name_template: "{{ user.name }}"
+sso:
+  client_whitelist:
+    - "${NEXO_URL}/acme/element/"

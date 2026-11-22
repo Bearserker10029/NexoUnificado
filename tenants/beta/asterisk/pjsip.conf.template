@@ -1,0 +1,30 @@
+; Generado por scripts/nexo-tenant.py. No editar a mano.
+[tenant-beta-endpoint](!)
+type=endpoint
+context=tenant-beta
+transport=transport-tls
+disallow=all
+allow=opus,ulaw,alaw
+direct_media=no
+rewrite_contact=yes
+force_rport=yes
+rtp_symmetric=yes
+dtmf_mode=rfc4733
+media_encryption=sdes
+
+[2001](tenant-beta-endpoint)
+auth=auth-2001
+aors=2001
+callerid="BETA 2001" <2001>
+
+[auth-2001]
+type=auth
+auth_type=userpass
+username=2001
+password=${TENANT_BETA_SIP_PASSWORD}
+
+[2001]
+type=aor
+max_contacts=1
+remove_existing=yes
+qualify_frequency=0

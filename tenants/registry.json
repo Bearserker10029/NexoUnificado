@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "tenants": [
+    {
+      "name": "acme",
+      "display_name": "ACME",
+      "range_prefix": 1,
+      "services": [
+        "chat",
+        "telefonia",
+        "videoconferencia"
+      ]
+    },
+    {
+      "name": "beta",
+      "display_name": "BETA",
+      "range_prefix": 2,
+      "services": [
+        "chat",
+        "telefonia",
+        "videoconferencia"
+      ]
+    }
+  ]
+}

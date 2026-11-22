@@ -15,6 +15,11 @@ $required = [ordered]@{
     JICOFO_AUTH_PASSWORD = (New-Secret "NexoJicofo")
     JICOFO_COMPONENT_SECRET = (New-Secret "NexoJicofoComponent")
     JVB_AUTH_PASSWORD = (New-Secret "NexoJVB")
+    TENANT_ACME_SIP_PASSWORD = (New-Secret "NexoAcme1001")
+    TENANT_BETA_SIP_PASSWORD = (New-Secret "NexoBeta2001")
+    ACME1_PASSWORD = (New-Secret "H10Acme1")
+    ACME2_PASSWORD = (New-Secret "H10Acme2")
+    BETA1_PASSWORD = (New-Secret "H10Beta1")
 }
 $path = Join-Path (Get-Location) ".env"
 $lines = [System.Collections.Generic.List[string]]::new()

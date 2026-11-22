@@ -20,11 +20,12 @@
 	<body>
 		<div id='aviso'>
 			<span>Softphone WebRTC (Nexo Unificado)</span>
-			<a href='/voip/' target='_blank' rel='noopener'>Si el micrófono no funciona aquí, ábrelo en pestaña nueva ↗</a>
+			<a id='abrir-voip' href='/voip/' target='_blank' rel='noopener'>Si el micrófono no funciona aquí, ábrelo en pestaña nueva ↗</a>
 		</div>
 		<!-- Mismo origen que /docs/ (Nextcloud): el iframe hereda la política
 		     de cabeceras de /voip/ (frame-ancestors 'self', X-Frame-Options
 		     SAMEORIGIN), por eso solo se embebe desde este mismo dominio. -->
-		<iframe src='/voip/' allow='microphone; camera' allowfullscreen></iframe>
+		<iframe id='softphone' src='/voip/' allow='microphone; camera' allowfullscreen></iframe>
+		<script src='resources/js/nexo-embed.js'></script>
 	</body>
 </html>

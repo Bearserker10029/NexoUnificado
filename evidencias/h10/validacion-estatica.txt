@@ -1,0 +1,14 @@
+Configuracion regenerada para 2 empresas.
+test_dialplan_interempresas_y_cdr (tests.test_multiempresa.MultiempresaEstatico.test_dialplan_interempresas_y_cdr) ... ok
+test_element_1a1_y_jitsi_aislados (tests.test_multiempresa.MultiempresaEstatico.test_element_1a1_y_jitsi_aislados) ... ok
+test_empresas_y_rangos (tests.test_multiempresa.MultiempresaEstatico.test_empresas_y_rangos) ... ok
+test_endpoints_tls_y_wss_sin_udp_5060 (tests.test_multiempresa.MultiempresaEstatico.test_endpoints_tls_y_wss_sin_udp_5060) ... ok
+test_homeservers_sin_federacion (tests.test_multiempresa.MultiempresaEstatico.test_homeservers_sin_federacion) ... ok
+test_proxy_conserva_base_e_incluye_empresas (tests.test_multiempresa.MultiempresaEstatico.test_proxy_conserva_base_e_incluye_empresas) ... ok
+test_python_valido (tests.test_multiempresa.MultiempresaEstatico.test_python_valido) ... ok
+test_realms_y_grupos_contratados (tests.test_multiempresa.MultiempresaEstatico.test_realms_y_grupos_contratados) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.956s
+
+OK

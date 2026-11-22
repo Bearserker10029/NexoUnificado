@@ -9,7 +9,9 @@
     }
   }
 
-  fetch('/voip-sso/config.json', { credentials: 'same-origin' })
+  var tenantMatch = window.location.pathname.match(/^\/([a-z][a-z0-9-]{1,30})\/voip\//);
+  var configUrl = tenantMatch ? '/voip-sso/' + tenantMatch[1] + '/config.json' : '/voip-sso/config.json';
+  fetch(configUrl, { credentials: 'same-origin' })
     .then(function (response) {
       if (response.status === 401) {
         return response.json().then(function (data) {

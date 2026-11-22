@@ -1,0 +1,36 @@
+nexo-proxy|Up 23 minutes (healthy)
+nexo-voip-gateway|Up 27 minutes (healthy)
+nexo-asterisk|Up 12 minutes (healthy)
+nexo-element-acme|Up 27 minutes (healthy)
+nexo-element-beta|Up 27 minutes (healthy)
+nexo-synapse-acme|Up 22 minutes (healthy)
+nexo-synapse-beta|Up 22 minutes (healthy)
+nexo-keycloak|Up 29 minutes
+nexo-jitsi-web-acme|Up 29 minutes
+nexo-jvb-beta|Up 29 minutes
+nexo-jicofo-acme|Up 29 minutes
+nexo-jvb-acme|Up 29 minutes
+nexo-jitsi-web-beta|Up 29 minutes
+nexo-jicofo-beta|Up 29 minutes
+nexo-nextcloud-tenants-init|Exited (0) 26 minutes ago
+nexo-jitsi-prosody-beta|Up 29 minutes
+nexo-jitsi-prosody-acme|Up 29 minutes
+nexo-element|Up 2 hours (healthy)
+nexo-synapse|Up 23 minutes (healthy)
+nexo-synapse-oidc-patch|Exited (0) 29 minutes ago
+nexo-nextcloud-menu-init|Exited (0) 27 minutes ago
+nexo-jitsi-web|Up 4 hours
+nexo-jvb|Up 4 hours
+nexo-jicofo|Up 4 hours
+nexo-jitsi-prosody|Up 4 hours
+nexo-host-update|Exited (0) 23 minutes ago
+nexo-nextcloud-init|Exited (0) 28 minutes ago
+nexo-grafana|Up 4 hours (healthy)
+nexo-nextcloud|Up 4 hours (healthy)
+nexo-certs|Exited (0) 29 minutes ago
+nexo-synapse-init|Exited (0) 29 minutes ago
+nexo-nextcloud-db|Up 4 hours (healthy)
+nexo-clamav|Up 4 hours (healthy)
+nexo-prometheus|Up 4 hours (healthy)
+nexo-node-exporter|Up 4 hours
+nexo-blackbox|Up 4 hours

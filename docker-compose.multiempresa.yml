@@ -1,0 +1,239 @@
+# GENERADO por scripts/nexo-tenant.py. Carga automatica junto al despliegue base.
+services:
+  asterisk:
+    env_file: [ .env ]
+  keycloak:
+    volumes:
+      - ./tenants:/opt/keycloak/nexo/tenants:ro
+  proxy:
+    volumes:
+      - ./tenants/nginx:/etc/nginx/tenants:ro
+  voip-gateway:
+    environment:
+      NEXO_TENANTS: /tenants/registry.json
+    volumes:
+      - ./tenants/registry.json:/tenants/registry.json:ro
+  nextcloud-tenants-init:
+    image: nextcloud:35-apache
+    container_name: nexo-nextcloud-tenants-init
+    restart: "no"
+    depends_on:
+      nextcloud-menu-init:
+        condition: service_completed_successfully
+    environment:
+      NEXO_URL: https://${NEXO_HOST:-localhost}:8443
+      KC_NEXTCLOUD_CLIENT_SECRET: ${KC_NEXTCLOUD_CLIENT_SECRET:?}
+    volumes:
+      - nextcloud_data:/var/www/html
+      - ./tenants/registry.json:/tenants/registry.json:ro
+      - ./nextcloud/tenants-oidc-setup.sh:/tenants-oidc-setup.sh:ro
+    entrypoint: [ "/bin/sh", "/tenants-oidc-setup.sh" ]
+    networks: [ srv ]
+  synapse-acme:
+    image: matrixdotorg/synapse:latest
+    container_name: nexo-synapse-acme
+    restart: unless-stopped
+    entrypoint: [ "/bin/sh", "/nexo/tenant-entrypoint.sh" ]
+    environment:
+      NEXO_URL: https://${NEXO_HOST:-localhost}:8443
+      KC_SYNAPSE_CLIENT_SECRET: ${KC_SYNAPSE_CLIENT_SECRET:?}
+      SSL_CERT_FILE: /data/nexo-ca-bundle.pem
+      REQUESTS_CA_BUNDLE: /data/nexo-ca-bundle.pem
+    volumes:
+      - synapse_acme_data:/data
+      - ./tenants/acme/matrix/homeserver.yaml.template:/template/homeserver.yaml:ro
+      - ./matrix/tenant-entrypoint.sh:/nexo/tenant-entrypoint.sh:ro
+      - ./certs/server.crt:/certs/server.crt:ro
+    depends_on: [ keycloak ]
+    networks: [ srv ]
+  element-acme:
+    image: vectorim/element-web:latest
+    container_name: nexo-element-acme
+    restart: unless-stopped
+    user: root
+    entrypoint: [ "/bin/sh", "/nexo/tenant-element-entrypoint.sh" ]
+    environment:
+      NEXO_URL: https://${NEXO_HOST:-localhost}:8443
+    volumes:
+      - ./tenants/acme/matrix/element-config.json.template:/template/config.json:ro
+      - ./matrix/tenant-element-entrypoint.sh:/nexo/tenant-element-entrypoint.sh:ro
+    depends_on: [ synapse-acme ]
+    networks: [ srv ]
+  jitsi-web-acme:
+    image: ghcr.io/jitsi/web:stable-11509
+    container_name: nexo-jitsi-web-acme
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: https://${NEXO_HOST:-localhost}:8443/acme/jitsi
+      XMPP_SERVER: jitsi-prosody-acme
+      XMPP_DOMAIN: acme.meet.jitsi
+      XMPP_MUC_DOMAIN: muc.acme.meet.jitsi
+      XMPP_INTERNAL_MUC_DOMAIN: internal-muc.acme.meet.jitsi
+      XMPP_HIDDEN_DOMAIN: hidden.acme.meet.jitsi
+      TZ: America/Lima
+      HTTP_PORT: "8000"
+      HTTPS_PORT: "8443"
+    depends_on: [ jitsi-prosody-acme ]
+    networks: [ srv ]
+  jitsi-prosody-acme:
+    image: ghcr.io/jitsi/prosody:stable-11509
+    container_name: nexo-jitsi-prosody-acme
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: https://${NEXO_HOST:-localhost}:8443/acme/jitsi
+      XMPP_SERVER: jitsi-prosody-acme
+      XMPP_DOMAIN: acme.meet.jitsi
+      XMPP_MUC_DOMAIN: muc.acme.meet.jitsi
+      XMPP_INTERNAL_MUC_DOMAIN: internal-muc.acme.meet.jitsi
+      XMPP_HIDDEN_DOMAIN: hidden.acme.meet.jitsi
+      TZ: America/Lima
+      JICOFO_AUTH_USER: ${JICOFO_AUTH_USER:-focus}
+      JICOFO_AUTH_PASSWORD: ${JICOFO_AUTH_PASSWORD:?Define JICOFO_AUTH_PASSWORD}
+      JICOFO_COMPONENT_SECRET: ${JICOFO_COMPONENT_SECRET:?Define JICOFO_COMPONENT_SECRET}
+      JVB_AUTH_USER: ${JVB_AUTH_USER:-jvb}
+      JVB_AUTH_PASSWORD: ${JVB_AUTH_PASSWORD:?Define JVB_AUTH_PASSWORD}
+    networks:
+      srv:
+        aliases: [ xmpp.acme.meet.jitsi ]
+  jicofo-acme:
+    image: ghcr.io/jitsi/jicofo:stable-11509
+    container_name: nexo-jicofo-acme
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: https://${NEXO_HOST:-localhost}:8443/acme/jitsi
+      XMPP_SERVER: jitsi-prosody-acme
+      XMPP_DOMAIN: acme.meet.jitsi
+      XMPP_MUC_DOMAIN: muc.acme.meet.jitsi
+      XMPP_INTERNAL_MUC_DOMAIN: internal-muc.acme.meet.jitsi
+      XMPP_HIDDEN_DOMAIN: hidden.acme.meet.jitsi
+      TZ: America/Lima
+      JICOFO_AUTH_PASSWORD: ${JICOFO_AUTH_PASSWORD:?Define JICOFO_AUTH_PASSWORD}
+      JICOFO_COMPONENT_SECRET: ${JICOFO_COMPONENT_SECRET:?Define JICOFO_COMPONENT_SECRET}
+    depends_on: [ jitsi-prosody-acme ]
+    networks: [ srv ]
+  jvb-acme:
+    image: ghcr.io/jitsi/jvb:stable-11509
+    container_name: nexo-jvb-acme
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: https://${NEXO_HOST:-localhost}:8443/acme/jitsi
+      XMPP_SERVER: jitsi-prosody-acme
+      XMPP_DOMAIN: acme.meet.jitsi
+      XMPP_MUC_DOMAIN: muc.acme.meet.jitsi
+      XMPP_INTERNAL_MUC_DOMAIN: internal-muc.acme.meet.jitsi
+      XMPP_HIDDEN_DOMAIN: hidden.acme.meet.jitsi
+      TZ: America/Lima
+      DOCKER_HOST_ADDRESS: ${NEXO_HOST:-127.0.0.1}
+      JVB_ADVERTISE_IPS: ${NEXO_HOST:-127.0.0.1}
+      JVB_PORT: "10001"
+      JVB_AUTH_PASSWORD: ${JVB_AUTH_PASSWORD:?Define JVB_AUTH_PASSWORD}
+    ports:
+      - "10001:10001/udp"
+    depends_on: [ jitsi-prosody-acme ]
+    networks: [ srv ]
+  synapse-beta:
+    image: matrixdotorg/synapse:latest
+    container_name: nexo-synapse-beta
+    restart: unless-stopped
+    entrypoint: [ "/bin/sh", "/nexo/tenant-entrypoint.sh" ]
+    environment:
+      NEXO_URL: https://${NEXO_HOST:-localhost}:8443
+      KC_SYNAPSE_CLIENT_SECRET: ${KC_SYNAPSE_CLIENT_SECRET:?}
+      SSL_CERT_FILE: /data/nexo-ca-bundle.pem
+      REQUESTS_CA_BUNDLE: /data/nexo-ca-bundle.pem
+    volumes:
+      - synapse_beta_data:/data
+      - ./tenants/beta/matrix/homeserver.yaml.template:/template/homeserver.yaml:ro
+      - ./matrix/tenant-entrypoint.sh:/nexo/tenant-entrypoint.sh:ro
+      - ./certs/server.crt:/certs/server.crt:ro
+    depends_on: [ keycloak ]
+    networks: [ srv ]
+  element-beta:
+    image: vectorim/element-web:latest
+    container_name: nexo-element-beta
+    restart: unless-stopped
+    user: root
+    entrypoint: [ "/bin/sh", "/nexo/tenant-element-entrypoint.sh" ]
+    environment:
+      NEXO_URL: https://${NEXO_HOST:-localhost}:8443
+    volumes:
+      - ./tenants/beta/matrix/element-config.json.template:/template/config.json:ro
+      - ./matrix/tenant-element-entrypoint.sh:/nexo/tenant-element-entrypoint.sh:ro
+    depends_on: [ synapse-beta ]
+    networks: [ srv ]
+  jitsi-web-beta:
+    image: ghcr.io/jitsi/web:stable-11509
+    container_name: nexo-jitsi-web-beta
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: https://${NEXO_HOST:-localhost}:8443/beta/jitsi
+      XMPP_SERVER: jitsi-prosody-beta
+      XMPP_DOMAIN: beta.meet.jitsi
+      XMPP_MUC_DOMAIN: muc.beta.meet.jitsi
+      XMPP_INTERNAL_MUC_DOMAIN: internal-muc.beta.meet.jitsi
+      XMPP_HIDDEN_DOMAIN: hidden.beta.meet.jitsi
+      TZ: America/Lima
+      HTTP_PORT: "8000"
+      HTTPS_PORT: "8443"
+    depends_on: [ jitsi-prosody-beta ]
+    networks: [ srv ]
+  jitsi-prosody-beta:
+    image: ghcr.io/jitsi/prosody:stable-11509
+    container_name: nexo-jitsi-prosody-beta
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: https://${NEXO_HOST:-localhost}:8443/beta/jitsi
+      XMPP_SERVER: jitsi-prosody-beta
+      XMPP_DOMAIN: beta.meet.jitsi
+      XMPP_MUC_DOMAIN: muc.beta.meet.jitsi
+      XMPP_INTERNAL_MUC_DOMAIN: internal-muc.beta.meet.jitsi
+      XMPP_HIDDEN_DOMAIN: hidden.beta.meet.jitsi
+      TZ: America/Lima
+      JICOFO_AUTH_USER: ${JICOFO_AUTH_USER:-focus}
+      JICOFO_AUTH_PASSWORD: ${JICOFO_AUTH_PASSWORD:?Define JICOFO_AUTH_PASSWORD}
+      JICOFO_COMPONENT_SECRET: ${JICOFO_COMPONENT_SECRET:?Define JICOFO_COMPONENT_SECRET}
+      JVB_AUTH_USER: ${JVB_AUTH_USER:-jvb}
+      JVB_AUTH_PASSWORD: ${JVB_AUTH_PASSWORD:?Define JVB_AUTH_PASSWORD}
+    networks:
+      srv:
+        aliases: [ xmpp.beta.meet.jitsi ]
+  jicofo-beta:
+    image: ghcr.io/jitsi/jicofo:stable-11509
+    container_name: nexo-jicofo-beta
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: https://${NEXO_HOST:-localhost}:8443/beta/jitsi
+      XMPP_SERVER: jitsi-prosody-beta
+      XMPP_DOMAIN: beta.meet.jitsi
+      XMPP_MUC_DOMAIN: muc.beta.meet.jitsi
+      XMPP_INTERNAL_MUC_DOMAIN: internal-muc.beta.meet.jitsi
+      XMPP_HIDDEN_DOMAIN: hidden.beta.meet.jitsi
+      TZ: America/Lima
+      JICOFO_AUTH_PASSWORD: ${JICOFO_AUTH_PASSWORD:?Define JICOFO_AUTH_PASSWORD}
+      JICOFO_COMPONENT_SECRET: ${JICOFO_COMPONENT_SECRET:?Define JICOFO_COMPONENT_SECRET}
+    depends_on: [ jitsi-prosody-beta ]
+    networks: [ srv ]
+  jvb-beta:
+    image: ghcr.io/jitsi/jvb:stable-11509
+    container_name: nexo-jvb-beta
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: https://${NEXO_HOST:-localhost}:8443/beta/jitsi
+      XMPP_SERVER: jitsi-prosody-beta
+      XMPP_DOMAIN: beta.meet.jitsi
+      XMPP_MUC_DOMAIN: muc.beta.meet.jitsi
+      XMPP_INTERNAL_MUC_DOMAIN: internal-muc.beta.meet.jitsi
+      XMPP_HIDDEN_DOMAIN: hidden.beta.meet.jitsi
+      TZ: America/Lima
+      DOCKER_HOST_ADDRESS: ${NEXO_HOST:-127.0.0.1}
+      JVB_ADVERTISE_IPS: ${NEXO_HOST:-127.0.0.1}
+      JVB_PORT: "10002"
+      JVB_AUTH_PASSWORD: ${JVB_AUTH_PASSWORD:?Define JVB_AUTH_PASSWORD}
+    ports:
+      - "10002:10002/udp"
+    depends_on: [ jitsi-prosody-beta ]
+    networks: [ srv ]
+
+volumes:
+  synapse_acme_data:
+  synapse_beta_data:

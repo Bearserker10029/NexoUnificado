@@ -8,7 +8,7 @@ la misma plataforma sin una cuenta adicional.
 ## Requisitos
 
 - Docker Desktop con WSL2.
-- Puertos libres: `8081` y `8443` TCP, `10000` y `20000–20199` UDP.
+- Puertos libres: `8081` y `8443` TCP, `10000–10002` y `20000–20199` UDP.
 - Los servicios web no publican puertos independientes: todo pasa por Nginx.
 
 ## Configuración y arranque
@@ -146,3 +146,27 @@ Asterisk es GPLv2+; Keycloak usa Apache-2.0; Nextcloud Server y `user_oidc` usan
 AGPLv3+; MariaDB usa GPLv2; ClamAV usa GPLv2. Tryit-JsSIP y JsSIP conservan su
 licencia MIT en `voip/LICENSE` y `voip/ATTRIBUTION.txt`. Flask, Requests, PyJWT y
 Gunicorn mantienen sus licencias permisivas en la imagen `voip-gateway`.
+
+## Modo multiempresa (H10)
+
+`docker-compose.override.yml` incorpora automáticamente ACME (`1xxx`) y BETA
+(`2xxx`) sin eliminar el modo tradicional. El archivo
+`docker-compose.multiempresa.yml` conserva una copia equivalente por
+compatibilidad; no es necesario indicarlo con `-f`. Element/Matrix gestiona las
+llamadas 1:1 dentro de cada empresa; Asterisk solo interconecta empresas mediante
+`9 + extensión`; Jitsi mantiene las videoconferencias grupales aisladas.
+
+Para consultar la arquitectura, el alta de empresas con un solo comando, el
+despliegue y el estado real de las evidencias, consulta
+[el avance del hito H10](evidencias/h10/avance-hito.md).
+
+```powershell
+python scripts/nexo-tenant.py render
+python -m unittest tests.test_multiempresa -v
+docker compose config --quiet
+docker compose up -d --build
+```
+
+`scripts/new-secrets.ps1` genera los secretos SIP de ACME y BETA que faltan en
+`.env`. El CDR interempresas queda en Asterisk bajo
+`/var/log/asterisk/cdr-custom/interempresas.csv`.

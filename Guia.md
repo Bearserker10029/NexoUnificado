@@ -8,7 +8,7 @@ comandos en **PowerShell**, desde la raíz del repositorio, donde se encuentra
 
 - Docker Desktop para Windows con WSL2, instalado y en ejecución.
 - Git para obtener el repositorio.
-- Puertos libres: `8081` y `8443` TCP; `10000` y `20000–20199` UDP.
+- Puertos libres: `8081` y `8443` TCP; `10000–10002` y `20000–20199` UDP.
 - No detener Docker Desktop mientras se estén levantando los servicios.
 
 Comprueba que Docker responde antes de continuar:
@@ -48,13 +48,20 @@ existan; no vuelvas a copiar `.env.example` sobre un `.env` ya configurado:
 ```
 
 `.env` no debe compartirse ni subirse a Git. Las contraseñas de los usuarios
-finales tampoco van ahí: sus cuentas se crean posteriormente en Keycloak.
+finales tampoco van ahí: sus cuentas se crean posteriormente en Keycloak. Las
+variables `H10_*_PASSWORD` que genera el script son **solo credenciales de
+laboratorio para las pruebas automatizadas**; no deben reutilizarse en un entorno
+real ni tratarse como cuentas de usuarios finales.
 
 ## 3. Levantar todos los servicios
 
-Con Docker Desktop en ejecución:
+El repositorio incluye `docker-compose.override.yml`. Docker Compose carga este
+archivo automáticamente junto con `docker-compose.yml`, por lo que el despliegue
+tradicional y las empresas ACME/BETA se levantan juntos **sin opciones `-f`
+adicionales**. Con Docker Desktop en ejecución:
 
 ```powershell
+docker compose config --quiet
 docker compose up -d --build
 docker compose ps --all
 ```
@@ -64,9 +71,9 @@ y ejecuta las tareas de inicialización. Espera a que finalicen antes de probar
 el acceso.
 
 Las tareas `certs`, `synapse-init`, `synapse-oidc-patch`, `nextcloud-init`,
-`nextcloud-menu-init` y `host-update` deben terminar con `Exited (0)`: es su
-estado normal. Los servicios persistentes deben quedar activos y, cuando tienen
-comprobación de salud, `healthy`.
+`nextcloud-menu-init`, `nextcloud-tenants-init` y `host-update` deben terminar
+con `Exited (0)`: es su estado normal. Los servicios persistentes deben quedar
+activos y, cuando tienen comprobación de salud, `healthy`.
 
 Si alguna inicialización falla, revisa su salida antes de repetir el arranque:
 
@@ -75,6 +82,7 @@ docker compose logs certs
 docker compose logs synapse-oidc-patch
 docker compose logs nextcloud-init
 docker compose logs nextcloud-menu-init
+docker compose logs nextcloud-tenants-init
 docker compose logs host-update
 ```
 
@@ -112,29 +120,45 @@ PowerShell **como administrador**:
 
 ```powershell
 netsh advfirewall firewall add rule name="Nexo HTTPS" dir=in action=allow protocol=TCP localport=8443 profile=any
-netsh advfirewall firewall add rule name="Nexo JVB" dir=in action=allow protocol=UDP localport=10000 profile=any
+netsh advfirewall firewall add rule name="Nexo JVB" dir=in action=allow protocol=UDP localport=10000-10002 profile=any
 netsh advfirewall firewall add rule name="Nexo WebRTC" dir=in action=allow protocol=UDP localport=20000-20199 profile=any
 ```
 
 Los demás equipos deben usar la IP configurada en `NEXO_HOST`; no uses
 `127.0.0.1` ni `localhost` desde un cliente remoto.
 
-## 6. Crear usuarios
+## 6. Crear usuarios por empresa
 
 1. Abre `https://TU_IP:8443/keycloak/admin/`.
 2. Entra con `KC_ADMIN_USER` y `KC_ADMIN_PASSWORD` definidos en `.env`.
-3. Selecciona el realm `nexo`.
+3. Selecciona el realm de la empresa: **`nexo-acme`** para ACME o **`nexo-beta`**
+   para BETA. El realm `nexo` se conserva para el despliegue tradicional.
 4. Entra en **Users → Add user**, completa los datos y habilita la cuenta.
 5. En **Credentials**, asigna una contraseña temporal o definitiva.
+6. En **Groups**, agrega el usuario únicamente a los grupos de los servicios que
+   tenga contratados: `acme-servicio-*` o `beta-servicio-*`. Por ejemplo,
+   `acme-servicio-chat`, `acme-servicio-telefonia` y
+   `acme-servicio-videoconferencia`.
 
 Nextcloud, Matrix y la extensión de telefonía se aprovisionan automáticamente en
 el primer acceso. No crees cuentas independientes dentro de Element o Asterisk.
+Las identidades y el directorio Matrix están separados por empresa.
 
 ## 7. Primer acceso y configuración de Chat
 
-Abre `https://TU_IP:8443/` e inicia sesión con la cuenta creada en Keycloak.
-Desde Nextcloud puedes abrir Telefonía, Videoconferencia y Chat bajo la misma
-IP y el mismo puerto.
+Accesos del laboratorio:
+
+| Empresa | Portal | Element | Jitsi |
+|---|---|---|---|
+| ACME | `https://TU_IP:8443/acme/` | `https://TU_IP:8443/acme/element/` | `https://TU_IP:8443/acme/jitsi/` |
+| BETA | `https://TU_IP:8443/beta/` | `https://TU_IP:8443/beta/element/` | `https://TU_IP:8443/beta/jitsi/` |
+| Tradicional | `https://TU_IP:8443/` | `https://TU_IP:8443/element/` | `https://TU_IP:8443/jitsi/` |
+
+En el portal de cada empresa, selecciona su proveedor de identidad cuando
+Nextcloud lo solicite. Los enlaces visibles dependen de los grupos asignados en
+Keycloak. Las llamadas 1:1 internas se realizan desde Element; entre empresas, la
+telefonía marca `9 + extensión` y pasa por Asterisk. Las salas Jitsi permanecen
+separadas por empresa.
 
 Chat utiliza cifrado extremo a extremo (E2EE). Keycloak verifica la cuenta,
 pero cada dispositivo de Element tiene sus propias claves criptográficas. En la

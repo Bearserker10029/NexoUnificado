@@ -59,6 +59,10 @@ services:
       - ./asterisk/rtp.conf:/etc/asterisk/rtp.conf:ro
       - ./asterisk/modules.conf:/etc/asterisk/modules.conf:ro
       - ./asterisk/logger.conf:/etc/asterisk/logger.conf:ro
+      - ./asterisk/cdr.conf:/etc/asterisk/cdr.conf:ro
+      - ./asterisk/cdr_custom.conf:/etc/asterisk/cdr_custom.conf:ro
+      - ./asterisk/tenants-extensions.conf:/etc/asterisk/tenants-extensions.conf:ro
+      - ./tenants:/etc/asterisk/tenants:ro
       - ./certs:/certs:ro
       - asterisk_dynamic:/etc/asterisk/dynamic
       - asterisk_lib:/var/lib/asterisk

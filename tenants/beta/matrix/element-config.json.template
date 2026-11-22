@@ -1,0 +1,19 @@
+{
+  "default_server_config": {
+    "m.homeserver": {
+      "base_url": "${NEXO_URL}/beta",
+      "server_name": "beta.nexo.local"
+    }
+  },
+  "brand": "Nexo · BETA",
+  "disable_guests": true,
+  "disable_custom_urls": true,
+  "force_verification": true,
+  "sso_redirect_options": {
+    "immediate": true
+  },
+  "show_labs_settings": false,
+  "features": {
+    "feature_group_calls": false
+  }
+}

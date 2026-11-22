@@ -1,0 +1,82 @@
+[ Context 'tenant-acme' created by 'pbx_config' ]
+  '_1XXX' =>        1. NoOp(Llamada interna de acme: ${CALLERID(num)} -> ${EXTEN}) [tenants-extensions.conf:3]
+                    2. Dial(PJSIP/${EXTEN},30)                    [tenants-extensions.conf:4]
+                    3. Hangup()                                   [tenants-extensions.conf:5]
+  '_9ZXXX' =>       1. Set(TENANT_ORIGEN=acme)                    [tenants-extensions.conf:8]
+                    2. Set(TENANT_PREFIJO=1)                      [tenants-extensions.conf:9]
+                    3. GotoIf($["${EXTEN:1:1}" = "${TENANT_PREFIJO}"]?misma-empresa) [tenants-extensions.conf:10]
+                    4. Set(CHANNEL(accountcode)=acme)             [tenants-extensions.conf:11]
+                    5. Set(CHANNEL(userfield)=origen=${CALLERID(num)},destino=${EXTEN:1},tipo=interempresas) [tenants-extensions.conf:12]
+                    6. Set(CDR(tenant_origen)=acme)               [tenants-extensions.conf:13]
+                    7. Set(CDR(origen)=${CALLERID(num)})          [tenants-extensions.conf:14]
+                    8. Set(CDR(destino)=${EXTEN:1})               [tenants-extensions.conf:15]
+                    9. Set(CDR(tipo)=interempresas)               [tenants-extensions.conf:16]
+                    10. Log(NOTICE,INTEREMPRESA origen=acme/${CALLERID(num)} destino=${EXTEN:1}) [tenants-extensions.conf:17]
+                    11. Dial(PJSIP/${EXTEN:1},30)                 [tenants-extensions.conf:18]
+                    12. Hangup()                                  [tenants-extensions.conf:19]
+     [misma-empresa] 13. Log(WARNING,Ruta interempresas innecesaria denegada: ${EXTEN}) [tenants-extensions.conf:20]
+                    14. Playback(invalid)                         [tenants-extensions.conf:21]
+                    15. Hangup(21)                                [tenants-extensions.conf:22]
+  '_X.' =>          1. Log(WARNING,Destino no autorizado en acme desde ${CALLERID(num)}: ${EXTEN}) [tenants-extensions.conf:25]
+                    2. Playback(invalid)                          [tenants-extensions.conf:26]
+                    3. Hangup(21)                                 [tenants-extensions.conf:27]
+
+-= 3 extensions (21 priorities) in 1 context. =-
+[ Context 'tenant-beta' created by 'pbx_config' ]
+  '_2XXX' =>        1. NoOp(Llamada interna de beta: ${CALLERID(num)} -> ${EXTEN}) [tenants-extensions.conf:30]
+                    2. Dial(PJSIP/${EXTEN},30)                    [tenants-extensions.conf:31]
+                    3. Hangup()                                   [tenants-extensions.conf:32]
+  '_9ZXXX' =>       1. Set(TENANT_ORIGEN=beta)                    [tenants-extensions.conf:35]
+                    2. Set(TENANT_PREFIJO=2)                      [tenants-extensions.conf:36]
+                    3. GotoIf($["${EXTEN:1:1}" = "${TENANT_PREFIJO}"]?misma-empresa) [tenants-extensions.conf:37]
+                    4. Set(CHANNEL(accountcode)=beta)             [tenants-extensions.conf:38]
+                    5. Set(CHANNEL(userfield)=origen=${CALLERID(num)},destino=${EXTEN:1},tipo=interempresas) [tenants-extensions.conf:39]
+                    6. Set(CDR(tenant_origen)=beta)               [tenants-extensions.conf:40]
+                    7. Set(CDR(origen)=${CALLERID(num)})          [tenants-extensions.conf:41]
+                    8. Set(CDR(destino)=${EXTEN:1})               [tenants-extensions.conf:42]
+                    9. Set(CDR(tipo)=interempresas)               [tenants-extensions.conf:43]
+                    10. Log(NOTICE,INTEREMPRESA origen=beta/${CALLERID(num)} destino=${EXTEN:1}) [tenants-extensions.conf:44]
+                    11. Dial(PJSIP/${EXTEN:1},30)                 [tenants-extensions.conf:45]
+                    12. Hangup()                                  [tenants-extensions.conf:46]
+     [misma-empresa] 13. Log(WARNING,Ruta interempresas innecesaria denegada: ${EXTEN}) [tenants-extensions.conf:47]
+                    14. Playback(invalid)                         [tenants-extensions.conf:48]
+                    15. Hangup(21)                                [tenants-extensions.conf:49]
+  '_X.' =>          1. Log(WARNING,Destino no autorizado en beta desde ${CALLERID(num)}: ${EXTEN}) [tenants-extensions.conf:52]
+                    2. Playback(invalid)                          [tenants-extensions.conf:53]
+                    3. Hangup(21)                                 [tenants-extensions.conf:54]
+
+-= 3 extensions (21 priorities) in 1 context. =-
+
+ Endpoint:  <Endpoint/CID.....................................>  <State.....>  <Channels.>
+    I/OAuth:  <AuthId/UserName...........................................................>
+        Aor:  <Aor............................................>  <MaxContact>
+      Contact:  <Aor/ContactUri..........................> <Hash....> <Status> <RTT(ms)..>
+  Transport:  <TransportId........>  <Type>  <cos>  <tos>  <BindAddress..................>
+   Identify:  <Identify/Endpoint.........................................................>
+        Match:  <criteria.........................>
+    Channel:  <ChannelId......................................>  <State.....>  <Time.....>
+        Exten: <DialedExten...........>  CLCID: <ConnectedLineCID.......>
+==========================================================================================
+
+ Endpoint:  1001/1001                                            Unavailable   0 of inf
+     InAuth:  auth-1001/1001
+        Aor:  1001                                               1
+  Transport:  transport-tls             tls      0      0  0.0.0.0:5061
+
+ Endpoint:  2001/2001                                            Unavailable   0 of inf
+     InAuth:  auth-2001/2001
+        Aor:  2001                                               1
+  Transport:  transport-tls             tls      0      0  0.0.0.0:5061
+
+ Endpoint:  2632/2632                                            Unavailable   0 of 1
+     InAuth:  auth-2632/2632
+        Aor:  2632                                               3
+  Transport:  transport-ws               ws      0      0  0.0.0.0:8088
+
+ Endpoint:  2646/2646                                            Unavailable   0 of 1
+     InAuth:  auth-2646/2646
+        Aor:  2646                                               3
+  Transport:  transport-ws               ws      0      0  0.0.0.0:8088
+
+
+Objects found: 4

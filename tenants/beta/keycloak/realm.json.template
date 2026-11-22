@@ -1,0 +1,110 @@
+{
+  "realm": "nexo-beta",
+  "enabled": true,
+  "displayName": "BETA",
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "groups": [
+    {
+      "name": "beta-servicio-chat"
+    },
+    {
+      "name": "beta-servicio-telefonia"
+    },
+    {
+      "name": "beta-servicio-videoconferencia"
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "nextcloud",
+      "name": "Nextcloud beta",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "${KC_NEXTCLOUD_CLIENT_SECRET}",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": [
+        "${NEXO_URL}/docs/apps/user_oidc/code*"
+      ],
+      "webOrigins": [
+        "${NEXO_URL}"
+      ],
+      "rootUrl": "${NEXO_URL}",
+      "baseUrl": "/docs/",
+      "attributes": {
+        "post.logout.redirect.uris": "${NEXO_URL}/docs/*"
+      },
+      "protocolMappers": [
+        {
+          "name": "grupos-servicios",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "config": {
+            "claim.name": "groups",
+            "full.path": "false",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "nexo-portal",
+      "name": "Servicios Nexo beta",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "${KC_VOIP_CLIENT_SECRET}",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": [
+        "${NEXO_URL}/voip-sso/beta/callback"
+      ],
+      "webOrigins": [
+        "${NEXO_URL}"
+      ],
+      "rootUrl": "${NEXO_URL}/beta/",
+      "attributes": {
+        "post.logout.redirect.uris": "${NEXO_URL}/beta/*",
+        "pkce.code.challenge.method": "S256"
+      },
+      "protocolMappers": [
+        {
+          "name": "grupos-servicios",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "config": {
+            "claim.name": "groups",
+            "full.path": "false",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "synapse",
+      "name": "Synapse beta",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "${KC_SYNAPSE_CLIENT_SECRET}",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": [
+        "${NEXO_URL}/beta/_synapse/client/oidc/callback"
+      ],
+      "webOrigins": [
+        "${NEXO_URL}"
+      ],
+      "attributes": {
+        "post.logout.redirect.uris": "+"
+      }
+    }
+  ]
+}
