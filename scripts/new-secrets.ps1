@@ -1,20 +1,20 @@
-# Completa los secretos locales que falten. Conserva los valores existentes.
+# Completa los secretos tecnicos locales que falten. Conserva los existentes.
 $ErrorActionPreference = "Stop"
 function New-Secret([string]$prefix) {
     $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
-    $bytes = New-Object byte[] 24
+    $bytes = New-Object byte[] 32
     $rng.GetBytes($bytes)
     $rng.Dispose()
     $value = [Convert]::ToBase64String($bytes).TrimEnd("=").Replace("+", "A").Replace("/", "B")
     return "${prefix}_${value}"
 }
 $required = [ordered]@{
-    GRAFANA_USER = "admin"
-    GRAFANA_PASSWORD = (New-Secret "NexoGrafana")
-    SIP_PASSWORD_100 = (New-Secret "NexoSip100")
-    SIP_PASSWORD_101 = (New-Secret "NexoSip101")
-    WEBRTC_PASSWORD_100 = (New-Secret "NexoWeb100")
-    WEBRTC_PASSWORD_101 = (New-Secret "NexoWeb101")
+    KC_VOIP_CLIENT_SECRET = (New-Secret "NexoVoipOIDC")
+    VOIP_SESSION_SECRET = (New-Secret "NexoVoipSession")
+    VOIP_AMI_SECRET = (New-Secret "NexoVoipAMI")
+    JICOFO_AUTH_PASSWORD = (New-Secret "NexoJicofo")
+    JICOFO_COMPONENT_SECRET = (New-Secret "NexoJicofoComponent")
+    JVB_AUTH_PASSWORD = (New-Secret "NexoJVB")
 }
 $path = Join-Path (Get-Location) ".env"
 $lines = [System.Collections.Generic.List[string]]::new()
@@ -30,7 +30,7 @@ foreach ($entry in $required.GetEnumerator()) {
 }
 if ($added -gt 0) {
     [System.IO.File]::WriteAllLines($path, $lines, [System.Text.UTF8Encoding]::new($false))
-    Write-Host "Se agregaron $added valores a .env. No lo compartas ni lo subas a Git."
+    Write-Host "Se agregaron $added secretos tecnicos a .env. No lo compartas ni lo subas a Git."
 } else {
-    Write-Host "El archivo .env ya contiene todos los valores; no se modifica."
+    Write-Host "El archivo .env ya contiene todos los secretos tecnicos; no se modifica."
 }

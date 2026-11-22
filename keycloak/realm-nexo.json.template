@@ -10,34 +10,6 @@
   "otpPolicyDigits": 6,
   "otpPolicyPeriod": 30,
   "requiredCredentials": ["password"],
-  "users": [
-    {
-      "username": "${KC_TEST_USER1_USERNAME}",
-      "enabled": true,
-      "emailVerified": true,
-      "email": "${KC_TEST_USER1_USERNAME}@nexo.local",
-      "firstName": "Usuario",
-      "lastName": "Uno",
-      "credentials": [
-        { "type": "password", "value": "${KC_TEST_USER1_PASSWORD}", "temporary": false }
-      ],
-      "requiredActions": ["CONFIGURE_TOTP"],
-      "realmRoles": ["offline_access", "uma_authorization"]
-    },
-    {
-      "username": "${KC_TEST_USER2_USERNAME}",
-      "enabled": true,
-      "emailVerified": true,
-      "email": "${KC_TEST_USER2_USERNAME}@nexo.local",
-      "firstName": "Usuario",
-      "lastName": "Dos",
-      "credentials": [
-        { "type": "password", "value": "${KC_TEST_USER2_PASSWORD}", "temporary": false }
-      ],
-      "requiredActions": ["CONFIGURE_TOTP"],
-      "realmRoles": ["offline_access", "uma_authorization"]
-    }
-  ],
   "clients": [
     {
       "clientId": "nextcloud",
@@ -65,10 +37,28 @@
       "secret": "${KC_SYNAPSE_CLIENT_SECRET}",
       "standardFlowEnabled": true,
       "directAccessGrantsEnabled": false,
-      "redirectUris": ["http://${HOST_IP}:8008/_synapse/client/oidc/callback"],
-      "webOrigins": ["${NEXO_URL}", "http://${HOST_IP}:8008"],
+      "redirectUris": ["${NEXO_URL}/_synapse/client/oidc/callback"],
+      "webOrigins": ["${NEXO_URL}"],
       "attributes": {
         "post.logout.redirect.uris": "+"
+      }
+    },
+    {
+      "clientId": "voip",
+      "name": "Telefonia WebRTC",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "${KC_VOIP_CLIENT_SECRET}",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": ["${NEXO_URL}/voip-sso/callback"],
+      "webOrigins": ["${NEXO_URL}"],
+      "rootUrl": "${NEXO_URL}/voip/",
+      "baseUrl": "/voip/",
+      "attributes": {
+        "post.logout.redirect.uris": "${NEXO_URL}/voip/*",
+        "pkce.code.challenge.method": "S256"
       }
     }
   ]

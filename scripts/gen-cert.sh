@@ -1,14 +1,20 @@
 #!/bin/sh
-# Genera un certificado TLS autofirmado para el laboratorio (solo si no existe).
-# HOST_IP define la IP de la red interna; por defecto 127.0.0.1.
+# Genera un certificado TLS autofirmado para el laboratorio. Lo regenera si
+# cambia HOST_IP, porque los navegadores validan la IP mediante el campo SAN.
 set -e
-if [ -f /certs/server.crt ] && [ -f /certs/server.key ]; then
-  echo "Certificado existente: no se regenera."
+HOST_IP=${HOST_IP:-127.0.0.1}
+apk add --no-cache openssl >/dev/null
+
+if [ -f /certs/server.crt ] && [ -f /certs/server.key ] \
+  && openssl x509 -in /certs/server.crt -noout -ext subjectAltName \
+    | grep -F "IP Address:${HOST_IP}" >/dev/null 2>&1; then
+  echo "Certificado existente: ya incluye ${HOST_IP}; no se regenera."
   exit 0
 fi
-apk add --no-cache openssl >/dev/null
+
+echo "Generando certificado con SAN para ${HOST_IP}..."
 openssl req -x509 -newkey rsa:2048 -nodes -days 365 \
   -keyout /certs/server.key -out /certs/server.crt \
   -subj "/O=Nexo Unificado/CN=nexo.local" \
-  -addext "subjectAltName=DNS:localhost,DNS:nexo.local,IP:127.0.0.1,IP:${HOST_IP:-127.0.0.1}"
-echo "Certificado generado en ./certs (SAN incluye ${HOST_IP:-127.0.0.1})"
+  -addext "subjectAltName=DNS:localhost,DNS:nexo.local,IP:127.0.0.1,IP:${HOST_IP}"
+echo "Certificado actualizado en ./certs (SAN incluye ${HOST_IP})."

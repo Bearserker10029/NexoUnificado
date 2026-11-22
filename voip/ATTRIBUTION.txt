@@ -9,8 +9,10 @@ Adaptaciones de Nexo Unificado:
 - Dominio SIP nexo.local, sin STUN ni Callstats externos.
 - Session Timers desactivado y rtcpMuxPolicy=require.
 - Sin depuración que exponga credenciales.
-- Las preferencias se conservan sin almacenar la contraseña SIP.
+- La configuración individual se obtiene tras OIDC y se conserva localmente
+  para mantener el registro del softphone en este navegador.
 - Scripts en línea extraídos para funcionar con la CSP de Nginx.
 
-Las credenciales 1100 y 1101 son perfiles WebRTC de las extensiones
-lógicas 100 y 101. No son extensiones adicionales para marcación interna.
+El gateway asigna a cada identidad de Keycloak una extensión del rango
+2000–2999 y una clave SIP individual. No existen perfiles fijos 100/101
+ni 1100/1101.
