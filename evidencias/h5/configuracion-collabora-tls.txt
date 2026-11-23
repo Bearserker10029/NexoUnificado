@@ -1,0 +1,16 @@
+# 2026-11-23T09:47:28-05:00 Collabora detras de Nginx con TLS
+## GET https://127.0.0.1:8443/hosting/discovery
+HTTP 200 tls=0 (0=ok, autofirmado => 18/19)
+<wopi-discovery>
+    <net-zone name="external-https">
+
+        <!-- Writer documents -->
+        <app favIconUrl="https://127.0.0.1:8443/browser/38e5d6ebeb/images/x-office-document.svg" name="writer">
+            <action default="true" ext="sxw" name="view" urlsrc="https://127.0.0.1:8443/browser/38e
+## puertos publicados de collabora (debe estar vacio)
+(vacio)
+## config richdocuments
+wopi_url=http://collabora:9980
+public_wopi_url=https://127.0.0.1:8443
+wopi_callback_url=http://proxy:8082
+richdocuments 12.0.2
