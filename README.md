@@ -148,6 +148,15 @@ AGPLv3+; MariaDB usa GPLv2; ClamAV usa GPLv2. Tryit-JsSIP y JsSIP conservan su
 licencia MIT en `voip/LICENSE` y `voip/ATTRIBUTION.txt`. Flask, Requests, PyJWT y
 Gunicorn mantienen sus licencias permisivas en la imagen `voip-gateway`.
 
+| Componente del asistente | Licencia |
+| --- | --- |
+| [Ollama](https://github.com/ollama/ollama/blob/v0.40.17/LICENSE) | MIT |
+| [Pesos Qwen2.5 1.5B Q4_K_M](https://ollama.com/library/qwen2.5:1.5b) | Apache-2.0 |
+| [AIRI Stage Web](https://github.com/moeru-ai/airi/blob/v0.15.4/LICENSE) | MIT |
+| [Pocket TTS](https://github.com/kyutai-labs/pocket-tts/blob/v3.3.0/LICENSE) | MIT |
+| [Pesos de Pocket TTS](https://huggingface.co/kyutai/pocket-tts-without-voice-cloning) | CC BY 4.0 |
+| Gemini API | Servicio propietario opcional |
+
 ## Modo multiempresa (H10)
 
 `docker-compose.override.yml` incorpora automáticamente ACME (`1xxx`) y BETA

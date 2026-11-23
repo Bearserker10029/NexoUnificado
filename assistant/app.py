@@ -17,7 +17,7 @@ import requests
 from flask import Flask, Response, abort, jsonify, redirect, render_template, request, send_from_directory, session
 from itsdangerous import BadData, URLSafeTimedSerializer
 
-from providers import PROVIDERS, ProviderError
+from providers import ProviderError, provider_for
 
 PREFIX = "/airi"
 CLIENT_ID = "nexo-assistant"
@@ -113,22 +113,21 @@ def health():
 @app.get(f"{PREFIX}/")
 def index():
     tenant = request.args.get("tenant", "")
-    company = tenants().get(tenant) if tenant else {}
-    if company is None:
+    company = tenants().get(tenant)
+    if tenant and company is None:
         abort(404)
     if not user_for(tenant):
         return begin_login(tenant)
-    provider_name = company.get("ai_provider")
-    provider = PROVIDERS.get(provider_name) if isinstance(provider_name, str) else None
+    provider = provider_for(tenant, company)
     status = ""
     if not provider:
         status = "El asistente está deshabilitado para tu empresa."
     elif not provider.ready:
-        status = "El equipo de Nexo todavía no ha configurado Gemini."
+        status = "El proveedor de IA todavía no está configurado."
     elif (STAGE / "index.html").is_file():
         return redirect(f"{PREFIX}/stage/?{urlencode({'tenant': tenant})}#/")
     return render_template(
-        "index.html", tenant=tenant, company=company.get("display_name", "Nexo Unificado"),
+        "index.html", tenant=tenant, company=(company or {}).get("display_name", "Nexo Unificado"),
         status=status,
     )
 
@@ -149,9 +148,7 @@ def stage_index():
     user = user_for(tenant)
     if not user:
         return redirect(assistant_url(tenant))
-    company = tenants().get(tenant, {})
-    provider_name = company.get("ai_provider")
-    provider = PROVIDERS.get(provider_name) if isinstance(provider_name, str) else None
+    provider = provider_for(tenant, tenants().get(tenant))
     if not provider or not provider.ready:
         return redirect(assistant_url(tenant))
     index_file = STAGE / "index.html"
@@ -225,9 +222,7 @@ def api_access(tenant):
         return None, None, (jsonify(error="La sesión caducó. Vuelve a abrir el asistente."), 401)
     if request.method == "POST" and (request.headers.get("Origin") != NEXO_URL or not request.is_json):
         return None, None, (jsonify(error="Origen o formato inválido."), 403)
-    company = tenants().get(tenant, {})
-    provider_name = company.get("ai_provider")
-    provider = PROVIDERS.get(provider_name) if isinstance(provider_name, str) else None
+    provider = provider_for(tenant, tenants().get(tenant))
     if not provider:
         return None, None, (jsonify(error="El asistente está deshabilitado para esta empresa."), 403)
     if not provider.ready:

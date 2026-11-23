@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TENANTS = ROOT / "tenants"
 REGISTRY = TENANTS / "registry.json"
 SERVICES = {"chat", "telefonia", "videoconferencia"}
-AI_PROVIDERS = ("gemini",)
+AI_PROVIDERS = ("gemini", "ollama")
 
 
 def load_registry() -> dict:
