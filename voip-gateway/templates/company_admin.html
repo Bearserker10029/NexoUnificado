@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Usuarios y áreas · {{ company }}</title>
+    <style>
+        body { font: 1rem/1.5 system-ui, sans-serif; margin: 0; background: #f4f7fa; color: #192835; }
+        main { max-width: 58rem; margin: auto; padding: 2rem 1rem; }
+        section { background: white; border: 1px solid #d7e0e8; border-radius: .75rem; padding: 1.25rem; margin: 1rem 0; }
+        h1, h2 { margin: 0 0 .75rem; line-height: 1.2; }
+        form { display: grid; gap: .75rem; }
+        form + form { margin-top: 1rem; }
+        label { display: grid; gap: .25rem; }
+        input, select, button { font: inherit; border-radius: .35rem; padding: .45rem .65rem; }
+        input, select { min-width: 0; border: 1px solid #8193a4; background: white; color: inherit; }
+        button { justify-self: start; background: #075d9e; color: white; border: 1px solid #075d9e; cursor: pointer; }
+        button:disabled { background: #526577; border-color: #526577; cursor: default; }
+        a { color: #075d9e; }
+        .fields { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
+    </style>
+</head>
+<body>
+<main>
+    <p><a href="/docs/">Volver a Nextcloud</a></p>
+    <h1>Usuarios y áreas · {{ company }}</h1>
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+    <p role="{{ 'alert' if category == 'error' else 'status' }}">{{ message }}</p>
+    {% endfor %}
+    <section>
+        <h2>Asignar un grupo</h2>
+        <form method="get" action="{{ path }}">
+            <label>Buscar usuario por nombre o correo
+                <input type="search" name="buscar" value="{{ query }}" maxlength="128">
+            </label>
+            <button>Buscar</button>
+        </form>
+        <form method="post" action="{{ path }}">
+            <input type="hidden" name="csrf" value="{{ csrf }}">
+            <input type="hidden" name="action" value="assign">
+            <div class="fields">
+                <label>Usuario
+                    <select name="user_id" required>
+                        <option value="">Selecciona un usuario</option>
+                        {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.username }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>Área o servicio
+                    <select name="group_id" required>
+                        <option value="">Selecciona un grupo</option>
+                        {% for group in groups %}
+                        <option value="{{ group.id }}">{{ group.name[area_prefix|length:] if group.name.startswith(area_prefix) else group.name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+            {% if not users %}<p>No se encontraron usuarios.</p>{% endif %}
+            <button {% if not users or not groups %}disabled{% endif %}>Asignar grupo</button>
+        </form>
+    </section>
+    <section>
+        <h2>Crear área</h2>
+        <form method="post" action="{{ path }}">
+            <input type="hidden" name="csrf" value="{{ csrf }}">
+            <input type="hidden" name="action" value="area">
+            <label>Nombre del área <input name="area" maxlength="80" required></label>
+            <button>Crear área</button>
+        </form>
+    </section>
+    <section>
+        <h2>Crear usuario</h2>
+        <form method="post" action="{{ path }}">
+            <input type="hidden" name="csrf" value="{{ csrf }}">
+            <input type="hidden" name="action" value="user">
+            <div class="fields">
+                <label>Usuario <input name="username" maxlength="128" autocomplete="off" required></label>
+                <label>Nombre <input name="firstName" maxlength="128" required></label>
+                <label>Apellido <input name="lastName" maxlength="128" required></label>
+                <label>Correo <input type="email" name="email" maxlength="254" required></label>
+                <label>Contraseña temporal
+                    <input type="password" name="password" minlength="8" maxlength="128" autocomplete="new-password" required>
+                </label>
+            </div>
+            <button>Crear usuario</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

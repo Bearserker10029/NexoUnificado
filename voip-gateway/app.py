@@ -12,7 +12,8 @@ from urllib.parse import urlencode
 
 import jwt
 import requests
-from flask import Flask, jsonify, redirect, request, session
+from flask import Flask, abort, flash, jsonify, redirect, render_template, request, session
+from itsdangerous import BadData, URLSafeTimedSerializer
 from jwt import PyJWKClient
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -72,6 +73,8 @@ app.config.update(
     PERMANENT_SESSION_LIFETIME=28800,
 )
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+oidc_flow_cookie = URLSafeTimedSerializer(app.secret_key, salt="nexo-oidc-flow")
+OIDC_FLOW_LIFETIME = 600
 jwks_clients = {}
 
 
@@ -247,32 +250,44 @@ def _start_login(tenant=None):
     verifier = secrets.token_urlsafe(48)
     challenge = base64.urlsafe_b64encode(hashlib.sha256(verifier.encode("ascii")).digest()).rstrip(b"=").decode("ascii")
     next_url = request.args.get("next", "")
-    if tenant and next_url and not re.fullmatch(rf"/{re.escape(tenant)}/[A-Za-z0-9_?&=./%-]*", next_url):
+    admin_url = f"/voip-sso/{tenant}/empresa/"
+    if tenant and next_url and next_url != admin_url and not re.fullmatch(
+        rf"/{re.escape(tenant)}/[A-Za-z0-9_?&=./%-]*", next_url
+    ):
         return jsonify(error="Destino de retorno inválido"), 400
-    session.clear()
-    session.permanent = True
-    session.update(oidc_state=state, oidc_nonce=nonce, oidc_verifier=verifier,
-                   oidc_tenant=tenant, next_url=next_url)
     query = urlencode({
         "client_id": oidc["client_id"], "response_type": "code",
-        "scope": "openid profile email", "redirect_uri": oidc["redirect_uri"],
+        "scope": "openid profile email kc-admin-api" if tenant and next_url == admin_url else "openid profile email",
+        "redirect_uri": oidc["redirect_uri"],
         "state": state, "nonce": nonce, "code_challenge": challenge,
         "code_challenge_method": "S256",
     })
-    return redirect(f"{oidc['authorization_endpoint']}?{query}")
+    response = redirect(f"{oidc['authorization_endpoint']}?{query}")
+    response.set_cookie(
+        f"nexo_oidc_{state}",
+        oidc_flow_cookie.dumps({
+            "state": state, "tenant": tenant, "nonce": nonce, "verifier": verifier, "next": next_url,
+        }),
+        max_age=OIDC_FLOW_LIFETIME, path=f"/voip-sso/{tenant}/callback" if tenant else "/voip-sso/callback",
+        secure=True, httponly=True, samesite="Lax",
+    )
+    return response
 
 
 def _finish_callback(tenant=None):
-    if tenant != session.get("oidc_tenant"):
-        return jsonify(error="La empresa no coincide con el inicio OIDC"), 400
-    if request.args.get("state") != session.pop("oidc_state", None):
+    state = request.args.get("state", "")
+    if not re.fullmatch(r"[A-Za-z0-9_-]{32}", state):
         return jsonify(error="Estado OIDC inválido"), 400
+    cookie_name = f"nexo_oidc_{state}"
+    try:
+        flow = oidc_flow_cookie.loads(request.cookies.get(cookie_name, ""), max_age=OIDC_FLOW_LIFETIME)
+    except BadData:
+        return render_template("login_retry.html"), 400
+    if flow["tenant"] != tenant or flow["state"] != state:
+        return jsonify(error="La empresa no coincide con el inicio OIDC"), 400
     code = request.args.get("code")
     if not code:
         return jsonify(error="Keycloak no devolvió un código"), 400
-    verifier = session.pop("oidc_verifier", None)
-    nonce = session.pop("oidc_nonce", None)
-    session.pop("oidc_tenant", None)
     try:
         oidc = _oidc(tenant)
     except KeyError:
@@ -280,7 +295,7 @@ def _finish_callback(tenant=None):
     response = requests.post(oidc["token_endpoint"], data={
         "grant_type": "authorization_code", "code": code,
         "redirect_uri": oidc["redirect_uri"], "client_id": oidc["client_id"],
-        "client_secret": CLIENT_SECRET, "code_verifier": verifier,
+        "client_secret": CLIENT_SECRET, "code_verifier": flow["verifier"],
     }, timeout=15)
     response.raise_for_status()
     token = response.json()
@@ -288,10 +303,14 @@ def _finish_callback(tenant=None):
     identity = jwt.decode(token["id_token"], signing_key.key, algorithms=["RS256"],
                           audience=oidc["client_id"], issuer=oidc["issuer"],
                           options={"require": ["exp", "iat", "sub"]})
-    if identity.get("nonce") != nonce:
+    if identity.get("nonce") != flow["nonce"]:
         return jsonify(error="Nonce OIDC inválido"), 400
-    next_url = session.pop("next_url", "")
-    session.clear()
+    next_url = flow["next"]
+    previous_identity = session.get("identity", {})
+    is_admin = tenant and f"{tenant}-administradores" in identity.get("groups", [])
+    if not (is_admin and previous_identity.get("tenant") == tenant
+            and previous_identity.get("subject") == identity["sub"]):
+        session.clear()
     session.permanent = True
     session["identity"] = {
         "subject": identity["sub"],
@@ -300,14 +319,22 @@ def _finish_callback(tenant=None):
         "tenant": tenant,
         "groups": identity.get("groups", []),
     }
-    if next_url:
-        return redirect(next_url)
-    return redirect(f"/{tenant}/voip/" if tenant else "/voip/")
+    if tenant and next_url == f"/voip-sso/{tenant}/empresa/":
+        if not is_admin:
+            abort(403, "Se requiere una cuenta administradora de la empresa.")
+        session["company_access_token"] = token["access_token"]
+        session["company_csrf"] = secrets.token_urlsafe(32)
+    response = redirect(next_url or (f"/{tenant}/voip/" if tenant else "/voip/"))
+    response.delete_cookie(
+        cookie_name, path=f"/voip-sso/{tenant}/callback" if tenant else "/voip-sso/callback",
+        secure=True, httponly=True, samesite="Lax",
+    )
+    return response
 
 
 @app.get("/healthz")
 def healthz():
-    return jsonify(status="ok", tenants=sorted(TENANTS))
+    return jsonify(status="ok")
 
 
 @app.get("/login")
@@ -328,6 +355,106 @@ def callback():
 @app.get("/<tenant>/callback")
 def tenant_callback(tenant):
     return _finish_callback(tenant)
+
+
+@app.route("/<tenant>/empresa/", methods=["GET", "POST"])
+def company_admin(tenant):
+    if tenant not in TENANTS:
+        abort(404)
+    path = f"/voip-sso/{tenant}/empresa/"
+    login_url = f"/voip-sso/{tenant}/login?" + urlencode({"next": path})
+    identity = session.get("identity", {})
+    token = session.get("company_access_token")
+    if identity.get("tenant") != tenant or not token:
+        if request.method == "POST":
+            abort(403)
+        return redirect(login_url)
+    if f"{tenant}-administradores" not in identity.get("groups", []):
+        abort(403)
+
+    def keycloak(method, resource, **kwargs):
+        response = requests.request(
+            method, f"http://keycloak:8080/admin/realms/nexo-{tenant}/{resource}",
+            headers={"Authorization": f"Bearer {token}"}, timeout=10,
+            allow_redirects=False, **kwargs,
+        )
+        response.raise_for_status()
+        return response
+
+    csrf = session["company_csrf"]
+    area_prefix = f"{tenant}-area-"
+    services = {f"{tenant}-servicio-{service}" for service in TENANTS[tenant].get("services", [])}
+    action = request.form.get("action") if request.method == "POST" else None
+    try:
+        if request.method == "POST":
+            if not secrets.compare_digest(request.form.get("csrf", "").encode(), csrf.encode()):
+                abort(403)
+            if action == "area":
+                label = request.form.get("area", "").strip()
+                if not label or len(label) > 80 or "/" in label or not label.isprintable():
+                    abort(400, "Introduce un nombre de área válido.")
+                keycloak("POST", "groups", json={"name": area_prefix + label})
+                flash("Área creada.")
+            elif action == "user":
+                fields = {name: request.form.get(name, "").strip()
+                          for name in ("username", "firstName", "lastName", "email")}
+                password = request.form.get("password", "")
+                if not all(fields.values()) or not 8 <= len(password) <= 128:
+                    abort(400, "Completa todos los datos y usa una contraseña temporal de 8 a 128 caracteres.")
+                keycloak("POST", "users", json={
+                    **fields, "enabled": True,
+                    "credentials": [{"type": "password", "value": password, "temporary": True}],
+                })
+                flash("Usuario creado. Ya puedes asignarle grupos.")
+            elif action == "assign":
+                user_id = request.form.get("user_id", "")
+                group_id = request.form.get("group_id", "")
+                if not all(re.fullmatch(r"[A-Za-z0-9_-]{1,128}", value) for value in (user_id, group_id)):
+                    abort(400)
+                group = keycloak("GET", f"groups/{group_id}").json()
+                name = group["name"]
+                if group.get("path") != "/" + name or not (name.startswith(area_prefix) or name in services):
+                    abort(403, "Solo se pueden asignar áreas y servicios de esta empresa.")
+                keycloak("PUT", f"users/{user_id}/groups/{group_id}", json={})
+                flash("Grupo asignado.")
+            else:
+                abort(400)
+            return redirect(path, code=303)
+
+        query = request.args.get("buscar", "").strip()[:128]
+        users = keycloak("GET", "users", params={"search": query, "max": 50}).json()
+        groups = []
+        offset = 0
+        while True:
+            batch = keycloak("GET", "groups", params={"first": offset, "max": 100}).json()
+            groups.extend(group for group in batch
+                          if group["name"].startswith(area_prefix) or group["name"] in services)
+            if len(batch) < 100:
+                break
+            offset += len(batch)
+        return render_template(
+            "company_admin.html", company=TENANTS[tenant]["display_name"],
+            users=users, groups=groups, csrf=csrf, path=path, query=query,
+            area_prefix=area_prefix,
+        )
+    except requests.HTTPError as error:
+        status = error.response.status_code
+        if status == 401:
+            session.pop("company_access_token", None)
+            return render_template("login_retry.html", retry_url=login_url), 401
+        if status == 409 and action:
+            messages = {
+                "area": "Ya existe un área con ese nombre. Puedes seleccionarla en Asignar un grupo.",
+                "user": "El nombre de usuario o el correo ya está en uso. Busca la cuenta existente o utiliza otros datos.",
+                "assign": "No se pudo completar la asignación. Revisa el usuario y el grupo e inténtalo de nuevo.",
+            }
+            flash(messages[action], "error")
+            return redirect(path, code=303)
+        if status in (400, 403, 404, 409):
+            abort(status, "Keycloak rechazó la operación. Comprueba los datos y tu sesión de empresa.")
+        abort(502, "Keycloak no pudo completar la operación.")
+    except requests.RequestException:
+        abort(502, "No se pudo conectar con Keycloak.")
 
 
 @app.get("/authorize")

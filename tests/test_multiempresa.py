@@ -40,6 +40,9 @@ class MultiempresaEstatico(unittest.TestCase):
             text = (ROOT / f"tenants/{name}/asterisk/extensions.conf").read_text(encoding="utf-8")
             self.assertIn(f"[tenant-{name}]", text)
             self.assertIn(f"exten => _{prefix}XXX", text)
+            self.assertNotIn("Dial(PJSIP/${EXTEN},", text)
+            self.assertIn("reservada a Element", text)
+            self.assertIn("PJSIP_ENDPOINT(${EXTEN:1},context)", text)
             self.assertIn("exten => _9ZXXX", text)
             self.assertIn("CDR(tenant_origen)", text)
             self.assertIn("CDR(origen)", text)
@@ -93,7 +96,10 @@ class MultiempresaEstatico(unittest.TestCase):
             realm = json.loads((ROOT / f"tenants/{name}/keycloak/realm.json.template").read_text(encoding="utf-8"))
             self.assertEqual(realm["realm"], f"nexo-{name}")
             groups = {group["name"] for group in realm["groups"]}
-            self.assertEqual(groups, {f"{name}-servicio-{s}" for s in self.tenants[name]["services"]})
+            services = {f"{name}-servicio-{s}" for s in self.tenants[name]["services"]}
+            admin = next(group for group in realm["groups"] if group["name"] == f"{name}-administradores")
+            self.assertEqual(admin["clientRoles"], {"realm-management": ["manage-users"]})
+            self.assertEqual(groups, services | {admin["name"]})
             self.assertIn("nextcloud", {client["clientId"] for client in realm["clients"]})
 
     def test_element_1a1_y_jitsi_aislados(self):

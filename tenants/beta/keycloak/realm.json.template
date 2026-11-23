@@ -14,6 +14,14 @@
     },
     {
       "name": "beta-servicio-videoconferencia"
+    },
+    {
+      "name": "beta-administradores",
+      "clientRoles": {
+        "realm-management": [
+          "manage-users"
+        ]
+      }
     }
   ],
   "clients": [
@@ -56,6 +64,11 @@
       "clientId": "nexo-portal",
       "name": "Servicios Nexo beta",
       "enabled": true,
+      "optionalClientScopes": [
+        "offline_access",
+        "microprofile-jwt",
+        "kc-admin-api"
+      ],
       "protocol": "openid-connect",
       "publicClient": false,
       "secret": "${KC_VOIP_CLIENT_SECRET}",

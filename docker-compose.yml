@@ -284,7 +284,7 @@ services:
     networks: [ mgmt ]
 
   grafana:
-    image: grafana/grafana:11.3.0
+    image: grafana/grafana:12.4.15
     container_name: nexo-grafana
     restart: unless-stopped
     environment:

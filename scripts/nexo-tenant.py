@@ -128,14 +128,14 @@ def render_asterisk(tenant: dict) -> None:
     cos_denied = sector_denied_block(sectors)
     (target / "extensions.conf").write_text(f"""; Generado por scripts/nexo-tenant.py. No editar a mano.
 [tenant-{name}]
-exten => _{prefix}XXX,1,NoOp(Llamada interna de {name}: ${{CALLERID(num)}} -> ${{EXTEN}})
- same => n,Dial(PJSIP/${{EXTEN}},30)
- same => n,Hangup()
+exten => _{prefix}XXX,1,Log(NOTICE,Llamada interna de {name} reservada a Element: ${{EXTEN}})
+ same => n,Hangup(21)
 
 ; 9 + extension destino. La validacion impide usar esta ruta dentro de la misma empresa.
 exten => _9ZXXX,1,Set(TENANT_ORIGEN={name})
  same => n,Set(TENANT_PREFIJO={prefix})
  same => n,GotoIf($[\"${{EXTEN:1:1}}\" = \"${{TENANT_PREFIJO}}\"]?misma-empresa)
+ same => n,GotoIf($["${{PJSIP_ENDPOINT(${{EXTEN:1}},context):0:7}}" != "tenant-"]?destino-denegado)
 {cos} same => n,Set(CHANNEL(accountcode)={name})
  same => n,Set(CDR(userfield)=origen=${{CALLERID(num)}},destino=${{EXTEN:1}},tipo=interempresas)
  same => n,Set(CDR(tenant_origen)={name})
@@ -148,6 +148,7 @@ exten => _9ZXXX,1,Set(TENANT_ORIGEN={name})
  same => n(misma-empresa),Log(WARNING,Ruta interempresas innecesaria denegada: ${{EXTEN}})
  same => n,Playback(invalid)
  same => n,Hangup(21)
+ same => n(destino-denegado),Hangup(21)
 {cos_denied}
 ; Denegar por defecto: PSTN y otros rangos no son alcanzables sin el prefijo 9.
 exten => _X.,1,Log(WARNING,Destino no autorizado en {name} desde ${{CALLERID(num)}}: ${{EXTEN}})
@@ -196,6 +197,8 @@ def render_keycloak(tenant: dict) -> None:
     target.mkdir(parents=True, exist_ok=True)
     services = tenant_services(tenant)
     groups = [{"name": f"{name}-servicio-{service}"} for service in sorted(services)]
+    groups.append({"name": f"{name}-administradores",
+                   "clientRoles": {"realm-management": ["manage-users"]}})
     clients = []
     clients.append({
         "clientId": "nextcloud", "name": f"Nextcloud {name}", "enabled": True,
@@ -211,6 +214,7 @@ def render_keycloak(tenant: dict) -> None:
     })
     clients.append({
         "clientId": "nexo-portal", "name": f"Servicios Nexo {name}", "enabled": True,
+        "optionalClientScopes": ["offline_access", "microprofile-jwt", "kc-admin-api"],
         "protocol": "openid-connect", "publicClient": False, "secret": "${KC_VOIP_CLIENT_SECRET}",
         "standardFlowEnabled": True, "directAccessGrantsEnabled": False,
         "redirectUris": ["${NEXO_URL}/voip-sso/" + name + "/callback"],
@@ -554,6 +558,10 @@ def render(registry: dict) -> None:
     for path in (TENANTS / "nginx").glob("tenant-*.conf") if (TENANTS / "nginx").exists() else []:
         if path.stem.removeprefix("tenant-") not in active:
             path.unlink()
+    (TENANTS / "nginx" / "administracion.conf").write_text(
+        "location = /administracion/ {\n"
+        "    return 302 https://$http_host/keycloak/admin/master/console/;\n"
+        "}\n", encoding="utf-8", newline="\n")
     render_compose(registry)
 
 

@@ -32,7 +32,7 @@ while IFS= read -r tenant; do
     --mapping-email='email' \
     --mapping-groups='groups' \
     --group-provisioning=1 \
-    --group-whitelist-regex="/^${tenant}-servicio-/"
+    --group-whitelist-regex="/^${tenant}-(servicio-|administradores\$)/"
 done < /tmp/nexo-tenants.txt
 
 occ user_oidc:provider --output=json
@@ -51,6 +51,8 @@ $addSite = static function ($name, $url, $groups, $redirect) use (&$sites) {
 };
 foreach ($tenants as $tenant) {
     $name = $tenant['name'];
+    $addSite('Usuarios y áreas · ' . $tenant['display_name'],
+        "/voip-sso/$name/empresa/", ["$name-administradores"], true);
     foreach ([
         'telefonia' => ['Telefonía', "/$name/voip/embed.html"],
         'videoconferencia' => ['Videoconferencia', "/$name/jitsi/"],

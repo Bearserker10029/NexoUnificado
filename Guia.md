@@ -127,18 +127,55 @@ netsh advfirewall firewall add rule name="Nexo WebRTC" dir=in action=allow proto
 Los demás equipos deben usar la IP configurada en `NEXO_HOST`; no uses
 `127.0.0.1` ni `localhost` desde un cliente remoto.
 
-## 6. Crear usuarios por empresa
+## 6. Administrar empresas, usuarios y áreas
 
-1. Abre `https://TU_IP:8443/keycloak/admin/`.
-2. Entra con `KC_ADMIN_USER` y `KC_ADMIN_PASSWORD` definidos en `.env`.
-3. Selecciona el realm de la empresa: **`nexo-acme`** para ACME o **`nexo-beta`**
-   para BETA. El realm `nexo` se conserva para el despliegue tradicional.
-4. Entra en **Users → Add user**, completa los datos y habilita la cuenta.
-5. En **Credentials**, asigna una contraseña temporal o definitiva.
-6. En **Groups**, agrega el usuario únicamente a los grupos de los servicios que
-   tenga contratados: `acme-servicio-*` o `beta-servicio-*`. Por ejemplo,
-   `acme-servicio-chat`, `acme-servicio-telefonia` y
-   `acme-servicio-videoconferencia`.
+El proveedor entra por `https://TU_IP:8443/administracion/`. Comparte con cada
+administrador únicamente el enlace de Nextcloud de su empresa. Sustituye
+`TU_IP` por el valor de `NEXO_HOST`.
+
+### Designar al administrador de una empresa
+
+1. Abre el enlace de administración e inicia sesión con `KC_ADMIN_USER` y
+   `KC_ADMIN_PASSWORD` de `.env`.
+2. En **Manage realms**, selecciona `nexo-acme` para ACME o `nexo-beta` para BETA.
+3. Abre **Users**, elige una cuenta de ese realm o créala con **Add user** y
+   configura su contraseña en **Credentials**.
+4. En la pestaña **Groups** de la cuenta, usa **Join Group** para agregarla a
+   `acme-administradores` o `beta-administradores`, según corresponda.
+
+Si actualizaste una instalación con realms existentes y faltan los grupos de
+administración, sincronízalos con Keycloak en ejecución. Desde PowerShell, en la
+raíz del repositorio, ejecuta:
+
+```powershell
+cmd.exe /c "docker exec -i nexo-keycloak sh -s < scripts\sincronizar-grupos-empresas.sh"
+```
+
+### Crear áreas y asignar usuarios
+
+1. Abre el enlace de Nextcloud de tu empresa e inicia sesión con su cuenta
+   administradora. En el laboratorio, ACME usa
+   `https://TU_IP:8443/docs/apps/user_oidc/login/2` y BETA usa
+   `https://TU_IP:8443/docs/apps/user_oidc/login/3`. Si cambian los ID, consulta
+   `docker compose exec --user www-data nextcloud php occ user_oidc:provider --output=json`.
+   Si acabas de recibir el permiso,
+   cierra la sesión de Nextcloud y vuelve a entrar para actualizar el menú.
+   Después del primer acceso, el navegador recuerda ese proveedor para volver
+   a entrar desde `https://TU_IP:8443/docs/` al cerrar sesión.
+2. En el menú de aplicaciones, abre **Usuarios y áreas · ACME** o **Usuarios y
+   áreas · BETA**.
+3. En **Crear área**, registra las áreas que necesite tu empresa, por ejemplo,
+   **Administración**, **Psicología** u **Oficina**.
+4. En **Crear usuario**, completa sus datos y asigna una contraseña temporal.
+   Keycloak solicitará cambiarla en el primer inicio de sesión.
+5. En **Asignar un grupo**, selecciona al usuario y su área. Repite la operación
+   para cada servicio que corresponda, como Chat o Telefonía.
+
+Los grupos de área organizan a los usuarios de la empresa. Los grupos de servicio
+controlan el acceso a las aplicaciones. En Keycloak, las áreas creadas por el
+portal aparecen con el prefijo `acme-area-` o `beta-area-`. Si ya habías creado
+un área en Keycloak, puedes añadir ese prefijo al nombre del grupo existente
+para que aparezca en el portal y conserve sus miembros.
 
 Nextcloud, Matrix y la extensión de telefonía se aprovisionan automáticamente en
 el primer acceso. No crees cuentas independientes dentro de Element o Asterisk.
@@ -156,9 +193,18 @@ Accesos del laboratorio:
 
 En el portal de cada empresa, selecciona su proveedor de identidad cuando
 Nextcloud lo solicite. Los enlaces visibles dependen de los grupos asignados en
-Keycloak. Las llamadas 1:1 internas se realizan desde Element; entre empresas, la
-telefonía marca `9 + extensión` y pasa por Asterisk. Las salas Jitsi permanecen
-separadas por empresa.
+Keycloak. Las salas Jitsi permanecen separadas por empresa.
+
+### Llamadas
+
+- **Dentro de la empresa.** Abre un chat directo en **Element** e inicia la
+  llamada desde ahí. Asterisk bloquea la marcación de extensiones de la misma
+  empresa, incluso con el prefijo `9`.
+- **Entre empresas.** Abre **Telefonía** en el portal y marca `9 + extensión`
+  del destino. Por ejemplo, desde ACME marca `92001` para llamar a la extensión
+  `2001` de BETA, si tu extensión tiene habilitadas las llamadas entre empresas.
+
+### Configurar Chat
 
 Chat utiliza cifrado extremo a extremo (E2EE). Keycloak verifica la cuenta,
 pero cada dispositivo de Element tiene sus propias claves criptográficas. En la
@@ -205,12 +251,16 @@ docker compose logs asterisk
 
 - **502:** comprueba que el servicio correspondiente esté activo y reinicia el
   proxy con `docker compose restart proxy` si se recreó un upstream por separado.
+- **400 al abrir administración:** usa `https://` en el puerto `8443`.
+- **No aparecen los grupos de empresa:** comprueba que estás en `nexo-acme` o
+  `nexo-beta`. El realm general `nexo` tiene su propia lista de grupos.
 - **Aviso de certificado:** comprueba que `NEXO_HOST` coincida con la dirección
   usada y que el certificado esté instalado en el usuario actual de Windows.
 - **Failed to load service worker:** instala el certificado, cierra por completo
   el navegador y vuelve a abrir Chat.
-- **Telefonía no disponible:** revisa los logs de `voip-gateway` y que el cliente
-  OIDC `voip` exista en el realm `nexo`.
+- **Telefonía de empresa no disponible:** comprueba que el usuario pertenece al
+  grupo de servicio de telefonía de su empresa y revisa los logs de
+  `voip-gateway` y `asterisk`.
 
 ## 10. Apagar
 
