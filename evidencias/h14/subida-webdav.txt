@@ -1,0 +1,12 @@
+# 2026-11-23T09:40:43-05:00 subida de archivo limpio (contraste)
+HTTP 201
+# 2026-11-23T09:40:44-05:00 subida de EICAR
+<?xml version="1.0" encoding="utf-8"?>
+<d:error xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns">
+  <s:exception>OCA\DAV\Connector\Sabre\Exception\UnsupportedMediaType</s:exception>
+  <s:message>Virus Eicar-Test-Signature is detected in the file. Upload cannot be completed.</s:message>
+</d:error>
+
+HTTP 415
+# listado posterior (solo debe aparecer limpio.txt)
+<d:href>/docs/remote.php/dav/files/nexo_admin/limpio.txt</d:href>

@@ -1,0 +1,3 @@
+socket found, clamd started.
+Mon Nov 23 14:40:33 2026 -> instream(172.18.0.8@38134): Eicar-Test-Signature FOUND
+Mon Nov 23 14:40:45 2026 -> instream(172.18.0.8@47788): Eicar-Test-Signature FOUND
