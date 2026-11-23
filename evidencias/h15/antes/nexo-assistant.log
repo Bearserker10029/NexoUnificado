@@ -1,0 +1,8 @@
+2026-11-23T13:37:33Z	INFO	[vuln] Vulnerability scanning is enabled
+2026-11-23T13:37:34Z	FATAL	Fatal error	run error: image scan error: scan error: unable to initialize a scan service: unable to initialize artifact: unable to initialize container image: unable to find the specified image "nexo-assistant" in ["docker" "containerd" "podman" "remote"]: 4 errors occurred:
+	* docker error: unable to inspect the image (nexo-assistant): Error response from daemon: No such image: nexo-assistant:latest
+	* containerd error: containerd socket not found: /run/containerd/containerd.sock
+	* podman error: unable to initialize Podman client: no podman socket found: stat podman/podman.sock: no such file or directory
+	* remote error: GET https://index.docker.io/v2/library/nexo-assistant/manifests/latest: UNAUTHORIZED: authentication required; [map[Action:pull Class: Name:library/nexo-assistant Type:repository]]
+
+

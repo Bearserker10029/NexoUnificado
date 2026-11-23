@@ -1,0 +1,16 @@
+# Cache en el stack real (nginx 1.29) 2026-11-23T09:05:36-05:00
+## index /element/ (Cache-Control: no-cache del upstream, nginx lo respeta)
+Cache-Control: no-cache
+X-Cache-Status: MISS
+Cache-Control: no-cache
+X-Cache-Status: MISS
+## estatico /element/bundles/a655e0c10163939af693/bundle.css
+X-Cache-Status: HIT
+X-Cache-Status: HIT
+X-Cache-Status: HIT
+## /jitsi/
+X-Cache-Status: HIT
+X-Cache-Status: HIT
+## /_matrix/ y /voip/ no llevan X-Cache-Status
+0
+0

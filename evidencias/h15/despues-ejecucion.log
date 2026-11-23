@@ -1,0 +1,26 @@
+>> alpine:3.22
+>> andrius/asterisk:20.21.0_debian-trixie
+>> clamav/clamav:stable
+>> collabora/code:latest
+>> docker:28-cli
+>> ghcr.io/jitsi/jicofo:stable-11509
+>> ghcr.io/jitsi/jvb:stable-11509
+   (no escaneada: ver evidencias/h15/despues/ghcr.io_jitsi_jvb_stable-11509.log)
+>> ghcr.io/jitsi/prosody:stable-11509
+   (no escaneada: ver evidencias/h15/despues/ghcr.io_jitsi_prosody_stable-11509.log)
+>> ghcr.io/jitsi/web:stable-11509
+>> grafana/grafana:11.6.0
+>> mariadb:11.4
+>> matrixdotorg/synapse:latest
+>> nexo-assistant
+   (no escaneada: ver evidencias/h15/despues/nexo-assistant.log)
+>> nexo-pocket-tts
+   (no escaneada: ver evidencias/h15/despues/nexo-pocket-tts.log)
+>> nexo-voip-gateway
+>> nextcloud:35-apache
+>> nginx:1.29-alpine
+>> prom/blackbox-exporter:v0.27.0
+>> prom/node-exporter:v1.9.1
+>> prom/prometheus:v3.5.0
+>> quay.io/keycloak/keycloak:26.8.2
+>> vectorim/element-web:latest

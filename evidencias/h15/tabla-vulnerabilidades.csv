@@ -1,0 +1,467 @@
+imagen,CVE,paquete,severidad,version_inicial,version_con_parche,correccion_aplicada,resultado_posterior
+alpine:3.20,CVE-2026-107891,musl,HIGH,1.2.5-r3,1.2.5-r4,alpine:3.20 -> alpine:3.22,Corregida
+alpine:3.20,CVE-2026-107891,musl-utils,HIGH,1.2.5-r3,1.2.5-r4,alpine:3.20 -> alpine:3.22,Corregida
+docker:27-cli,CVE-2025-68121,stdlib,CRITICAL,v1.22.10,"1.24.13, 1.25.7, 1.26.0-rc.3",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.24.13, 1.25.7, 1.26.0-rc.3)"
+docker:27-cli,CVE-2026-111497,brotli-libs,CRITICAL,1.1.0-r2,1.1.1-r0,docker:27-cli -> docker:28-cli,Corregida
+docker:27-cli,CVE-2026-123158,openssh-client-common,CRITICAL,9.9_p1-r2,9.9_p2-r1,docker:27-cli -> docker:28-cli,Persiste (parche: 10.0_p1-r11)
+docker:27-cli,CVE-2026-123158,openssh-client-default,CRITICAL,9.9_p1-r2,9.9_p2-r1,docker:27-cli -> docker:28-cli,Persiste (parche: 10.0_p1-r11)
+docker:27-cli,CVE-2026-123158,openssh-keygen,CRITICAL,9.9_p1-r2,9.9_p2-r1,docker:27-cli -> docker:28-cli,Persiste (parche: 10.0_p1-r11)
+docker:27-cli,CVE-2026-31789,libcrypto3,CRITICAL,3.3.3-r0,3.3.7-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 3.5.6-r0)
+docker:27-cli,CVE-2026-31789,libssl3,CRITICAL,3.3.3-r0,3.3.7-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 3.5.6-r0)
+docker:27-cli,CVE-2026-33186,google.golang.org/grpc,CRITICAL,v1.68.1,1.79.3,docker:27-cli -> docker:28-cli,Persiste (parche: 1.79.3)
+docker:27-cli,CVE-2024-25621,github.com/containerd/containerd/v2,HIGH,v2.0.2,"2.0.7, 2.1.5, 2.2.0",docker:27-cli -> docker:28-cli,"Persiste (parche: 2.0.7, 2.1.5, 2.2.0)"
+docker:27-cli,CVE-2025-15467,libcrypto3,HIGH,3.3.3-r0,3.3.6-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 3.5.5-r0)
+docker:27-cli,CVE-2025-15467,libssl3,HIGH,3.3.3-r0,3.3.6-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 3.5.5-r0)
+docker:27-cli,CVE-2025-15558,github.com/docker/cli,HIGH,v27.5.1+incompatible,29.2.0,docker:27-cli -> docker:28-cli,Persiste (parche: 29.2.0)
+docker:27-cli,CVE-2025-22868,golang.org/x/oauth2,HIGH,v0.23.0,0.27.0,docker:27-cli -> docker:28-cli,Corregida
+docker:27-cli,CVE-2025-22869,golang.org/x/crypto,HIGH,v0.31.0,0.35.0,docker:27-cli -> docker:28-cli,Corregida
+docker:27-cli,CVE-2025-46334,git,HIGH,2.47.2-r0,2.47.3-r0,docker:27-cli -> docker:28-cli,Corregida
+docker:27-cli,CVE-2025-46334,git-init-template,HIGH,2.47.2-r0,2.47.3-r0,docker:27-cli -> docker:28-cli,Corregida
+docker:27-cli,CVE-2025-47913,golang.org/x/crypto,HIGH,v0.31.0,0.43.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.43.0)
+docker:27-cli,CVE-2025-48384,git,HIGH,2.47.2-r0,2.47.3-r0,docker:27-cli -> docker:28-cli,Corregida
+docker:27-cli,CVE-2025-48384,git-init-template,HIGH,2.47.2-r0,2.47.3-r0,docker:27-cli -> docker:28-cli,Corregida
+docker:27-cli,CVE-2025-48385,git,HIGH,2.47.2-r0,2.47.3-r0,docker:27-cli -> docker:28-cli,Corregida
+docker:27-cli,CVE-2025-48385,git-init-template,HIGH,2.47.2-r0,2.47.3-r0,docker:27-cli -> docker:28-cli,Corregida
+docker:27-cli,CVE-2025-59375,libexpat,HIGH,2.6.4-r0,2.7.2-r0,docker:27-cli -> docker:28-cli,Corregida
+docker:27-cli,CVE-2025-61726,stdlib,HIGH,v1.22.10,"1.24.12, 1.25.6",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.24.12, 1.25.6)"
+docker:27-cli,CVE-2025-61729,stdlib,HIGH,v1.22.10,"1.24.11, 1.25.5",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.24.11, 1.25.5)"
+docker:27-cli,CVE-2025-69421,libcrypto3,HIGH,3.3.3-r0,3.3.6-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 3.5.5-r0)
+docker:27-cli,CVE-2025-69421,libssl3,HIGH,3.3.3-r0,3.3.6-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 3.5.5-r0)
+docker:27-cli,CVE-2026-103111,pcre2,HIGH,10.43-r0,10.43-r1,docker:27-cli -> docker:28-cli,Persiste (parche: 10.46-r1)
+docker:27-cli,CVE-2026-107891,musl,HIGH,1.2.5-r9,1.2.5-r12,docker:27-cli -> docker:28-cli,Persiste (parche: 1.2.5-r13)
+docker:27-cli,CVE-2026-107891,musl-utils,HIGH,1.2.5-r9,1.2.5-r12,docker:27-cli -> docker:28-cli,Persiste (parche: 1.2.5-r13)
+docker:27-cli,CVE-2026-111943,stdlib,HIGH,v1.22.10,"1.26.10, 1.27.3",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.26.10, 1.27.3)"
+docker:27-cli,CVE-2026-113351,libexpat,HIGH,2.6.4-r0,2.10.0-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 2.10.0-r0)
+docker:27-cli,CVE-2026-115506,libexpat,HIGH,2.6.4-r0,2.10.0-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 2.10.0-r0)
+docker:27-cli,CVE-2026-117610,libexpat,HIGH,2.6.4-r0,2.10.0-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 2.10.0-r0)
+docker:27-cli,CVE-2026-118370,libexpat,HIGH,2.6.4-r0,2.10.0-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 2.10.0-r0)
+docker:27-cli,CVE-2026-22184,zlib,HIGH,1.3.1-r2,1.3.2-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 1.3.2-r0)
+docker:27-cli,CVE-2026-24051,go.opentelemetry.io/otel/sdk,HIGH,v1.31.0,1.40.0,docker:27-cli -> docker:28-cli,Persiste (parche: 1.40.0)
+docker:27-cli,CVE-2026-25210,libexpat,HIGH,2.6.4-r0,2.7.4-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 2.7.4-r0)
+docker:27-cli,CVE-2026-25679,stdlib,HIGH,v1.22.10,"1.25.8, 1.26.1",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.8, 1.26.1)"
+docker:27-cli,CVE-2026-25681,golang.org/x/net,HIGH,v0.33.0,0.55.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.55.0)
+docker:27-cli,CVE-2026-27135,nghttp2-libs,HIGH,1.64.0-r0,1.68.1,docker:27-cli -> docker:28-cli,Persiste (parche: 1.68.1)
+docker:27-cli,CVE-2026-27136,golang.org/x/net,HIGH,v0.33.0,0.55.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.55.0)
+docker:27-cli,CVE-2026-27145,stdlib,HIGH,v1.22.10,"1.25.11, 1.26.4",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.11, 1.26.4)"
+docker:27-cli,CVE-2026-28387,libcrypto3,HIGH,3.3.3-r0,3.3.7-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 3.5.6-r0)
+docker:27-cli,CVE-2026-28387,libssl3,HIGH,3.3.3-r0,3.3.7-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 3.5.6-r0)
+docker:27-cli,CVE-2026-28388,libcrypto3,HIGH,3.3.3-r0,3.3.7-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 3.5.6-r0)
+docker:27-cli,CVE-2026-28388,libssl3,HIGH,3.3.3-r0,3.3.7-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 3.5.6-r0)
+docker:27-cli,CVE-2026-28389,libcrypto3,HIGH,3.3.3-r0,3.3.7-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 3.5.6-r0)
+docker:27-cli,CVE-2026-28389,libssl3,HIGH,3.3.3-r0,3.3.7-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 3.5.6-r0)
+docker:27-cli,CVE-2026-28390,libcrypto3,HIGH,3.3.3-r0,3.3.7-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 3.5.6-r0)
+docker:27-cli,CVE-2026-28390,libssl3,HIGH,3.3.3-r0,3.3.7-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 3.5.6-r0)
+docker:27-cli,CVE-2026-32280,stdlib,HIGH,v1.22.10,"1.25.9, 1.26.2",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.9, 1.26.2)"
+docker:27-cli,CVE-2026-32281,stdlib,HIGH,v1.22.10,"1.25.9, 1.26.2",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.9, 1.26.2)"
+docker:27-cli,CVE-2026-32283,stdlib,HIGH,v1.22.10,"1.25.9, 1.26.2",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.9, 1.26.2)"
+docker:27-cli,CVE-2026-33630,c-ares,HIGH,1.34.3-r0,1.34.8-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 1.34.8-r0)
+docker:27-cli,CVE-2026-33747,github.com/moby/buildkit,HIGH,v0.19.0,0.28.1,docker:27-cli -> docker:28-cli,Persiste (parche: 0.28.1)
+docker:27-cli,CVE-2026-33748,github.com/moby/buildkit,HIGH,v0.19.0,0.28.1,docker:27-cli -> docker:28-cli,Persiste (parche: 0.28.1)
+docker:27-cli,CVE-2026-33811,stdlib,HIGH,v1.22.10,"1.25.10, 1.26.3",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.10, 1.26.3)"
+docker:27-cli,CVE-2026-33814,golang.org/x/net,HIGH,v0.33.0,0.53.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.53.0)
+docker:27-cli,CVE-2026-33814,stdlib,HIGH,v1.22.10,"1.25.10, 1.26.3",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.10, 1.26.3)"
+docker:27-cli,CVE-2026-33818,stdlib,HIGH,v1.22.10,"1.25.13, 1.26.6, 1.27.0-rc.3",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+docker:27-cli,CVE-2026-35469,github.com/moby/spdystream,HIGH,v0.4.0,0.5.1,docker:27-cli -> docker:28-cli,Persiste (parche: 0.5.1)
+docker:27-cli,CVE-2026-39820,stdlib,HIGH,v1.22.10,"1.25.10, 1.26.3",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.10, 1.26.3)"
+docker:27-cli,CVE-2026-39821,golang.org/x/net,HIGH,v0.33.0,0.55.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.55.0)
+docker:27-cli,CVE-2026-39821,stdlib,HIGH,v1.22.10,"1.25.13, 1.26.6, 1.27.0-rc.3",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+docker:27-cli,CVE-2026-39822,stdlib,HIGH,v1.22.10,"1.25.12, 1.26.5, 1.27.0-rc.2",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.12, 1.26.5, 1.27.0-rc.2)"
+docker:27-cli,CVE-2026-39828,golang.org/x/crypto,HIGH,v0.31.0,0.52.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.52.0)
+docker:27-cli,CVE-2026-39829,golang.org/x/crypto,HIGH,v0.31.0,0.52.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.52.0)
+docker:27-cli,CVE-2026-39830,golang.org/x/crypto,HIGH,v0.31.0,0.52.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.52.0)
+docker:27-cli,CVE-2026-39831,golang.org/x/crypto,HIGH,v0.31.0,0.52.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.52.0)
+docker:27-cli,CVE-2026-39832,golang.org/x/crypto,HIGH,v0.31.0,0.52.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.52.0)
+docker:27-cli,CVE-2026-39835,golang.org/x/crypto,HIGH,v0.31.0,0.52.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.52.0)
+docker:27-cli,CVE-2026-39836,stdlib,HIGH,v1.22.10,"1.25.10, 1.26.3",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.10, 1.26.3)"
+docker:27-cli,CVE-2026-39883,go.opentelemetry.io/otel/sdk,HIGH,v1.31.0,1.43.0,docker:27-cli -> docker:28-cli,Persiste (parche: 1.43.0)
+docker:27-cli,CVE-2026-40200,musl,HIGH,1.2.5-r9,1.2.5-r11,docker:27-cli -> docker:28-cli,Persiste (parche: 1.2.5-r12)
+docker:27-cli,CVE-2026-40200,musl-utils,HIGH,1.2.5-r9,1.2.5-r11,docker:27-cli -> docker:28-cli,Persiste (parche: 1.2.5-r12)
+docker:27-cli,CVE-2026-41567,github.com/docker/docker,HIGH,v27.5.1+incompatible,sin parche,docker:27-cli -> docker:28-cli,Persiste (sin parche)
+docker:27-cli,CVE-2026-42306,github.com/docker/docker,HIGH,v27.5.1+incompatible,sin parche,docker:27-cli -> docker:28-cli,Persiste (sin parche)
+docker:27-cli,CVE-2026-42499,stdlib,HIGH,v1.22.10,"1.25.10, 1.26.3",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.10, 1.26.3)"
+docker:27-cli,CVE-2026-42504,stdlib,HIGH,v1.22.10,"1.25.11, 1.26.4",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.11, 1.26.4)"
+docker:27-cli,CVE-2026-42508,golang.org/x/crypto,HIGH,v0.31.0,0.52.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.52.0)
+docker:27-cli,CVE-2026-45186,libexpat,HIGH,2.6.4-r0,2.8.1-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 2.8.1-r0)
+docker:27-cli,CVE-2026-45447,libcrypto3,HIGH,3.3.3-r0,3.3.7-r1,docker:27-cli -> docker:28-cli,Persiste (parche: 3.5.7-r0)
+docker:27-cli,CVE-2026-45447,libssl3,HIGH,3.3.3-r0,3.3.7-r1,docker:27-cli -> docker:28-cli,Persiste (parche: 3.5.7-r0)
+docker:27-cli,CVE-2026-46595,golang.org/x/crypto,HIGH,v0.31.0,0.52.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.52.0)
+docker:27-cli,CVE-2026-46597,golang.org/x/crypto,HIGH,v0.31.0,0.52.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.52.0)
+docker:27-cli,CVE-2026-46600,golang.org/x/net,HIGH,v0.33.0,0.56.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.56.0)
+docker:27-cli,CVE-2026-53488,github.com/containerd/containerd/v2,HIGH,v2.0.2,"2.0.10, 2.1.9, 2.2.5, 2.3.2",docker:27-cli -> docker:28-cli,"Persiste (parche: 2.0.10, 2.1.9, 2.2.5, 2.3.2)"
+docker:27-cli,CVE-2026-56851,golang.org/x/text,HIGH,v0.21.0,0.41.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.41.0)
+docker:27-cli,CVE-2026-56852,golang.org/x/text,HIGH,v0.21.0,0.39.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.39.0)
+docker:27-cli,CVE-2026-56853,stdlib,HIGH,v1.22.10,"1.25.13, 1.26.6, 1.27.0-rc.3",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+docker:27-cli,CVE-2026-56854,golang.org/x/crypto,HIGH,v0.31.0,0.55.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.55.0)
+docker:27-cli,CVE-2026-56858,stdlib,HIGH,v1.22.10,"1.25.13, 1.26.6, 1.27.0-rc.3",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+docker:27-cli,CVE-2026-56859,stdlib,HIGH,v1.22.10,"1.25.13, 1.26.6, 1.27.0-rc.3",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+docker:27-cli,CVE-2026-56860,stdlib,HIGH,v1.22.10,"1.25.13, 1.26.6, 1.27.0-rc.3",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+docker:27-cli,CVE-2026-56862,stdlib,HIGH,v1.22.10,"1.25.13, 1.26.6, 1.27.0-rc.3",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+docker:27-cli,CVE-2026-5773,libcurl,HIGH,8.12.1-r0,8.14.1-r3,docker:27-cli -> docker:28-cli,Persiste (parche: 8.14.1-r4)
+docker:27-cli,CVE-2026-6276,libcurl,HIGH,8.12.1-r0,8.14.1-r3,docker:27-cli -> docker:28-cli,Persiste (parche: 8.14.1-r4)
+docker:27-cli,CVE-2026-63209,github.com/klauspost/compress,HIGH,v1.17.11,1.18.7,docker:27-cli -> docker:28-cli,Persiste (parche: 1.18.7)
+docker:27-cli,CVE-2026-66046,libexpat,HIGH,2.6.4-r0,2.8.4-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 2.8.4-r0)
+docker:27-cli,CVE-2026-76641,libexpat,HIGH,2.6.4-r0,2.8.4-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 2.8.4-r0)
+docker:27-cli,CVE-2026-76956,libexpat,HIGH,2.6.4-r0,2.8.4-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 2.8.4-r0)
+docker:27-cli,CVE-2026-76957,libexpat,HIGH,2.6.4-r0,2.8.4-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 2.8.4-r0)
+docker:27-cli,CVE-2026-77214,libexpat,HIGH,2.6.4-r0,2.9.0-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 2.9.0-r0)
+docker:27-cli,CVE-2026-78661,golang.org/x/net,HIGH,v0.33.0,0.62.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.62.0)
+docker:27-cli,CVE-2026-78667,stdlib,HIGH,v1.22.10,"1.26.9, 1.27.2",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.26.9, 1.27.2)"
+docker:27-cli,CVE-2026-78669,golang.org/x/net,HIGH,v0.33.0,0.60.0,docker:27-cli -> docker:28-cli,Persiste (parche: 0.60.0)
+docker:27-cli,CVE-2026-78669,stdlib,HIGH,v1.22.10,"1.26.9, 1.27.2",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.26.9, 1.27.2)"
+docker:27-cli,CVE-2026-8286,libcurl,HIGH,8.12.1-r0,8.14.1-r3,docker:27-cli -> docker:28-cli,Persiste (parche: 8.14.1-r4)
+docker:27-cli,CVE-2026-84304,google.golang.org/grpc,HIGH,v1.68.1,1.83.1,docker:27-cli -> docker:28-cli,Persiste (parche: 1.83.1)
+docker:27-cli,CVE-2026-84445,google.golang.org/grpc,HIGH,v1.68.1,"1.82.2, 1.83.2, 1.84.0-dev.0.20260825144003-d5a41119e0e3, 1.85.0-dev.0.20260825072537-93e31b48545e",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.82.2, 1.83.2, 1.84.0-dev.0.20260825144003-d5a41119e0e3, 1.85.0-dev.0.20260825072537-93e31b48545e)"
+docker:27-cli,CVE-2026-84782,libcrypto3,HIGH,3.3.3-r0,3.3.7-r2,docker:27-cli -> docker:28-cli,Corregida
+docker:27-cli,CVE-2026-84782,libssl3,HIGH,3.3.3-r0,3.3.7-r2,docker:27-cli -> docker:28-cli,Corregida
+docker:27-cli,CVE-2026-85091,zlib,HIGH,1.3.1-r2,1.3.2-r1,docker:27-cli -> docker:28-cli,Persiste (parche: 1.3.2-r1)
+docker:27-cli,CVE-2026-86145,pcre2,HIGH,10.43-r0,10.43-r1,docker:27-cli -> docker:28-cli,Persiste (parche: 10.46-r1)
+docker:27-cli,CVE-2026-89157,pcre2,HIGH,10.43-r0,10.43-r1,docker:27-cli -> docker:28-cli,Persiste (parche: 10.46-r1)
+docker:27-cli,CVE-2026-89161,pcre2,HIGH,10.43-r0,10.43-r1,docker:27-cli -> docker:28-cli,Persiste (parche: 10.46-r1)
+docker:27-cli,CVE-2026-8927,libcurl,HIGH,8.12.1-r0,8.14.1-r3,docker:27-cli -> docker:28-cli,Persiste (parche: 8.14.1-r4)
+docker:27-cli,CVE-2026-92392,libcurl,HIGH,8.12.1-r0,8.14.1-r3,docker:27-cli -> docker:28-cli,Persiste (parche: 8.14.1-r4)
+docker:27-cli,CVE-2026-93990,libexpat,HIGH,2.6.4-r0,2.8.5-r0,docker:27-cli -> docker:28-cli,Persiste (parche: 2.8.5-r0)
+docker:27-cli,CVE-2026-97031,stdlib,HIGH,v1.22.10,"1.26.9, 1.27.2",docker:27-cli -> docker:28-cli,"Persiste (parche: 1.26.9, 1.27.2)"
+docker:27-cli,GHSA-hrxh-6v49-42gf,google.golang.org/grpc,HIGH,v1.68.1,1.82.1,docker:27-cli -> docker:28-cli,Persiste (parche: 1.82.1)
+nginx:1.27-alpine,CVE-2026-111497,brotli-libs,CRITICAL,1.1.0-r2,1.1.1-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 1.2.1-r0)
+nginx:1.27-alpine,CVE-2026-31789,libcrypto3,CRITICAL,3.3.3-r0,3.3.7-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-31789,libssl3,CRITICAL,3.3.3-r0,3.3.7-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2025-15467,libcrypto3,HIGH,3.3.3-r0,3.3.6-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2025-15467,libssl3,HIGH,3.3.3-r0,3.3.6-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2025-32414,libxml2,HIGH,2.13.4-r5,2.13.4-r6,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2025-32415,libxml2,HIGH,2.13.4-r5,2.13.4-r6,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2025-49794,libxml2,HIGH,2.13.4-r5,2.13.9-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2025-49795,libxml2,HIGH,2.13.4-r5,2.13.9-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2025-49796,libxml2,HIGH,2.13.4-r5,2.13.9-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2025-59375,libexpat,HIGH,2.7.0-r0,2.7.2-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2025-64720,libpng,HIGH,1.6.47-r0,1.6.53-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2025-65018,libpng,HIGH,1.6.47-r0,1.6.53-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2025-66293,libpng,HIGH,1.6.47-r0,1.6.53-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2025-69421,libcrypto3,HIGH,3.3.3-r0,3.3.6-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2025-69421,libssl3,HIGH,3.3.3-r0,3.3.6-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-103111,pcre2,HIGH,10.43-r0,10.43-r1,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 10.49-r0)
+nginx:1.27-alpine,CVE-2026-107891,musl,HIGH,1.2.5-r9,1.2.5-r12,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 1.2.5-r24)
+nginx:1.27-alpine,CVE-2026-107891,musl-utils,HIGH,1.2.5-r9,1.2.5-r12,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 1.2.5-r24)
+nginx:1.27-alpine,CVE-2026-113351,libexpat,HIGH,2.7.0-r0,2.10.0-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 2.10.0-r0)
+nginx:1.27-alpine,CVE-2026-115506,libexpat,HIGH,2.7.0-r0,2.10.0-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 2.10.0-r0)
+nginx:1.27-alpine,CVE-2026-117610,libexpat,HIGH,2.7.0-r0,2.10.0-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 2.10.0-r0)
+nginx:1.27-alpine,CVE-2026-118370,libexpat,HIGH,2.7.0-r0,2.10.0-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 2.10.0-r0)
+nginx:1.27-alpine,CVE-2026-125350,libxslt,HIGH,1.1.42-r2,1.1.42-r3,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 1.1.43-r4)
+nginx:1.27-alpine,CVE-2026-22184,zlib,HIGH,1.3.1-r2,1.3.2-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-22695,libpng,HIGH,1.6.47-r0,1.6.54-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-22801,libpng,HIGH,1.6.47-r0,1.6.54-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-25210,libexpat,HIGH,2.7.0-r0,2.7.4-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-25646,libpng,HIGH,1.6.47-r0,1.6.55-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-27135,nghttp2-libs,HIGH,1.64.0-r0,1.68.1,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 1.68.1)
+nginx:1.27-alpine,CVE-2026-28387,libcrypto3,HIGH,3.3.3-r0,3.3.7-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-28387,libssl3,HIGH,3.3.3-r0,3.3.7-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-28388,libcrypto3,HIGH,3.3.3-r0,3.3.7-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-28388,libssl3,HIGH,3.3.3-r0,3.3.7-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-28389,libcrypto3,HIGH,3.3.3-r0,3.3.7-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-28389,libssl3,HIGH,3.3.3-r0,3.3.7-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-28390,libcrypto3,HIGH,3.3.3-r0,3.3.7-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-28390,libssl3,HIGH,3.3.3-r0,3.3.7-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-33630,c-ares,HIGH,1.34.5-r0,1.34.8-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 1.34.8-r0)
+nginx:1.27-alpine,CVE-2026-40200,musl,HIGH,1.2.5-r9,1.2.5-r11,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-40200,musl-utils,HIGH,1.2.5-r9,1.2.5-r11,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-45186,libexpat,HIGH,2.7.0-r0,2.8.1-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 2.8.1-r0)
+nginx:1.27-alpine,CVE-2026-45447,libcrypto3,HIGH,3.3.3-r0,3.3.7-r1,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 3.5.7-r0)
+nginx:1.27-alpine,CVE-2026-45447,libssl3,HIGH,3.3.3-r0,3.3.7-r1,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 3.5.7-r0)
+nginx:1.27-alpine,CVE-2026-4775,tiff,HIGH,4.7.0-r0,4.7.2-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 4.7.2-r0)
+nginx:1.27-alpine,CVE-2026-5773,curl,HIGH,8.12.1-r1,8.14.1-r3,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 8.20.0-r0)
+nginx:1.27-alpine,CVE-2026-5773,libcurl,HIGH,8.12.1-r1,8.14.1-r3,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 8.20.0-r0)
+nginx:1.27-alpine,CVE-2026-6276,curl,HIGH,8.12.1-r1,8.14.1-r3,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 8.20.0-r0)
+nginx:1.27-alpine,CVE-2026-6276,libcurl,HIGH,8.12.1-r1,8.14.1-r3,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 8.20.0-r0)
+nginx:1.27-alpine,CVE-2026-66046,libexpat,HIGH,2.7.0-r0,2.8.4-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 2.8.4-r0)
+nginx:1.27-alpine,CVE-2026-6732,libxml2,HIGH,2.13.4-r5,2.13.9-r1,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 2.13.9-r1)
+nginx:1.27-alpine,CVE-2026-76641,libexpat,HIGH,2.7.0-r0,2.8.4-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 2.8.4-r0)
+nginx:1.27-alpine,CVE-2026-76956,libexpat,HIGH,2.7.0-r0,2.8.4-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 2.8.4-r0)
+nginx:1.27-alpine,CVE-2026-76957,libexpat,HIGH,2.7.0-r0,2.8.4-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 2.8.4-r0)
+nginx:1.27-alpine,CVE-2026-77214,libexpat,HIGH,2.7.0-r0,2.9.0-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 2.9.0-r0)
+nginx:1.27-alpine,CVE-2026-8286,curl,HIGH,8.12.1-r1,8.14.1-r3,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 8.22.0-r0)
+nginx:1.27-alpine,CVE-2026-8286,libcurl,HIGH,8.12.1-r1,8.14.1-r3,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 8.22.0-r0)
+nginx:1.27-alpine,CVE-2026-84782,libcrypto3,HIGH,3.3.3-r0,3.3.7-r2,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-84782,libssl3,HIGH,3.3.3-r0,3.3.7-r2,nginx:1.27-alpine -> nginx:1.29-alpine,Corregida
+nginx:1.27-alpine,CVE-2026-85091,zlib,HIGH,1.3.1-r2,1.3.2-r1,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 1.3.2-r1)
+nginx:1.27-alpine,CVE-2026-86145,pcre2,HIGH,10.43-r0,10.43-r1,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 10.48-r0)
+nginx:1.27-alpine,CVE-2026-87636,libxslt,HIGH,1.1.42-r2,1.1.42-r3,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 1.1.43-r4)
+nginx:1.27-alpine,CVE-2026-89157,pcre2,HIGH,10.43-r0,10.43-r1,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 10.48-r0)
+nginx:1.27-alpine,CVE-2026-89161,pcre2,HIGH,10.43-r0,10.43-r1,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 10.48-r0)
+nginx:1.27-alpine,CVE-2026-8927,curl,HIGH,8.12.1-r1,8.14.1-r3,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 8.22.0-r0)
+nginx:1.27-alpine,CVE-2026-8927,libcurl,HIGH,8.12.1-r1,8.14.1-r3,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 8.22.0-r0)
+nginx:1.27-alpine,CVE-2026-92392,curl,HIGH,8.12.1-r1,8.14.1-r3,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 8.23.0-r0)
+nginx:1.27-alpine,CVE-2026-92392,libcurl,HIGH,8.12.1-r1,8.14.1-r3,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 8.23.0-r0)
+nginx:1.27-alpine,CVE-2026-93990,libexpat,HIGH,2.7.0-r0,2.8.5-r0,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 2.8.5-r0)
+nginx:1.27-alpine,CVE-2026-9947,libxslt,HIGH,1.1.42-r2,1.1.42-r3,nginx:1.27-alpine -> nginx:1.29-alpine,Persiste (parche: 1.1.43-r4)
+prom/prometheus:v2.55.1,CVE-2025-68121,stdlib,CRITICAL,v1.23.2,"1.24.13, 1.25.7, 1.26.0-rc.3",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.24.13, 1.25.7, 1.26.0-rc.3)"
+prom/prometheus:v2.55.1,CVE-2026-33186,google.golang.org/grpc,CRITICAL,v1.66.0,1.79.3,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 1.79.3)
+prom/prometheus:v2.55.1,CVE-2024-45337,golang.org/x/crypto,HIGH,v0.26.0,0.31.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Corregida
+prom/prometheus:v2.55.1,CVE-2024-45338,golang.org/x/net,HIGH,v0.28.0,0.33.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Corregida
+prom/prometheus:v2.55.1,CVE-2025-22868,golang.org/x/oauth2,HIGH,v0.23.0,0.27.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Corregida
+prom/prometheus:v2.55.1,CVE-2025-22869,golang.org/x/crypto,HIGH,v0.26.0,0.35.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Corregida
+prom/prometheus:v2.55.1,CVE-2025-30204,github.com/golang-jwt/jwt/v5,HIGH,v5.2.1,5.2.2,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Corregida
+prom/prometheus:v2.55.1,CVE-2025-47913,golang.org/x/crypto,HIGH,v0.26.0,0.43.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.43.0)
+prom/prometheus:v2.55.1,CVE-2025-61726,stdlib,HIGH,v1.23.2,"1.24.12, 1.25.6",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.24.12, 1.25.6)"
+prom/prometheus:v2.55.1,CVE-2025-61729,stdlib,HIGH,v1.23.2,"1.24.11, 1.25.5",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.24.11, 1.25.5)"
+prom/prometheus:v2.55.1,CVE-2026-111943,stdlib,HIGH,v1.23.2,"1.26.10, 1.27.3",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.26.10, 1.27.3)"
+prom/prometheus:v2.55.1,CVE-2026-24051,go.opentelemetry.io/otel/sdk,HIGH,v1.29.0,1.40.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 1.40.0)
+prom/prometheus:v2.55.1,CVE-2026-25679,stdlib,HIGH,v1.23.2,"1.25.8, 1.26.1",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.8, 1.26.1)"
+prom/prometheus:v2.55.1,CVE-2026-25681,golang.org/x/net,HIGH,v0.28.0,0.55.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.55.0)
+prom/prometheus:v2.55.1,CVE-2026-27136,golang.org/x/net,HIGH,v0.28.0,0.55.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.55.0)
+prom/prometheus:v2.55.1,CVE-2026-27145,stdlib,HIGH,v1.23.2,"1.25.11, 1.26.4",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.11, 1.26.4)"
+prom/prometheus:v2.55.1,CVE-2026-32280,stdlib,HIGH,v1.23.2,"1.25.9, 1.26.2",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.9, 1.26.2)"
+prom/prometheus:v2.55.1,CVE-2026-32281,stdlib,HIGH,v1.23.2,"1.25.9, 1.26.2",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.9, 1.26.2)"
+prom/prometheus:v2.55.1,CVE-2026-32283,stdlib,HIGH,v1.23.2,"1.25.9, 1.26.2",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.9, 1.26.2)"
+prom/prometheus:v2.55.1,CVE-2026-33811,stdlib,HIGH,v1.23.2,"1.25.10, 1.26.3",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.10, 1.26.3)"
+prom/prometheus:v2.55.1,CVE-2026-33814,golang.org/x/net,HIGH,v0.28.0,0.53.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.53.0)
+prom/prometheus:v2.55.1,CVE-2026-33814,stdlib,HIGH,v1.23.2,"1.25.10, 1.26.3",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.10, 1.26.3)"
+prom/prometheus:v2.55.1,CVE-2026-33818,stdlib,HIGH,v1.23.2,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/prometheus:v2.55.1,CVE-2026-39820,stdlib,HIGH,v1.23.2,"1.25.10, 1.26.3",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.10, 1.26.3)"
+prom/prometheus:v2.55.1,CVE-2026-39821,golang.org/x/net,HIGH,v0.28.0,0.55.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.55.0)
+prom/prometheus:v2.55.1,CVE-2026-39821,stdlib,HIGH,v1.23.2,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/prometheus:v2.55.1,CVE-2026-39822,stdlib,HIGH,v1.23.2,"1.25.12, 1.26.5, 1.27.0-rc.2",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.12, 1.26.5, 1.27.0-rc.2)"
+prom/prometheus:v2.55.1,CVE-2026-39828,golang.org/x/crypto,HIGH,v0.26.0,0.52.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.52.0)
+prom/prometheus:v2.55.1,CVE-2026-39829,golang.org/x/crypto,HIGH,v0.26.0,0.52.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.52.0)
+prom/prometheus:v2.55.1,CVE-2026-39830,golang.org/x/crypto,HIGH,v0.26.0,0.52.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.52.0)
+prom/prometheus:v2.55.1,CVE-2026-39831,golang.org/x/crypto,HIGH,v0.26.0,0.52.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.52.0)
+prom/prometheus:v2.55.1,CVE-2026-39832,golang.org/x/crypto,HIGH,v0.26.0,0.52.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.52.0)
+prom/prometheus:v2.55.1,CVE-2026-39835,golang.org/x/crypto,HIGH,v0.26.0,0.52.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.52.0)
+prom/prometheus:v2.55.1,CVE-2026-39836,stdlib,HIGH,v1.23.2,"1.25.10, 1.26.3",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.10, 1.26.3)"
+prom/prometheus:v2.55.1,CVE-2026-39883,go.opentelemetry.io/otel/sdk,HIGH,v1.29.0,1.43.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 1.43.0)
+prom/prometheus:v2.55.1,CVE-2026-41567,github.com/docker/docker,HIGH,v27.2.0+incompatible,sin parche,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (sin parche)
+prom/prometheus:v2.55.1,CVE-2026-42306,github.com/docker/docker,HIGH,v27.2.0+incompatible,sin parche,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (sin parche)
+prom/prometheus:v2.55.1,CVE-2026-42499,stdlib,HIGH,v1.23.2,"1.25.10, 1.26.3",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.10, 1.26.3)"
+prom/prometheus:v2.55.1,CVE-2026-42504,stdlib,HIGH,v1.23.2,"1.25.11, 1.26.4",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.11, 1.26.4)"
+prom/prometheus:v2.55.1,CVE-2026-42508,golang.org/x/crypto,HIGH,v0.26.0,0.52.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.52.0)
+prom/prometheus:v2.55.1,CVE-2026-46595,golang.org/x/crypto,HIGH,v0.26.0,0.52.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.52.0)
+prom/prometheus:v2.55.1,CVE-2026-46597,golang.org/x/crypto,HIGH,v0.26.0,0.52.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.52.0)
+prom/prometheus:v2.55.1,CVE-2026-46600,golang.org/x/net,HIGH,v0.28.0,0.56.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.56.0)
+prom/prometheus:v2.55.1,CVE-2026-56851,golang.org/x/text,HIGH,v0.18.0,0.41.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.41.0)
+prom/prometheus:v2.55.1,CVE-2026-56852,golang.org/x/text,HIGH,v0.18.0,0.39.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.39.0)
+prom/prometheus:v2.55.1,CVE-2026-56853,stdlib,HIGH,v1.23.2,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/prometheus:v2.55.1,CVE-2026-56854,golang.org/x/crypto,HIGH,v0.26.0,0.55.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.55.0)
+prom/prometheus:v2.55.1,CVE-2026-56858,stdlib,HIGH,v1.23.2,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/prometheus:v2.55.1,CVE-2026-56859,stdlib,HIGH,v1.23.2,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/prometheus:v2.55.1,CVE-2026-56860,stdlib,HIGH,v1.23.2,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/prometheus:v2.55.1,CVE-2026-56862,stdlib,HIGH,v1.23.2,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/prometheus:v2.55.1,CVE-2026-63209,github.com/klauspost/compress,HIGH,v1.17.9,1.18.7,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 1.18.7)
+prom/prometheus:v2.55.1,CVE-2026-78661,golang.org/x/net,HIGH,v0.28.0,0.62.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.62.0)
+prom/prometheus:v2.55.1,CVE-2026-78667,stdlib,HIGH,v1.23.2,"1.26.9, 1.27.2",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.26.9, 1.27.2)"
+prom/prometheus:v2.55.1,CVE-2026-78669,golang.org/x/net,HIGH,v0.28.0,0.60.0,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 0.60.0)
+prom/prometheus:v2.55.1,CVE-2026-78669,stdlib,HIGH,v1.23.2,"1.26.9, 1.27.2",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.26.9, 1.27.2)"
+prom/prometheus:v2.55.1,CVE-2026-84304,google.golang.org/grpc,HIGH,v1.66.0,1.83.1,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 1.83.1)
+prom/prometheus:v2.55.1,CVE-2026-84445,google.golang.org/grpc,HIGH,v1.66.0,"1.82.2, 1.83.2, 1.84.0-dev.0.20260825144003-d5a41119e0e3, 1.85.0-dev.0.20260825072537-93e31b48545e",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.82.2, 1.83.2, 1.84.0-dev.0.20260825144003-d5a41119e0e3, 1.85.0-dev.0.20260825072537-93e31b48545e)"
+prom/prometheus:v2.55.1,CVE-2026-97031,stdlib,HIGH,v1.23.2,"1.26.9, 1.27.2",prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,"Persiste (parche: 1.26.9, 1.27.2)"
+prom/prometheus:v2.55.1,GHSA-hrxh-6v49-42gf,google.golang.org/grpc,HIGH,v1.66.0,1.82.1,prom/prometheus:v2.55.1 -> prom/prometheus:v3.5.0,Persiste (parche: 1.82.1)
+prom/node-exporter:v1.8.2,CVE-2025-68121,stdlib,CRITICAL,v1.22.5,"1.24.13, 1.25.7, 1.26.0-rc.3",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.24.13, 1.25.7, 1.26.0-rc.3)"
+prom/node-exporter:v1.8.2,CVE-2024-34156,stdlib,HIGH,v1.22.5,"1.22.7, 1.23.1",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Corregida
+prom/node-exporter:v1.8.2,CVE-2024-45337,golang.org/x/crypto,HIGH,v0.21.0,0.31.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Corregida
+prom/node-exporter:v1.8.2,CVE-2024-45338,golang.org/x/net,HIGH,v0.23.0,0.33.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Corregida
+prom/node-exporter:v1.8.2,CVE-2025-22868,golang.org/x/oauth2,HIGH,v0.18.0,0.27.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Corregida
+prom/node-exporter:v1.8.2,CVE-2025-22869,golang.org/x/crypto,HIGH,v0.21.0,0.35.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Corregida
+prom/node-exporter:v1.8.2,CVE-2025-47913,golang.org/x/crypto,HIGH,v0.21.0,0.43.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.43.0)
+prom/node-exporter:v1.8.2,CVE-2025-52881,github.com/opencontainers/selinux,HIGH,v1.11.0,1.13.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 1.13.0)
+prom/node-exporter:v1.8.2,CVE-2025-61726,stdlib,HIGH,v1.22.5,"1.24.12, 1.25.6",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.24.12, 1.25.6)"
+prom/node-exporter:v1.8.2,CVE-2025-61729,stdlib,HIGH,v1.22.5,"1.24.11, 1.25.5",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.24.11, 1.25.5)"
+prom/node-exporter:v1.8.2,CVE-2026-111943,stdlib,HIGH,v1.22.5,"1.26.10, 1.27.3",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.26.10, 1.27.3)"
+prom/node-exporter:v1.8.2,CVE-2026-25679,stdlib,HIGH,v1.22.5,"1.25.8, 1.26.1",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.8, 1.26.1)"
+prom/node-exporter:v1.8.2,CVE-2026-25681,golang.org/x/net,HIGH,v0.23.0,0.55.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.55.0)
+prom/node-exporter:v1.8.2,CVE-2026-27136,golang.org/x/net,HIGH,v0.23.0,0.55.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.55.0)
+prom/node-exporter:v1.8.2,CVE-2026-27145,stdlib,HIGH,v1.22.5,"1.25.11, 1.26.4",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.11, 1.26.4)"
+prom/node-exporter:v1.8.2,CVE-2026-32280,stdlib,HIGH,v1.22.5,"1.25.9, 1.26.2",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.9, 1.26.2)"
+prom/node-exporter:v1.8.2,CVE-2026-32281,stdlib,HIGH,v1.22.5,"1.25.9, 1.26.2",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.9, 1.26.2)"
+prom/node-exporter:v1.8.2,CVE-2026-32283,stdlib,HIGH,v1.22.5,"1.25.9, 1.26.2",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.9, 1.26.2)"
+prom/node-exporter:v1.8.2,CVE-2026-33811,stdlib,HIGH,v1.22.5,"1.25.10, 1.26.3",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.10, 1.26.3)"
+prom/node-exporter:v1.8.2,CVE-2026-33814,golang.org/x/net,HIGH,v0.23.0,0.53.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.53.0)
+prom/node-exporter:v1.8.2,CVE-2026-33814,stdlib,HIGH,v1.22.5,"1.25.10, 1.26.3",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.10, 1.26.3)"
+prom/node-exporter:v1.8.2,CVE-2026-33818,stdlib,HIGH,v1.22.5,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/node-exporter:v1.8.2,CVE-2026-39820,stdlib,HIGH,v1.22.5,"1.25.10, 1.26.3",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.10, 1.26.3)"
+prom/node-exporter:v1.8.2,CVE-2026-39821,golang.org/x/net,HIGH,v0.23.0,0.55.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.55.0)
+prom/node-exporter:v1.8.2,CVE-2026-39821,stdlib,HIGH,v1.22.5,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/node-exporter:v1.8.2,CVE-2026-39822,stdlib,HIGH,v1.22.5,"1.25.12, 1.26.5, 1.27.0-rc.2",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.12, 1.26.5, 1.27.0-rc.2)"
+prom/node-exporter:v1.8.2,CVE-2026-39828,golang.org/x/crypto,HIGH,v0.21.0,0.52.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.52.0)
+prom/node-exporter:v1.8.2,CVE-2026-39829,golang.org/x/crypto,HIGH,v0.21.0,0.52.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.52.0)
+prom/node-exporter:v1.8.2,CVE-2026-39830,golang.org/x/crypto,HIGH,v0.21.0,0.52.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.52.0)
+prom/node-exporter:v1.8.2,CVE-2026-39831,golang.org/x/crypto,HIGH,v0.21.0,0.52.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.52.0)
+prom/node-exporter:v1.8.2,CVE-2026-39832,golang.org/x/crypto,HIGH,v0.21.0,0.52.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.52.0)
+prom/node-exporter:v1.8.2,CVE-2026-39835,golang.org/x/crypto,HIGH,v0.21.0,0.52.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.52.0)
+prom/node-exporter:v1.8.2,CVE-2026-39836,stdlib,HIGH,v1.22.5,"1.25.10, 1.26.3",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.10, 1.26.3)"
+prom/node-exporter:v1.8.2,CVE-2026-42499,stdlib,HIGH,v1.22.5,"1.25.10, 1.26.3",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.10, 1.26.3)"
+prom/node-exporter:v1.8.2,CVE-2026-42504,stdlib,HIGH,v1.22.5,"1.25.11, 1.26.4",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.11, 1.26.4)"
+prom/node-exporter:v1.8.2,CVE-2026-42508,golang.org/x/crypto,HIGH,v0.21.0,0.52.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.52.0)
+prom/node-exporter:v1.8.2,CVE-2026-46595,golang.org/x/crypto,HIGH,v0.21.0,0.52.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.52.0)
+prom/node-exporter:v1.8.2,CVE-2026-46597,golang.org/x/crypto,HIGH,v0.21.0,0.52.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.52.0)
+prom/node-exporter:v1.8.2,CVE-2026-46600,golang.org/x/net,HIGH,v0.23.0,0.56.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.56.0)
+prom/node-exporter:v1.8.2,CVE-2026-56851,golang.org/x/text,HIGH,v0.14.0,0.41.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.41.0)
+prom/node-exporter:v1.8.2,CVE-2026-56852,golang.org/x/text,HIGH,v0.14.0,0.39.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.39.0)
+prom/node-exporter:v1.8.2,CVE-2026-56853,stdlib,HIGH,v1.22.5,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/node-exporter:v1.8.2,CVE-2026-56854,golang.org/x/crypto,HIGH,v0.21.0,0.55.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.55.0)
+prom/node-exporter:v1.8.2,CVE-2026-56858,stdlib,HIGH,v1.22.5,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/node-exporter:v1.8.2,CVE-2026-56859,stdlib,HIGH,v1.22.5,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/node-exporter:v1.8.2,CVE-2026-56860,stdlib,HIGH,v1.22.5,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/node-exporter:v1.8.2,CVE-2026-56862,stdlib,HIGH,v1.22.5,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/node-exporter:v1.8.2,CVE-2026-78661,golang.org/x/net,HIGH,v0.23.0,0.62.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.62.0)
+prom/node-exporter:v1.8.2,CVE-2026-78667,stdlib,HIGH,v1.22.5,"1.26.9, 1.27.2",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.26.9, 1.27.2)"
+prom/node-exporter:v1.8.2,CVE-2026-78669,golang.org/x/net,HIGH,v0.23.0,0.60.0,prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,Persiste (parche: 0.60.0)
+prom/node-exporter:v1.8.2,CVE-2026-78669,stdlib,HIGH,v1.22.5,"1.26.9, 1.27.2",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.26.9, 1.27.2)"
+prom/node-exporter:v1.8.2,CVE-2026-97031,stdlib,HIGH,v1.22.5,"1.26.9, 1.27.2",prom/node-exporter:v1.8.2 -> prom/node-exporter:v1.9.1,"Persiste (parche: 1.26.9, 1.27.2)"
+prom/blackbox-exporter:v0.25.0,CVE-2024-24790,stdlib,CRITICAL,v1.22.2,"1.21.11, 1.22.4",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Corregida
+prom/blackbox-exporter:v0.25.0,CVE-2025-68121,stdlib,CRITICAL,v1.22.2,"1.24.13, 1.25.7, 1.26.0-rc.3",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.24.13, 1.25.7, 1.26.0-rc.3)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-33186,google.golang.org/grpc,CRITICAL,v1.63.2,1.79.3,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 1.79.3)
+prom/blackbox-exporter:v0.25.0,CVE-2024-34156,stdlib,HIGH,v1.22.2,"1.22.7, 1.23.1",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Corregida
+prom/blackbox-exporter:v0.25.0,CVE-2024-45337,golang.org/x/crypto,HIGH,v0.22.0,0.31.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Corregida
+prom/blackbox-exporter:v0.25.0,CVE-2024-45338,golang.org/x/net,HIGH,v0.24.0,0.33.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Corregida
+prom/blackbox-exporter:v0.25.0,CVE-2025-22868,golang.org/x/oauth2,HIGH,v0.18.0,0.27.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Corregida
+prom/blackbox-exporter:v0.25.0,CVE-2025-22869,golang.org/x/crypto,HIGH,v0.22.0,0.35.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Corregida
+prom/blackbox-exporter:v0.25.0,CVE-2025-47913,golang.org/x/crypto,HIGH,v0.22.0,0.43.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.43.0)
+prom/blackbox-exporter:v0.25.0,CVE-2025-61726,stdlib,HIGH,v1.22.2,"1.24.12, 1.25.6",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.24.12, 1.25.6)"
+prom/blackbox-exporter:v0.25.0,CVE-2025-61729,stdlib,HIGH,v1.22.2,"1.24.11, 1.25.5",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.24.11, 1.25.5)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-111943,stdlib,HIGH,v1.22.2,"1.26.10, 1.27.3",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.26.10, 1.27.3)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-25679,stdlib,HIGH,v1.22.2,"1.25.8, 1.26.1",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.8, 1.26.1)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-25681,golang.org/x/net,HIGH,v0.24.0,0.55.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.55.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-27136,golang.org/x/net,HIGH,v0.24.0,0.55.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.55.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-27145,stdlib,HIGH,v1.22.2,"1.25.11, 1.26.4",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.11, 1.26.4)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-32280,stdlib,HIGH,v1.22.2,"1.25.9, 1.26.2",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.9, 1.26.2)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-32281,stdlib,HIGH,v1.22.2,"1.25.9, 1.26.2",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.9, 1.26.2)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-32283,stdlib,HIGH,v1.22.2,"1.25.9, 1.26.2",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.9, 1.26.2)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-33811,stdlib,HIGH,v1.22.2,"1.25.10, 1.26.3",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.10, 1.26.3)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-33814,golang.org/x/net,HIGH,v0.24.0,0.53.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.53.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-33814,stdlib,HIGH,v1.22.2,"1.25.10, 1.26.3",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.10, 1.26.3)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-33818,stdlib,HIGH,v1.22.2,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-39820,stdlib,HIGH,v1.22.2,"1.25.10, 1.26.3",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.10, 1.26.3)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-39821,golang.org/x/net,HIGH,v0.24.0,0.55.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.55.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-39821,stdlib,HIGH,v1.22.2,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-39822,stdlib,HIGH,v1.22.2,"1.25.12, 1.26.5, 1.27.0-rc.2",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.12, 1.26.5, 1.27.0-rc.2)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-39828,golang.org/x/crypto,HIGH,v0.22.0,0.52.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.52.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-39829,golang.org/x/crypto,HIGH,v0.22.0,0.52.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.52.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-39830,golang.org/x/crypto,HIGH,v0.22.0,0.52.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.52.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-39831,golang.org/x/crypto,HIGH,v0.22.0,0.52.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.52.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-39832,golang.org/x/crypto,HIGH,v0.22.0,0.52.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.52.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-39835,golang.org/x/crypto,HIGH,v0.22.0,0.52.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.52.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-39836,stdlib,HIGH,v1.22.2,"1.25.10, 1.26.3",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.10, 1.26.3)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-42499,stdlib,HIGH,v1.22.2,"1.25.10, 1.26.3",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.10, 1.26.3)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-42504,stdlib,HIGH,v1.22.2,"1.25.11, 1.26.4",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.11, 1.26.4)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-42508,golang.org/x/crypto,HIGH,v0.22.0,0.52.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.52.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-46595,golang.org/x/crypto,HIGH,v0.22.0,0.52.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.52.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-46597,golang.org/x/crypto,HIGH,v0.22.0,0.52.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.52.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-46600,golang.org/x/net,HIGH,v0.24.0,0.56.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.56.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-56851,golang.org/x/text,HIGH,v0.14.0,0.41.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.41.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-56852,golang.org/x/text,HIGH,v0.14.0,0.39.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.39.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-56853,stdlib,HIGH,v1.22.2,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-56854,golang.org/x/crypto,HIGH,v0.22.0,0.55.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.55.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-56858,stdlib,HIGH,v1.22.2,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-56859,stdlib,HIGH,v1.22.2,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-56860,stdlib,HIGH,v1.22.2,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-56862,stdlib,HIGH,v1.22.2,"1.25.13, 1.26.6, 1.27.0-rc.3",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-78661,golang.org/x/net,HIGH,v0.24.0,0.62.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.62.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-78667,stdlib,HIGH,v1.22.2,"1.26.9, 1.27.2",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.26.9, 1.27.2)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-78669,golang.org/x/net,HIGH,v0.24.0,0.60.0,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 0.60.0)
+prom/blackbox-exporter:v0.25.0,CVE-2026-78669,stdlib,HIGH,v1.22.2,"1.26.9, 1.27.2",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.26.9, 1.27.2)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-84304,google.golang.org/grpc,HIGH,v1.63.2,1.83.1,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 1.83.1)
+prom/blackbox-exporter:v0.25.0,CVE-2026-84445,google.golang.org/grpc,HIGH,v1.63.2,"1.82.2, 1.83.2, 1.84.0-dev.0.20260825144003-d5a41119e0e3, 1.85.0-dev.0.20260825072537-93e31b48545e",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.82.2, 1.83.2, 1.84.0-dev.0.20260825144003-d5a41119e0e3, 1.85.0-dev.0.20260825072537-93e31b48545e)"
+prom/blackbox-exporter:v0.25.0,CVE-2026-97031,stdlib,HIGH,v1.22.2,"1.26.9, 1.27.2",prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,"Persiste (parche: 1.26.9, 1.27.2)"
+prom/blackbox-exporter:v0.25.0,GHSA-hrxh-6v49-42gf,google.golang.org/grpc,HIGH,v1.63.2,1.82.1,prom/blackbox-exporter:v0.25.0 -> prom/blackbox-exporter:v0.27.0,Persiste (parche: 1.82.1)
+grafana/grafana:11.3.0,CVE-2025-68121,stdlib,CRITICAL,v1.23.1,"1.24.13, 1.25.7, 1.26.0-rc.3",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.24.13, 1.25.7, 1.26.0-rc.3)"
+grafana/grafana:11.3.0,CVE-2026-31789,libcrypto3,CRITICAL,3.3.2-r0,3.3.7-r0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 3.3.7-r0)
+grafana/grafana:11.3.0,CVE-2026-31789,libssl3,CRITICAL,3.3.2-r0,3.3.7-r0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 3.3.7-r0)
+grafana/grafana:11.3.0,CVE-2026-33186,google.golang.org/grpc,CRITICAL,v1.66.0,1.79.3,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 1.79.3)
+grafana/grafana:11.3.0,CVE-2026-33815,github.com/jackc/pgx/v5,CRITICAL,v5.5.5,5.9.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 5.9.0)
+grafana/grafana:11.3.0,CVE-2026-33816,github.com/jackc/pgx/v5,CRITICAL,v5.5.5,5.9.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 5.9.0)
+grafana/grafana:11.3.0,GHSA-r277-6w6q-xmqw,github.com/getkin/kin-openapi,CRITICAL,v0.125.0,0.144.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.144.0)
+grafana/grafana:11.3.0,CVE-2024-12797,libcrypto3,HIGH,3.3.2-r0,3.3.3-r0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Corregida
+grafana/grafana:11.3.0,CVE-2024-12797,libssl3,HIGH,3.3.2-r0,3.3.3-r0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Corregida
+grafana/grafana:11.3.0,CVE-2024-45337,golang.org/x/crypto,HIGH,v0.27.0,0.31.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Corregida
+grafana/grafana:11.3.0,CVE-2024-45338,golang.org/x/net,HIGH,v0.29.0,0.33.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Corregida
+grafana/grafana:11.3.0,CVE-2025-15467,libcrypto3,HIGH,3.3.2-r0,3.3.6-r0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 3.3.6-r0)
+grafana/grafana:11.3.0,CVE-2025-15467,libssl3,HIGH,3.3.2-r0,3.3.6-r0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 3.3.6-r0)
+grafana/grafana:11.3.0,CVE-2025-22868,golang.org/x/oauth2,HIGH,v0.23.0,0.27.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Corregida
+grafana/grafana:11.3.0,CVE-2025-22869,golang.org/x/crypto,HIGH,v0.27.0,0.35.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Corregida
+grafana/grafana:11.3.0,CVE-2025-26519,musl,HIGH,1.2.5-r0,1.2.5-r1,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Corregida
+grafana/grafana:11.3.0,CVE-2025-26519,musl-utils,HIGH,1.2.5-r0,1.2.5-r1,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Corregida
+grafana/grafana:11.3.0,CVE-2025-30153,github.com/getkin/kin-openapi,HIGH,v0.125.0,0.131.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.131.0)
+grafana/grafana:11.3.0,CVE-2025-30204,github.com/golang-jwt/jwt/v4,HIGH,v4.5.0,4.5.2,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 4.5.2)
+grafana/grafana:11.3.0,CVE-2025-30204,github.com/golang-jwt/jwt/v5,HIGH,v5.2.1,5.2.2,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 5.2.2)
+grafana/grafana:11.3.0,CVE-2025-47913,golang.org/x/crypto,HIGH,v0.27.0,0.43.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.43.0)
+grafana/grafana:11.3.0,CVE-2025-61726,stdlib,HIGH,v1.23.1,"1.24.12, 1.25.6",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.24.12, 1.25.6)"
+grafana/grafana:11.3.0,CVE-2025-61729,stdlib,HIGH,v1.23.1,"1.24.11, 1.25.5",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.24.11, 1.25.5)"
+grafana/grafana:11.3.0,CVE-2025-69421,libcrypto3,HIGH,3.3.2-r0,3.3.6-r0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 3.3.6-r0)
+grafana/grafana:11.3.0,CVE-2025-69421,libssl3,HIGH,3.3.2-r0,3.3.6-r0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 3.3.6-r0)
+grafana/grafana:11.3.0,CVE-2026-100349,github.com/getkin/kin-openapi,HIGH,v0.125.0,0.146.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.146.0)
+grafana/grafana:11.3.0,CVE-2026-100352,github.com/getkin/kin-openapi,HIGH,v0.125.0,0.148.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.148.0)
+grafana/grafana:11.3.0,CVE-2026-100354,github.com/getkin/kin-openapi,HIGH,v0.125.0,0.149.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.149.0)
+grafana/grafana:11.3.0,CVE-2026-107891,musl,HIGH,1.2.5-r0,1.2.5-r4,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 1.2.5-r12)
+grafana/grafana:11.3.0,CVE-2026-107891,musl-utils,HIGH,1.2.5-r0,1.2.5-r4,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 1.2.5-r12)
+grafana/grafana:11.3.0,CVE-2026-111943,stdlib,HIGH,v1.23.1,"1.26.10, 1.27.3",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.26.10, 1.27.3)"
+grafana/grafana:11.3.0,CVE-2026-116587,github.com/go-jose/go-jose/v3,HIGH,v3.0.3,sin parche,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (sin parche)
+grafana/grafana:11.3.0,CVE-2026-21728,github.com/grafana/tempo,HIGH,v1.5.1-0.20240604192202-01f4bc8ac2d1,"2.8.4, 2.9.2, 2.10.2",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 2.8.4, 2.9.2, 2.10.2)"
+grafana/grafana:11.3.0,CVE-2026-22184,zlib,HIGH,1.3.1-r1,1.3.2-r0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 1.3.2-r0)
+grafana/grafana:11.3.0,CVE-2026-24051,go.opentelemetry.io/otel/sdk,HIGH,v1.29.0,1.40.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 1.40.0)
+grafana/grafana:11.3.0,CVE-2026-25679,stdlib,HIGH,v1.23.1,"1.25.8, 1.26.1",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.8, 1.26.1)"
+grafana/grafana:11.3.0,CVE-2026-25681,golang.org/x/net,HIGH,v0.29.0,0.55.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.55.0)
+grafana/grafana:11.3.0,CVE-2026-27136,golang.org/x/net,HIGH,v0.29.0,0.55.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.55.0)
+grafana/grafana:11.3.0,CVE-2026-27145,stdlib,HIGH,v1.23.1,"1.25.11, 1.26.4",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.11, 1.26.4)"
+grafana/grafana:11.3.0,CVE-2026-28377,github.com/grafana/tempo,HIGH,v1.5.1-0.20240604192202-01f4bc8ac2d1,2.10.3,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 2.10.3)
+grafana/grafana:11.3.0,CVE-2026-28387,libcrypto3,HIGH,3.3.2-r0,3.3.7-r0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 3.3.7-r0)
+grafana/grafana:11.3.0,CVE-2026-28387,libssl3,HIGH,3.3.2-r0,3.3.7-r0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 3.3.7-r0)
+grafana/grafana:11.3.0,CVE-2026-28388,libcrypto3,HIGH,3.3.2-r0,3.3.7-r0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 3.3.7-r0)
+grafana/grafana:11.3.0,CVE-2026-28388,libssl3,HIGH,3.3.2-r0,3.3.7-r0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 3.3.7-r0)
+grafana/grafana:11.3.0,CVE-2026-28389,libcrypto3,HIGH,3.3.2-r0,3.3.7-r0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 3.3.7-r0)
+grafana/grafana:11.3.0,CVE-2026-28389,libssl3,HIGH,3.3.2-r0,3.3.7-r0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 3.3.7-r0)
+grafana/grafana:11.3.0,CVE-2026-28390,libcrypto3,HIGH,3.3.2-r0,3.3.7-r0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 3.3.7-r0)
+grafana/grafana:11.3.0,CVE-2026-28390,libssl3,HIGH,3.3.2-r0,3.3.7-r0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 3.3.7-r0)
+grafana/grafana:11.3.0,CVE-2026-32280,stdlib,HIGH,v1.23.1,"1.25.9, 1.26.2",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.9, 1.26.2)"
+grafana/grafana:11.3.0,CVE-2026-32281,stdlib,HIGH,v1.23.1,"1.25.9, 1.26.2",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.9, 1.26.2)"
+grafana/grafana:11.3.0,CVE-2026-32283,stdlib,HIGH,v1.23.1,"1.25.9, 1.26.2",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.9, 1.26.2)"
+grafana/grafana:11.3.0,CVE-2026-32285,github.com/buger/jsonparser,HIGH,v1.1.1,1.1.2,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 1.1.2)
+grafana/grafana:11.3.0,CVE-2026-33487,github.com/russellhaering/goxmldsig,HIGH,v1.4.0,1.6.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Corregida
+grafana/grafana:11.3.0,CVE-2026-33811,stdlib,HIGH,v1.23.1,"1.25.10, 1.26.3",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.10, 1.26.3)"
+grafana/grafana:11.3.0,CVE-2026-33814,golang.org/x/net,HIGH,v0.29.0,0.53.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.53.0)
+grafana/grafana:11.3.0,CVE-2026-33814,stdlib,HIGH,v1.23.1,"1.25.10, 1.26.3",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.10, 1.26.3)"
+grafana/grafana:11.3.0,CVE-2026-33818,stdlib,HIGH,v1.23.1,"1.25.13, 1.26.6, 1.27.0-rc.3",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+grafana/grafana:11.3.0,CVE-2026-34986,github.com/go-jose/go-jose/v3,HIGH,v3.0.3,3.0.5,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 3.0.5)
+grafana/grafana:11.3.0,CVE-2026-35469,github.com/moby/spdystream,HIGH,v0.4.0,0.5.1,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.5.1)
+grafana/grafana:11.3.0,CVE-2026-39820,stdlib,HIGH,v1.23.1,"1.25.10, 1.26.3",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.10, 1.26.3)"
+grafana/grafana:11.3.0,CVE-2026-39821,golang.org/x/net,HIGH,v0.29.0,0.55.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.55.0)
+grafana/grafana:11.3.0,CVE-2026-39821,stdlib,HIGH,v1.23.1,"1.25.13, 1.26.6, 1.27.0-rc.3",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+grafana/grafana:11.3.0,CVE-2026-39822,stdlib,HIGH,v1.23.1,"1.25.12, 1.26.5, 1.27.0-rc.2",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.12, 1.26.5, 1.27.0-rc.2)"
+grafana/grafana:11.3.0,CVE-2026-39828,golang.org/x/crypto,HIGH,v0.27.0,0.52.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.52.0)
+grafana/grafana:11.3.0,CVE-2026-39829,golang.org/x/crypto,HIGH,v0.27.0,0.52.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.52.0)
+grafana/grafana:11.3.0,CVE-2026-39830,golang.org/x/crypto,HIGH,v0.27.0,0.52.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.52.0)
+grafana/grafana:11.3.0,CVE-2026-39831,golang.org/x/crypto,HIGH,v0.27.0,0.52.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.52.0)
+grafana/grafana:11.3.0,CVE-2026-39832,golang.org/x/crypto,HIGH,v0.27.0,0.52.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.52.0)
+grafana/grafana:11.3.0,CVE-2026-39835,golang.org/x/crypto,HIGH,v0.27.0,0.52.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.52.0)
+grafana/grafana:11.3.0,CVE-2026-39836,stdlib,HIGH,v1.23.1,"1.25.10, 1.26.3",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.10, 1.26.3)"
+grafana/grafana:11.3.0,CVE-2026-39883,go.opentelemetry.io/otel/sdk,HIGH,v1.29.0,1.43.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 1.43.0)
+grafana/grafana:11.3.0,CVE-2026-40200,musl,HIGH,1.2.5-r0,1.2.5-r3,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 1.2.5-r11)
+grafana/grafana:11.3.0,CVE-2026-40200,musl-utils,HIGH,1.2.5-r0,1.2.5-r3,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 1.2.5-r11)
+grafana/grafana:11.3.0,CVE-2026-42127,github.com/grafana/grafana,HIGH,11.3.0,1.9.2-0.20260616075434-82ef13993059,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 1.9.2-0.20260616075434-82ef13993059)
+grafana/grafana:11.3.0,CVE-2026-42129,github.com/grafana/grafana,HIGH,11.3.0,1.9.2-0.20260616075434-82ef13993059,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 1.9.2-0.20260616075434-82ef13993059)
+grafana/grafana:11.3.0,CVE-2026-42151,github.com/prometheus/prometheus,HIGH,v0.52.0,0.311.3,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.311.3)
+grafana/grafana:11.3.0,CVE-2026-42154,github.com/prometheus/prometheus,HIGH,v0.52.0,"0.311.3, 0.305.2",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 0.311.3, 0.305.2)"
+grafana/grafana:11.3.0,CVE-2026-42499,stdlib,HIGH,v1.23.1,"1.25.10, 1.26.3",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.10, 1.26.3)"
+grafana/grafana:11.3.0,CVE-2026-42504,stdlib,HIGH,v1.23.1,"1.25.11, 1.26.4",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.11, 1.26.4)"
+grafana/grafana:11.3.0,CVE-2026-42508,golang.org/x/crypto,HIGH,v0.27.0,0.52.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.52.0)
+grafana/grafana:11.3.0,CVE-2026-46595,golang.org/x/crypto,HIGH,v0.27.0,0.52.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.52.0)
+grafana/grafana:11.3.0,CVE-2026-46597,golang.org/x/crypto,HIGH,v0.27.0,0.52.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.52.0)
+grafana/grafana:11.3.0,CVE-2026-46600,golang.org/x/net,HIGH,v0.29.0,0.56.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.56.0)
+grafana/grafana:11.3.0,CVE-2026-56851,golang.org/x/text,HIGH,v0.18.0,0.41.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.41.0)
+grafana/grafana:11.3.0,CVE-2026-56852,golang.org/x/text,HIGH,v0.18.0,0.39.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.39.0)
+grafana/grafana:11.3.0,CVE-2026-56853,stdlib,HIGH,v1.23.1,"1.25.13, 1.26.6, 1.27.0-rc.3",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+grafana/grafana:11.3.0,CVE-2026-56854,golang.org/x/crypto,HIGH,v0.27.0,0.55.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.55.0)
+grafana/grafana:11.3.0,CVE-2026-56858,stdlib,HIGH,v1.23.1,"1.25.13, 1.26.6, 1.27.0-rc.3",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+grafana/grafana:11.3.0,CVE-2026-56859,stdlib,HIGH,v1.23.1,"1.25.13, 1.26.6, 1.27.0-rc.3",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+grafana/grafana:11.3.0,CVE-2026-56860,stdlib,HIGH,v1.23.1,"1.25.13, 1.26.6, 1.27.0-rc.3",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+grafana/grafana:11.3.0,CVE-2026-56862,stdlib,HIGH,v1.23.1,"1.25.13, 1.26.6, 1.27.0-rc.3",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.25.13, 1.26.6, 1.27.0-rc.3)"
+grafana/grafana:11.3.0,CVE-2026-56864,golang.org/x/mod,HIGH,v0.20.0,0.40.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Corregida
+grafana/grafana:11.3.0,CVE-2026-56865,golang.org/x/mod,HIGH,v0.20.0,0.40.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Corregida
+grafana/grafana:11.3.0,CVE-2026-63209,github.com/klauspost/compress,HIGH,v1.17.9,1.18.7,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 1.18.7)
+grafana/grafana:11.3.0,CVE-2026-76905,github.com/getkin/kin-openapi,HIGH,v0.125.0,0.141.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.141.0)
+grafana/grafana:11.3.0,CVE-2026-77354,github.com/getkin/kin-openapi,HIGH,v0.125.0,0.142.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.142.0)
+grafana/grafana:11.3.0,CVE-2026-78661,golang.org/x/net,HIGH,v0.29.0,0.62.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.62.0)
+grafana/grafana:11.3.0,CVE-2026-78667,stdlib,HIGH,v1.23.1,"1.26.9, 1.27.2",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.26.9, 1.27.2)"
+grafana/grafana:11.3.0,CVE-2026-78669,golang.org/x/net,HIGH,v0.29.0,0.60.0,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 0.60.0)
+grafana/grafana:11.3.0,CVE-2026-78669,stdlib,HIGH,v1.23.1,"1.26.9, 1.27.2",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.26.9, 1.27.2)"
+grafana/grafana:11.3.0,CVE-2026-84304,google.golang.org/grpc,HIGH,v1.66.0,1.83.1,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 1.83.1)
+grafana/grafana:11.3.0,CVE-2026-84445,google.golang.org/grpc,HIGH,v1.66.0,"1.82.2, 1.83.2, 1.84.0-dev.0.20260825144003-d5a41119e0e3, 1.85.0-dev.0.20260825072537-93e31b48545e",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.82.2, 1.83.2, 1.84.0-dev.0.20260825144003-d5a41119e0e3, 1.85.0-dev.0.20260825072537-93e31b48545e)"
+grafana/grafana:11.3.0,CVE-2026-9029,github.com/grafana/grafana,HIGH,11.3.0,1.9.2-0.20260616075434-82ef13993059,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 1.9.2-0.20260616075434-82ef13993059)
+grafana/grafana:11.3.0,CVE-2026-97031,stdlib,HIGH,v1.23.1,"1.26.9, 1.27.2",grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,"Persiste (parche: 1.26.9, 1.27.2)"
+grafana/grafana:11.3.0,GHSA-hrxh-6v49-42gf,google.golang.org/grpc,HIGH,v1.66.0,1.82.1,grafana/grafana:11.3.0 -> grafana/grafana:11.6.0,Persiste (parche: 1.82.1)

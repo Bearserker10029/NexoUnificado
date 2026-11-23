@@ -1,0 +1,939 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.76.2"
+  },
+  "ReportID": "01a2089a-4f45-7a31-ba48-6c573076f8df",
+  "CreatedAt": "2026-11-23T13:31:00.293743248Z",
+  "ArtifactID": "sha256:ddb7f41e5472f9d01617e56a7a2866ca61b320d073fb0eeadf376baadb89064d",
+  "ArtifactName": "collabora/code:latest",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "Size": 1357853184,
+    "OS": {
+      "Family": "none",
+      "Name": ""
+    },
+    "ImageID": "sha256:e67426038c101ca53f18ef7ee96ed953eaa9b74bead97cfb53f709f54808a70c",
+    "DiffIDs": [
+      "sha256:d3e62d6b4bfdd8d76ad33f2ec632e9d8fd8cc6e9321644011e79506b99afc153",
+      "sha256:20d5815b2cbb88f91c965ef4d11cbaacb556d8a1092b4f2e6ff7b34b1f6c475d",
+      "sha256:8878e07249ee66c0cc0c621b167032b83be0e84b96de9189da40889510801a54",
+      "sha256:2e783a9b0d414fff2d8c591cfda35237dc4974974470d7bc2cb95516e88e0ed2",
+      "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+    ],
+    "RepoTags": [
+      "collabora/code:latest"
+    ],
+    "RepoDigests": [
+      "collabora/code@sha256:a2f5d4e88addd46033d8440f7a13b82f7e6fe444bf8c6b5a3eadc789f0b5342b"
+    ],
+    "Reference": "collabora/code:latest",
+    "ImageConfig": {
+      "architecture": "amd64",
+      "created": "2026-11-20T15:42:02.812088738Z",
+      "history": [
+        {
+          "created": "1970-01-01T00:00:01Z",
+          "comment": "store paths: ['/nix/store/cjsd30364cm2x8b2743f5mvrnayrkhl2-image-root']"
+        },
+        {
+          "created": "1970-01-01T00:00:01Z",
+          "comment": "store paths: ['/nix/store/zmad6qnm2s9ilaad8463mhxh9jl9wz29-base-customisation-layer']"
+        },
+        {
+          "created": "2026-11-20T15:41:57.088103332Z",
+          "created_by": "ARG author",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-20T15:41:57.088103332Z",
+          "created_by": "LABEL author=Collabora Productivity Ltd.",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-20T15:41:57.088103332Z",
+          "created_by": "LABEL description=Collabora Online is a powerful collaborative Office suite that supports all major document, spreadsheet and presentation file formats, which you can integrate into your own infrastructure. Collabora Online provides data security and sovereignty, and is ideally suited to the demands of a modern distributed working environment. Delivering a familiar look and feel, Collabora Online represents a real alternative to other big-brands solutions, giving you control and flexibility.",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-20T15:41:57.088103332Z",
+          "created_by": "ARG releasenotes",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-20T15:41:57.088103332Z",
+          "created_by": "LABEL release.notes=https://www.collaboraonline.com/code-26-04-release-notes/",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-20T15:41:57.088103332Z",
+          "created_by": "ARG version",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-20T15:41:57.088103332Z",
+          "created_by": "LABEL version=26.04.6.2",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-20T15:41:57.088103332Z",
+          "created_by": "ARG onlinetag",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-20T15:41:57.088103332Z",
+          "created_by": "LABEL commit.history.core=https://gerrit.collaboraoffice.com/plugins/gitiles/online/+log/cp-26.04.6-2",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-20T15:41:57.088103332Z",
+          "created_by": "ENV LC_CTYPE=C.UTF-8",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-20T15:41:57.088103332Z",
+          "created_by": "COPY /rootfs / # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-20T15:41:57.380078925Z",
+          "created_by": "COPY /caps-verified /opt/cool/.caps-verified # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-20T15:42:02.812088738Z",
+          "created_by": "COPY /sbom/ /usr/share/sbom/ # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-20T15:42:02.812088738Z",
+          "created_by": "EXPOSE map[9980/tcp:{}]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-20T15:42:02.812088738Z",
+          "created_by": "USER 1001",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-20T15:42:02.812088738Z",
+          "created_by": "HEALTHCHECK \u0026{[\"CMD\" \"/usr/bin/coolwsd\" \"--probe\" \"--use-env-vars\"] \"30s\" \"10s\" \"2m0s\" '\\x03'}",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-20T15:42:02.812088738Z",
+          "created_by": "ENTRYPOINT [\"/usr/bin/coolwsd\" \"--use-env-vars\" \"--o:sys_template_path=/opt/cool/systemplate\" \"--o:child_root_path=/opt/cool/child-roots\" \"--o:file_server_root_path=/usr/share/coolwsd\" \"--o:cache_files.path=/opt/cool/cache\" \"--o:logging.color=false\" \"--o:stop_on_config_change=true\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        }
+      ],
+      "os": "linux",
+      "rootfs": {
+        "type": "layers",
+        "diff_ids": [
+          "sha256:d3e62d6b4bfdd8d76ad33f2ec632e9d8fd8cc6e9321644011e79506b99afc153",
+          "sha256:20d5815b2cbb88f91c965ef4d11cbaacb556d8a1092b4f2e6ff7b34b1f6c475d",
+          "sha256:8878e07249ee66c0cc0c621b167032b83be0e84b96de9189da40889510801a54",
+          "sha256:2e783a9b0d414fff2d8c591cfda35237dc4974974470d7bc2cb95516e88e0ed2",
+          "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+        ]
+      },
+      "config": {
+        "Healthcheck": {
+          "Test": [
+            "CMD",
+            "/usr/bin/coolwsd",
+            "--probe",
+            "--use-env-vars"
+          ],
+          "Interval": 30000000000,
+          "Timeout": 10000000000,
+          "StartPeriod": 120000000000,
+          "Retries": 3
+        },
+        "Entrypoint": [
+          "/usr/bin/coolwsd",
+          "--use-env-vars",
+          "--o:sys_template_path=/opt/cool/systemplate",
+          "--o:child_root_path=/opt/cool/child-roots",
+          "--o:file_server_root_path=/usr/share/coolwsd",
+          "--o:cache_files.path=/opt/cool/cache",
+          "--o:logging.color=false",
+          "--o:stop_on_config_change=true"
+        ],
+        "Env": [
+          "PATH=/usr/bin:/bin",
+          "LD_LIBRARY_PATH=/lib:/usr/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu",
+          "LC_CTYPE=C.UTF-8"
+        ],
+        "Labels": {
+          "author": "Collabora Productivity Ltd.",
+          "commit.history.core": "https://gerrit.collaboraoffice.com/plugins/gitiles/online/+log/cp-26.04.6-2",
+          "description": "Collabora Online is a powerful collaborative Office suite that supports all major document, spreadsheet and presentation file formats, which you can integrate into your own infrastructure. Collabora Online provides data security and sovereignty, and is ideally suited to the demands of a modern distributed working environment. Delivering a familiar look and feel, Collabora Online represents a real alternative to other big-brands solutions, giving you control and flexibility.",
+          "release.notes": "https://www.collaboraonline.com/code-26-04-release-notes/",
+          "version": "26.04.6.2"
+        },
+        "User": "1001",
+        "WorkingDir": "/home/nonroot",
+        "ExposedPorts": {
+          "9980/tcp": {}
+        }
+      }
+    },
+    "Layers": [
+      {
+        "Size": 28282880,
+        "Digest": "sha256:91e2591836e48910ae8a08e39eefba260b9f15c3df7be2d8fb8be7689e411cf9",
+        "DiffID": "sha256:d3e62d6b4bfdd8d76ad33f2ec632e9d8fd8cc6e9321644011e79506b99afc153"
+      },
+      {
+        "Size": 1136640,
+        "Digest": "sha256:fee2e5c8032289468734f032a1f9fd2418bd6bf8ce9afc045cda1128d9a5edd5",
+        "DiffID": "sha256:20d5815b2cbb88f91c965ef4d11cbaacb556d8a1092b4f2e6ff7b34b1f6c475d"
+      },
+      {
+        "Size": 1328184320,
+        "Digest": "sha256:97c9c9d3d9d10e56287ef84b815b0ce311a6844be82d834171fdab96b17d4023",
+        "DiffID": "sha256:8878e07249ee66c0cc0c621b167032b83be0e84b96de9189da40889510801a54"
+      },
+      {
+        "Size": 2560,
+        "Digest": "sha256:f554aec126c82d27c084315ed17735c87e780bb11ae4f17a8f937a3462707a48",
+        "DiffID": "sha256:2e783a9b0d414fff2d8c591cfda35237dc4974974470d7bc2cb95516e88e0ed2"
+      },
+      {
+        "Size": 246784,
+        "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+        "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+      }
+    ]
+  },
+  "Results": [
+    {
+      "Target": "Node.js",
+      "Class": "lang-pkgs",
+      "Type": "node-pkg",
+      "Packages": [
+        {
+          "ID": "commander@7.2.0",
+          "Name": "commander",
+          "Identifier": {
+            "PURL": "pkg:npm/commander@7.2.0",
+            "UID": "1c1ad89e5b20bc4c",
+            "BOMRef": "pkg:npm/commander@7.2.0"
+          },
+          "Version": "7.2.0",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3@7.9.0",
+          "Name": "d3",
+          "Identifier": {
+            "PURL": "pkg:npm/d3@7.9.0",
+            "UID": "91463277e74dfd1a",
+            "BOMRef": "pkg:npm/d3@7.9.0"
+          },
+          "Version": "7.9.0",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-array@3.2.4",
+          "Name": "d3-array",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-array@3.2.4",
+            "UID": "aeda275dc358b525",
+            "BOMRef": "pkg:npm/d3-array@3.2.4"
+          },
+          "Version": "3.2.4",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-axis@3.0.0",
+          "Name": "d3-axis",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-axis@3.0.0",
+            "UID": "c2cf16f75243b6f3",
+            "BOMRef": "pkg:npm/d3-axis@3.0.0"
+          },
+          "Version": "3.0.0",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-brush@3.0.0",
+          "Name": "d3-brush",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-brush@3.0.0",
+            "UID": "ae850637dd5647fc",
+            "BOMRef": "pkg:npm/d3-brush@3.0.0"
+          },
+          "Version": "3.0.0",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-chord@3.0.1",
+          "Name": "d3-chord",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-chord@3.0.1",
+            "UID": "2a1aa91fe046a5b",
+            "BOMRef": "pkg:npm/d3-chord@3.0.1"
+          },
+          "Version": "3.0.1",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-color@3.1.0",
+          "Name": "d3-color",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-color@3.1.0",
+            "UID": "3013b358a663db82",
+            "BOMRef": "pkg:npm/d3-color@3.1.0"
+          },
+          "Version": "3.1.0",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-contour@4.0.2",
+          "Name": "d3-contour",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-contour@4.0.2",
+            "UID": "22365b74fd39249d",
+            "BOMRef": "pkg:npm/d3-contour@4.0.2"
+          },
+          "Version": "4.0.2",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-delaunay@6.0.4",
+          "Name": "d3-delaunay",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-delaunay@6.0.4",
+            "UID": "1548a059e529b632",
+            "BOMRef": "pkg:npm/d3-delaunay@6.0.4"
+          },
+          "Version": "6.0.4",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-dispatch@3.0.1",
+          "Name": "d3-dispatch",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-dispatch@3.0.1",
+            "UID": "8488daa4b3dc215",
+            "BOMRef": "pkg:npm/d3-dispatch@3.0.1"
+          },
+          "Version": "3.0.1",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-drag@3.0.0",
+          "Name": "d3-drag",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-drag@3.0.0",
+            "UID": "6607a52d8c3fef75",
+            "BOMRef": "pkg:npm/d3-drag@3.0.0"
+          },
+          "Version": "3.0.0",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-dsv@3.0.1",
+          "Name": "d3-dsv",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-dsv@3.0.1",
+            "UID": "efc8c16e55e5e9d7",
+            "BOMRef": "pkg:npm/d3-dsv@3.0.1"
+          },
+          "Version": "3.0.1",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-ease@3.0.1",
+          "Name": "d3-ease",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-ease@3.0.1",
+            "UID": "23a3ad75da7d25cc",
+            "BOMRef": "pkg:npm/d3-ease@3.0.1"
+          },
+          "Version": "3.0.1",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-fetch@3.0.1",
+          "Name": "d3-fetch",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-fetch@3.0.1",
+            "UID": "45563b5ca31390f",
+            "BOMRef": "pkg:npm/d3-fetch@3.0.1"
+          },
+          "Version": "3.0.1",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-force@3.0.0",
+          "Name": "d3-force",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-force@3.0.0",
+            "UID": "be4ac253467af115",
+            "BOMRef": "pkg:npm/d3-force@3.0.0"
+          },
+          "Version": "3.0.0",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-format@3.1.2",
+          "Name": "d3-format",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-format@3.1.2",
+            "UID": "9572c2fa22dd3af2",
+            "BOMRef": "pkg:npm/d3-format@3.1.2"
+          },
+          "Version": "3.1.2",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-geo@3.1.1",
+          "Name": "d3-geo",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-geo@3.1.1",
+            "UID": "9d9c8ba7b7df172",
+            "BOMRef": "pkg:npm/d3-geo@3.1.1"
+          },
+          "Version": "3.1.1",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-hierarchy@3.1.2",
+          "Name": "d3-hierarchy",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-hierarchy@3.1.2",
+            "UID": "d4024e1a2850d18d",
+            "BOMRef": "pkg:npm/d3-hierarchy@3.1.2"
+          },
+          "Version": "3.1.2",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-interpolate@3.0.1",
+          "Name": "d3-interpolate",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-interpolate@3.0.1",
+            "UID": "7b4806bd1ae8a116",
+            "BOMRef": "pkg:npm/d3-interpolate@3.0.1"
+          },
+          "Version": "3.0.1",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-path@3.1.0",
+          "Name": "d3-path",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-path@3.1.0",
+            "UID": "fd1c021e58b6ce09",
+            "BOMRef": "pkg:npm/d3-path@3.1.0"
+          },
+          "Version": "3.1.0",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-polygon@3.0.1",
+          "Name": "d3-polygon",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-polygon@3.0.1",
+            "UID": "f9c4acdd4c4a692e",
+            "BOMRef": "pkg:npm/d3-polygon@3.0.1"
+          },
+          "Version": "3.0.1",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-quadtree@3.0.1",
+          "Name": "d3-quadtree",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-quadtree@3.0.1",
+            "UID": "19e25157c965aff9",
+            "BOMRef": "pkg:npm/d3-quadtree@3.0.1"
+          },
+          "Version": "3.0.1",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-random@3.0.1",
+          "Name": "d3-random",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-random@3.0.1",
+            "UID": "62bdc72615245088",
+            "BOMRef": "pkg:npm/d3-random@3.0.1"
+          },
+          "Version": "3.0.1",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-scale@4.0.2",
+          "Name": "d3-scale",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-scale@4.0.2",
+            "UID": "29848436597db268",
+            "BOMRef": "pkg:npm/d3-scale@4.0.2"
+          },
+          "Version": "4.0.2",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-scale-chromatic@3.1.0",
+          "Name": "d3-scale-chromatic",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-scale-chromatic@3.1.0",
+            "UID": "b35836ca74a7aea0",
+            "BOMRef": "pkg:npm/d3-scale-chromatic@3.1.0"
+          },
+          "Version": "3.1.0",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-selection@3.0.0",
+          "Name": "d3-selection",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-selection@3.0.0",
+            "UID": "66966c556abf3fc8",
+            "BOMRef": "pkg:npm/d3-selection@3.0.0"
+          },
+          "Version": "3.0.0",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-shape@3.2.0",
+          "Name": "d3-shape",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-shape@3.2.0",
+            "UID": "cd523c2912f1c1ed",
+            "BOMRef": "pkg:npm/d3-shape@3.2.0"
+          },
+          "Version": "3.2.0",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-time@3.1.0",
+          "Name": "d3-time",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-time@3.1.0",
+            "UID": "c41cc241b95d23ee",
+            "BOMRef": "pkg:npm/d3-time@3.1.0"
+          },
+          "Version": "3.1.0",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-time-format@4.1.0",
+          "Name": "d3-time-format",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-time-format@4.1.0",
+            "UID": "bf2e0a057ee072d4",
+            "BOMRef": "pkg:npm/d3-time-format@4.1.0"
+          },
+          "Version": "4.1.0",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-timer@3.0.1",
+          "Name": "d3-timer",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-timer@3.0.1",
+            "UID": "e11e3a465714b2c3",
+            "BOMRef": "pkg:npm/d3-timer@3.0.1"
+          },
+          "Version": "3.0.1",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-transition@3.0.1",
+          "Name": "d3-transition",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-transition@3.0.1",
+            "UID": "e97747e47b945220",
+            "BOMRef": "pkg:npm/d3-transition@3.0.1"
+          },
+          "Version": "3.0.1",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "d3-zoom@3.0.0",
+          "Name": "d3-zoom",
+          "Identifier": {
+            "PURL": "pkg:npm/d3-zoom@3.0.0",
+            "UID": "515450be8f0fb0a6",
+            "BOMRef": "pkg:npm/d3-zoom@3.0.0"
+          },
+          "Version": "3.0.0",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "delaunator@5.1.0",
+          "Name": "delaunator",
+          "Identifier": {
+            "PURL": "pkg:npm/delaunator@5.1.0",
+            "UID": "34dc88798e9093ba",
+            "BOMRef": "pkg:npm/delaunator@5.1.0"
+          },
+          "Version": "5.1.0",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "dompurify@3.4.14",
+          "Name": "dompurify",
+          "Identifier": {
+            "PURL": "pkg:npm/dompurify@3.4.14",
+            "UID": "add2113efaab6c2f",
+            "BOMRef": "pkg:npm/dompurify@3.4.14"
+          },
+          "Version": "3.4.14",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "fzstd@0.1.0",
+          "Name": "fzstd",
+          "Identifier": {
+            "PURL": "pkg:npm/fzstd@0.1.0",
+            "UID": "31f5c452b3e2655f",
+            "BOMRef": "pkg:npm/fzstd@0.1.0"
+          },
+          "Version": "0.1.0",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "gl-matrix@3.4.4",
+          "Name": "gl-matrix",
+          "Identifier": {
+            "PURL": "pkg:npm/gl-matrix@3.4.4",
+            "UID": "2b3d84ab9e2ad911",
+            "BOMRef": "pkg:npm/gl-matrix@3.4.4"
+          },
+          "Version": "3.4.4",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "hammerjs@2.0.8",
+          "Name": "hammerjs",
+          "Identifier": {
+            "PURL": "pkg:npm/hammerjs@2.0.8",
+            "UID": "6cf4f861c7ee05a1",
+            "BOMRef": "pkg:npm/hammerjs@2.0.8"
+          },
+          "Version": "2.0.8",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "iconv-lite@0.6.3",
+          "Name": "iconv-lite",
+          "Identifier": {
+            "PURL": "pkg:npm/iconv-lite@0.6.3",
+            "UID": "22520f6a9732ff3d",
+            "BOMRef": "pkg:npm/iconv-lite@0.6.3"
+          },
+          "Version": "0.6.3",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "internmap@2.0.3",
+          "Name": "internmap",
+          "Identifier": {
+            "PURL": "pkg:npm/internmap@2.0.3",
+            "UID": "4e28cf8e85b6bd2d",
+            "BOMRef": "pkg:npm/internmap@2.0.3"
+          },
+          "Version": "2.0.3",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "jquery@3.5.1",
+          "Name": "jquery",
+          "Identifier": {
+            "PURL": "pkg:npm/jquery@3.5.1",
+            "UID": "5588653bec6ba0d2",
+            "BOMRef": "pkg:npm/jquery@3.5.1"
+          },
+          "Version": "3.5.1",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "jquery-ui@1.13.2",
+          "Name": "jquery-ui",
+          "Identifier": {
+            "PURL": "pkg:npm/jquery-ui@1.13.2",
+            "UID": "9fbfb90e8d7361b5",
+            "BOMRef": "pkg:npm/jquery-ui@1.13.2"
+          },
+          "Version": "1.13.2",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "l10n-for-node@0.0.1",
+          "Name": "l10n-for-node",
+          "Identifier": {
+            "PURL": "pkg:npm/l10n-for-node@0.0.1",
+            "UID": "64f672faaea5dbf",
+            "BOMRef": "pkg:npm/l10n-for-node@0.0.1"
+          },
+          "Version": "0.0.1",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "marked@15.0.6",
+          "Name": "marked",
+          "Identifier": {
+            "PURL": "pkg:npm/marked@15.0.6",
+            "UID": "e5c75d1112394106",
+            "BOMRef": "pkg:npm/marked@15.0.6"
+          },
+          "Version": "15.0.6",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "robust-predicates@3.0.3",
+          "Name": "robust-predicates",
+          "Identifier": {
+            "PURL": "pkg:npm/robust-predicates@3.0.3",
+            "UID": "748229bffd740ecc",
+            "BOMRef": "pkg:npm/robust-predicates@3.0.3"
+          },
+          "Version": "3.0.3",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "rw@1.3.3",
+          "Name": "rw",
+          "Identifier": {
+            "PURL": "pkg:npm/rw@1.3.3",
+            "UID": "9f5ba5afbb43b7f2",
+            "BOMRef": "pkg:npm/rw@1.3.3"
+          },
+          "Version": "1.3.3",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "safer-buffer@2.1.2",
+          "Name": "safer-buffer",
+          "Identifier": {
+            "PURL": "pkg:npm/safer-buffer@2.1.2",
+            "UID": "893b9a0e7ddca696",
+            "BOMRef": "pkg:npm/safer-buffer@2.1.2"
+          },
+          "Version": "2.1.2",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "smartmenus@1.0.0",
+          "Name": "smartmenus",
+          "Identifier": {
+            "PURL": "pkg:npm/smartmenus@1.0.0",
+            "UID": "3ac1dad4c9d57239",
+            "BOMRef": "pkg:npm/smartmenus@1.0.0"
+          },
+          "Version": "1.0.0",
+          "Layer": {
+            "Digest": "sha256:56feb9ad28ac4215e7d645a199d68afaf5f898acb2b8cbb96713260dae0b0715",
+            "DiffID": "sha256:1ab63d4453370e661d3a33c9da076c4bbbce8e0553663a1050e0a7beae19e11c"
+          },
+          "AnalyzedBy": "sbom"
+        }
+      ]
+    }
+  ]
+}
