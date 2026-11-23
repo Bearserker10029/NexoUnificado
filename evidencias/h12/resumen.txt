@@ -1,0 +1,13 @@
+H12 — Evidencia de idempotencia local
+Fecha: 2026-11-23
+Entorno: Docker Desktop mediante WSL2, Ansible Core 2.22.0
+Objetivo local: 127.0.0.1 (sin infraestructura del laboratorio)
+Comando: tools/ansible-venv/bin/ansible-playbook ansible/site.yml -e skip_host_update=true
+
+Primera ejecucion: ok=16 changed=1 unreachable=0 failed=0 skipped=2
+Segunda ejecucion: ok=16 changed=0 unreachable=0 failed=0 skipped=2
+
+La opcion skip_host_update=true conserva la configuracion OIDC ya persistida porque
+NEXO_HOST no cambio. Ambas corridas validaron proxy TLS, Keycloak, Element, Jitsi,
+Nextcloud, telefonia, Grafana, servicios base y multiempresa (ACME y BETA), sin
+contenedores unhealthy. Las salidas completas estan en los archivos 01 y 02.

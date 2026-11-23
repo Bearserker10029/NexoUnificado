@@ -1,0 +1,77 @@
+
+PLAY [Preparar el servidor Docker] *********************************************
+
+TASK [Comprobar que el daemon Docker responde] *********************************
+ok: [localhost]
+
+TASK [Comprobar que Docker Compose esta disponible] ****************************
+ok: [localhost]
+
+TASK [Comprobar permisos sobre el daemon Docker] *******************************
+ok: [localhost]
+
+TASK [Crear directorios de despliegue y secretos] ******************************
+ok: [localhost] => (item={'path': '/mnt/c/Users/kentj/Proyectos/NexoUnificado/ansible/..', 'mode': '0755'})
+ok: [localhost] => (item={'path': '/mnt/c/Users/kentj/Proyectos/NexoUnificado/ansible/../certs', 'mode': '0755'})
+ok: [localhost] => (item={'path': '/mnt/c/Users/kentj/Proyectos/NexoUnificado/ansible/.secrets', 'mode': '0700'})
+
+TASK [Mostrar versiones detectadas] ********************************************
+ok: [localhost] => {
+    "msg": "Docker y Compose disponibles; despliegue en /mnt/c/Users/kentj/Proyectos/NexoUnificado/ansible/.."
+}
+
+PLAY [Desplegar Nexo Unificado con Docker Compose] *****************************
+
+TASK [Detectar una pila nexo desplegada desde otro directorio] *****************
+ok: [localhost]
+
+TASK [Detener el despliegue si otra pila nexo esta activa] *********************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+TASK [Comprobar si ya existe un archivo de entorno] ****************************
+ok: [localhost]
+
+TASK [Validar la configuracion Compose completa] *******************************
+ok: [localhost]
+
+TASK [Construir y levantar los servicios] **************************************
+ok: [localhost]
+
+PLAY [Verificar que los servicios de Nexo Unificado responden] *****************
+
+TASK [Esperar al healthcheck HTTP del proxy] ***********************************
+ok: [localhost]
+
+TASK [Comprobar HTTPS y los puntos de entrada principales] *********************
+ok: [localhost] => (item={'name': 'Proxy TLS', 'path': '/healthz'})
+ok: [localhost] => (item={'name': 'Keycloak', 'path': '/keycloak/realms/nexo/.well-known/openid-configuration'})
+ok: [localhost] => (item={'name': 'Element', 'path': '/element/'})
+ok: [localhost] => (item={'name': 'Jitsi', 'path': '/jitsi/'})
+ok: [localhost] => (item={'name': 'Nextcloud', 'path': '/docs/status.php'})
+ok: [localhost] => (item={'name': 'Telefonia', 'path': '/voip/'})
+ok: [localhost] => (item={'name': 'Grafana', 'path': '/grafana/api/health'})
+
+TASK [Listar servicios en ejecucion] *******************************************
+ok: [localhost]
+
+TASK [Comprobar servicios esenciales y modo multiempresa] **********************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "Servicios base y multiempresa responden correctamente."
+}
+
+TASK [Detectar contenedores con healthcheck en fallo] **************************
+ok: [localhost]
+
+TASK [Confirmar que no hay contenedores enfermos] ******************************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=16   changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+

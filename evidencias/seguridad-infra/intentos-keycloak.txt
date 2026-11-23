@@ -1,0 +1,6 @@
+Intento 1: HTTP 401 (credenciales falsas)
+Intento 2: HTTP 401 (credenciales falsas)
+Intento 3: HTTP 401 (credenciales falsas)
+Intento 4: HTTP 401 (credenciales falsas)
+Intento 5: HTTP 401 (credenciales falsas)
+Intento 6: HTTP 000 (credenciales falsas)
