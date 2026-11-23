@@ -23,8 +23,10 @@ Define `GEMINI_API_KEY` en el `.env` del servidor. `GEMINI_MODEL` usa `gemini-3.
 
 Para habilitar otra empresa, agrega el campo `ai_provider` a su entrada en el registro. Para deshabilitarla, elimina el campo o usa `null`. Si das de alta una empresa nueva, puedes usar `python scripts/nexo-tenant.py add nombre --range-prefix 3 --ai-provider gemini`, con un prefijo libre, y volver a levantar Compose.
 
-## Decisión de interfaz
+## AIRI Stage Web
 
-Se evaluó [Project AIRI / Stage Web](https://github.com/moeru-ai/airi/tree/v0.15.4/apps/stage-web). Sus proveedores compatibles con OpenAI cubren chat y voz, pero su selección se guarda en stores locales de AIRI. La versión evaluada no publica un artefacto web ni documenta cómo fijar esos proveedores por despliegue. Para conservar el acceso de un clic desde Nextcloud sin pedir ajustes al usuario, este hito usa un chat propio en `/airi/`. El backend mantiene la selección de proveedor, el acceso por realm y la síntesis como interfaces independientes del navegador.
+La imagen del backend compila [Project AIRI / Stage Web v0.15.4](https://github.com/moeru-ai/airi/tree/v0.15.4/apps/stage-web) con su interfaz y avatar originales. El acceso desde Nextcloud sigue pasando por `/airi/`. Tras verificar el realm de Keycloak y la habilitación de la empresa, Nexo abre Stage Web en `/airi/stage/` y preconfigura los proveedores de chat y voz. La configuración del navegador contiene la URL de Nexo y un identificador público. El backend usa la sesión de Keycloak para autorizar cada operación y conserva la clave de Gemini en el servidor.
+
+Para actualizar solo el asistente, ejecuta `docker compose up -d --build assistant`. La primera compilación descarga las dependencias y los recursos oficiales de AIRI. Las capturas anteriores corresponden a la interfaz inicial del proyecto. AIRI se distribuye con su aviso MIT en `/airi/stage/AIRI-LICENSE.txt`.
 
 El código de [Pocket TTS](https://github.com/kyutai-labs/pocket-tts/tree/v3.3.0) tiene licencia MIT. Los [pesos públicos de Kyutai](https://huggingface.co/kyutai/pocket-tts-without-voice-cloning) tienen licencia CC BY 4.0.

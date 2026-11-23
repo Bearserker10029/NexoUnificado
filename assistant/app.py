@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 import base64
 import hashlib
+import hmac
 import json
 import os
 import re
@@ -13,7 +14,7 @@ from urllib.parse import urlencode
 
 import jwt
 import requests
-from flask import Flask, abort, jsonify, redirect, render_template, request, session
+from flask import Flask, Response, abort, jsonify, redirect, render_template, request, send_from_directory, session
 from itsdangerous import BadData, URLSafeTimedSerializer
 
 from providers import PROVIDERS, ProviderError
@@ -24,6 +25,7 @@ NEXO_URL = os.environ["NEXO_URL"].rstrip("/")
 CALLBACK = f"{NEXO_URL}{PREFIX}/callback"
 KEYCLOAK = "http://keycloak:8080"
 REGISTRY = Path("/tenants/registry.json")
+STAGE = Path(__file__).with_name("stage")
 AUTH_SECONDS = 300
 app = Flask(__name__, static_folder="web/assets", static_url_path=f"{PREFIX}/assets", template_folder="web")
 app.config.update(
@@ -96,10 +98,10 @@ def begin_login(tenant):
 @app.after_request
 def private_response(response):
     response.headers["Cache-Control"] = "no-store"
-    response.headers["Content-Security-Policy"] = (
+    response.headers.setdefault("Content-Security-Policy", (
         "default-src 'self'; media-src 'self' blob:; frame-ancestors 'self'; "
         "form-action 'self'; base-uri 'none'; object-src 'none'"
-    )
+    ))
     return response
 
 
@@ -123,10 +125,57 @@ def index():
         status = "El asistente está deshabilitado para tu empresa."
     elif not provider.ready:
         status = "El equipo de Nexo todavía no ha configurado Gemini."
+    elif (STAGE / "index.html").is_file():
+        return redirect(f"{PREFIX}/stage/?{urlencode({'tenant': tenant})}#/")
     return render_template(
         "index.html", tenant=tenant, company=company.get("display_name", "Nexo Unificado"),
         status=status,
     )
+
+
+@lru_cache(maxsize=1)
+def stage_script_hashes():
+    html = (STAGE / "index.html").read_bytes()
+    scripts = re.findall(rb"<script\b[^>]*>(.*?)</script>", html, re.DOTALL)
+    return " ".join(
+        "'sha256-" + base64.b64encode(hashlib.sha256(script).digest()).decode() + "'"
+        for script in scripts if script
+    )
+
+
+@app.get(f"{PREFIX}/stage/")
+def stage_index():
+    tenant = request.args.get("tenant", "")
+    user = user_for(tenant)
+    if not user:
+        return redirect(assistant_url(tenant))
+    company = tenants().get(tenant, {})
+    provider_name = company.get("ai_provider")
+    provider = PROVIDERS.get(provider_name) if isinstance(provider_name, str) else None
+    if not provider or not provider.ready:
+        return redirect(assistant_url(tenant))
+    index_file = STAGE / "index.html"
+    if not index_file.is_file():
+        abort(404)
+    profile = hmac.new(app.secret_key.encode(), json.dumps([user["issuer"], user["sub"]]).encode(), "sha256").hexdigest()
+    html = index_file.read_bytes().replace(
+        b"<head>", f'<head><meta name="nexo-profile" content="{profile}">'.encode(), 1,
+    )
+    response = Response(html, mimetype="text/html")
+    response.headers["Content-Security-Policy"] = (
+        f"default-src 'self'; script-src 'self' 'wasm-unsafe-eval' {stage_script_hashes()}; "
+        "style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; "
+        "connect-src 'self' blob: data:; worker-src 'self' blob:; media-src 'self' blob: data:; "
+        "frame-ancestors 'self'; form-action 'self'; base-uri 'none'; object-src 'none'"
+    )
+    return response
+
+
+@app.get(f"{PREFIX}/stage/<path:asset>")
+def stage_asset(asset):
+    if asset.lower().endswith(".html"):
+        abort(404)
+    return send_from_directory(STAGE, asset)
 
 
 @app.get(f"{PREFIX}/callback")
@@ -174,7 +223,7 @@ def api_access(tenant):
     user = user_for(tenant)
     if not user:
         return None, None, (jsonify(error="La sesión caducó. Vuelve a abrir el asistente."), 401)
-    if request.headers.get("Origin") != NEXO_URL or not request.is_json:
+    if request.method == "POST" and (request.headers.get("Origin") != NEXO_URL or not request.is_json):
         return None, None, (jsonify(error="Origen o formato inválido."), 403)
     company = tenants().get(tenant, {})
     provider_name = company.get("ai_provider")
@@ -235,9 +284,87 @@ def speech(tenant):
         return jsonify(error="La autorización de audio caducó."), 403
     if claims != [user["issuer"], user["sub"], hashlib.sha256(text.encode()).hexdigest()]:
         return jsonify(error="La autorización de audio no corresponde a esta respuesta."), 403
+    return synthesize(text)
+
+
+def synthesize(text):
     try:
         audio = requests.post("http://pocket-tts:8000/speech", json={"text": text}, timeout=(3, 115))
         audio.raise_for_status()
     except requests.RequestException:
         return jsonify(error="La voz no está disponible. Puedes volver a intentar reproducirla."), 503
     return audio.content, 200, {"Content-Type": "audio/wav"}
+
+
+def stage_error(message, status):
+    return jsonify(error={"message": message}), status
+
+
+@app.get(f"{PREFIX}/api/<tenant>/v1/models")
+def stage_models(tenant):
+    _, _, error = api_access(tenant)
+    if error:
+        return error
+    return jsonify(object="list", data=[
+        {"id": model, "object": "model", "created": 0, "owned_by": "nexo"}
+        for model in ("nexo-chat", "pocket-tts")
+    ])
+
+
+@app.post(f"{PREFIX}/api/<tenant>/v1/chat/completions")
+def stage_chat(tenant):
+    _, provider, error = api_access(tenant)
+    if error:
+        return error
+    body = request.get_json(silent=True)
+    messages = body.get("messages") if isinstance(body, dict) else None
+    if not isinstance(messages, list) or any(not isinstance(item, dict) for item in messages):
+        return stage_error("Historial inválido.", 400)
+    history = []
+    for message in messages[-12:]:
+        role, content = message.get("role"), message.get("content")
+        if role not in ("user", "assistant"):
+            continue
+        if isinstance(content, list):
+            content = " ".join(
+                part["text"] for part in content
+                if isinstance(part, dict) and part.get("type") == "text" and isinstance(part.get("text"), str)
+            )
+        if not isinstance(content, str) or not content.strip():
+            continue
+        if history and history[-1]["role"] == role:
+            history.pop()
+        if history or role == "user":
+            history.append({"role": role, "text": content.strip()[:2000 if role == "user" else 3000]})
+    if not history or history[-1]["role"] != "user":
+        return stage_error("Se requiere una pregunta de texto.", 400)
+    try:
+        answer = provider.reply(history[-5:])
+    except ProviderError as exc:
+        return stage_error(str(exc), 502)
+    meta = {"id": f"chatcmpl-{secrets.token_hex(12)}", "created": int(time.time()), "model": "nexo-chat"}
+    if body.get("stream") is not True:
+        return jsonify(**meta, object="chat.completion", choices=[
+            {"index": 0, "message": {"role": "assistant", "content": answer}, "finish_reason": "stop"},
+        ])
+
+    def chunks():
+        for delta, reason in [({"role": "assistant"}, None), ({"content": answer}, None), ({}, "stop")]:
+            event = {**meta, "object": "chat.completion.chunk",
+                     "choices": [{"index": 0, "delta": delta, "finish_reason": reason}]}
+            yield f"data: {json.dumps(event)}\n\n"
+        yield "data: [DONE]\n\n"
+
+    return Response(chunks(), mimetype="text/event-stream", headers={"X-Accel-Buffering": "no"})
+
+
+@app.post(f"{PREFIX}/api/<tenant>/v1/audio/speech")
+def stage_speech(tenant):
+    _, _, error = api_access(tenant)
+    if error:
+        return error
+    body = request.get_json(silent=True)
+    text = body.get("input") if isinstance(body, dict) else None
+    if not isinstance(text, str) or not 1 <= len(text.strip()) <= 3000:
+        return stage_error("Se requiere texto para sintetizar.", 400)
+    return synthesize(text.strip())

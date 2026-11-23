@@ -6,6 +6,7 @@ import sys
 import time
 import unittest
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 from urllib.parse import parse_qs, urlsplit
@@ -69,3 +70,43 @@ class AssistantTest(unittest.TestCase):
             audio = self.post(endpoint, {"text": answer["text"], "ticket": ticket})
             self.assertEqual(audio.content_type, "audio/wav")
             self.assertEqual(audio.data, b"RIFF")
+
+    def test_airi_chat_stream_is_tenant_scoped(self):
+        endpoint = "/airi/api/acme/v1/chat/completions"
+        body = {"stream": True, "messages": [
+            {"role": "system", "content": "Contexto del personaje"},
+            {"role": "user", "content": [{"type": "text", "text": "Hola"}]},
+        ]}
+        self.login_as("beta")
+        self.assertEqual(self.post(endpoint, body).status_code, 401)
+        self.login_as("acme")
+        response = self.post(endpoint, body)
+        self.assertEqual(response.mimetype, "text/event-stream")
+        self.assertIn("Hola desde Nexo.", response.text)
+        self.assertTrue(response.text.endswith("data: [DONE]\n\n"))
+        self.provider.reply.assert_called_once_with([{"role": "user", "text": "Hola"}])
+
+    def test_airi_voice_uses_pocket_tts(self):
+        self.login_as("acme")
+        endpoint = "/airi/api/acme/v1/audio/speech"
+        with patch.object(assistant.requests, "post") as pocket:
+            pocket.return_value.content = b"RIFF"
+            response = self.post(endpoint, {"input": "Hola", "voice": "lola"})
+        self.assertEqual(response.content_type, "audio/wav")
+        self.assertEqual(pocket.call_args.kwargs["json"], {"text": "Hola"})
+
+    def test_airi_shell_requires_the_enabled_company_session(self):
+        endpoint = "/airi/stage/?tenant=acme"
+        self.login_as("beta")
+        self.assertEqual(self.client.get(endpoint, base_url=ORIGIN).status_code, 302)
+        self.login_as("acme")
+        with TemporaryDirectory() as directory, patch.object(assistant, "STAGE", Path(directory)):
+            (Path(directory) / "index.html").write_text("<head><script>boot()</script></head>")
+            assistant.stage_script_hashes.cache_clear()
+            self.addCleanup(assistant.stage_script_hashes.cache_clear)
+            response = self.client.get(endpoint, base_url=ORIGIN)
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('name="nexo-profile"', response.text)
+            self.assertIn("'sha256-", response.headers["Content-Security-Policy"])
+            self.assertEqual(response.headers["Cache-Control"], "no-store")
+            self.assertEqual(self.client.get("/airi/stage/index.html", base_url=ORIGIN).status_code, 404)
