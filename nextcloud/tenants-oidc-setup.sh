@@ -13,12 +13,12 @@ until occ status --output=json 2>/dev/null | grep -q '"installed":true'; do
   sleep 5
 done
 
-python3 - <<'PY' > /tmp/nexo-tenants.txt
-import json
-with open('/tenants/registry.json', encoding='utf-8') as f:
-    for tenant in json.load(f)['tenants']:
-        print(tenant['name'])
-PY
+php -r '
+    $tenants = json_decode(file_get_contents("/tenants/registry.json"), true, 512, JSON_THROW_ON_ERROR)["tenants"];
+    foreach ($tenants as $tenant) {
+        echo $tenant["name"], PHP_EOL;
+    }
+' > /tmp/nexo-tenants.txt
 
 while IFS= read -r tenant; do
   [ -n "$tenant" ] || continue
@@ -30,32 +30,45 @@ while IFS= read -r tenant; do
     --unique-uid=0 \
     --mapping-display-name='name' \
     --mapping-email='email' \
-    --mapping-groups='groups'
+    --mapping-groups='groups' \
+    --group-provisioning=1 \
+    --group-whitelist-regex="/^${tenant}-servicio-/"
 done < /tmp/nexo-tenants.txt
 
 occ user_oidc:provider --output=json
 
 # Cada empresa recibe entradas propias, visibles solo para sus grupos sincronizados.
-python3 - <<'PY' > /tmp/nexo-tenant-sites.json
-import json
-with open('/tenants/registry.json', encoding='utf-8') as f:
-    tenants = json.load(f)['tenants']
-sites = {}
-index = 1
-for tenant in tenants:
-    name = tenant['name']
-    for service, label, path in [
-        ('telefonia', 'Telefonía', f'/{name}/voip/embed.html'),
-        ('videoconferencia', 'Videoconferencia', f'/{name}/jitsi/'),
-        ('chat', 'Chat', f'/{name}/element/'),
-    ]:
-        if service not in tenant.get('services', []):
-            continue
-        sites[str(index)] = {"id": index, "name": f"{label} · {name.upper()}", "url": path,
-            "lang": "", "type": "link", "device": "", "icon": "external.svg",
-            "groups": [f"{name}-servicio-{service}"], "redirect": False}
-        index += 1
-print(json.dumps(sites, ensure_ascii=False))
-PY
+php <<'PHP' > /tmp/nexo-tenant-sites.json
+<?php
+$tenants = json_decode(file_get_contents('/tenants/registry.json'), true, 512, JSON_THROW_ON_ERROR)['tenants'];
+$sites = [];
+$addSite = static function ($name, $url, $groups, $redirect) use (&$sites) {
+    $id = count($sites) + 1;
+    $sites[$id] = [
+        'id' => $id, 'name' => $name, 'url' => $url, 'lang' => '', 'type' => 'link',
+        'device' => '', 'icon' => 'external.svg', 'groups' => $groups, 'redirect' => $redirect,
+    ];
+};
+foreach ($tenants as $tenant) {
+    $name = $tenant['name'];
+    foreach ([
+        'telefonia' => ['Telefonía', "/$name/voip/embed.html"],
+        'videoconferencia' => ['Videoconferencia', "/$name/jitsi/"],
+        'chat' => ['Chat', "/$name/element/"],
+    ] as $service => [$label, $path]) {
+        if (in_array($service, $tenant['services'] ?? [], true)) {
+            $addSite($label . ' · ' . strtoupper($name), $path, ["$name-servicio-$service"], false);
+        }
+    }
+}
+foreach ($tenants as $tenant) {
+    $name = $tenant['name'];
+    $groups = array_map(static fn ($service) => "$name-servicio-$service", $tenant['services'] ?? []);
+    if ($groups) {
+        $addSite('Asistente IA · ' . $tenant['display_name'], '/airi/?tenant=' . rawurlencode($name), $groups, true);
+    }
+}
+echo json_encode((object) $sites, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+PHP
 occ config:app:set external sites --value="$(cat /tmp/nexo-tenant-sites.json)"
-occ config:app:set external max_site --value="$(python3 -c 'import json; print(len(json.load(open("/tmp/nexo-tenant-sites.json"))))')"
+occ config:app:set external max_site --value="$(php -r 'echo count(json_decode(file_get_contents("/tmp/nexo-tenant-sites.json"), true, 512, JSON_THROW_ON_ERROR));')"

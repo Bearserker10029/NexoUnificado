@@ -1,5 +1,5 @@
 #!/bin/sh
-# Pobla el menu unificado de Nextcloud (app External Sites) con las cuatro
+# Pobla el menu unificado de Nextcloud (app External Sites) con las
 # rutas reales detras del proxy Nginx (Documentos no va aqui: usa la app
 # nativa de Archivos de Nextcloud). Se ejecuta desde el host, una vez
 # desplegado el contenedor nexo-nextcloud (se puede volver a correr para
@@ -44,7 +44,8 @@ SITES_JSON=$(cat <<'JSON'
   "1": {"id": 1, "name": "Telefonía", "url": "/voip/embed.html", "lang": "", "type": "link", "device": "", "icon": "external.svg", "groups": [], "redirect": false},
   "2": {"id": 2, "name": "Videoconferencia", "url": "/jitsi/", "lang": "", "type": "link", "device": "", "icon": "external.svg", "groups": [], "redirect": false},
   "3": {"id": 3, "name": "Chat", "url": "/element/", "lang": "", "type": "link", "device": "", "icon": "external.svg", "groups": [], "redirect": false},
-  "4": {"id": 4, "name": "Monitoreo", "url": "/grafana/", "lang": "", "type": "link", "device": "", "icon": "external.svg", "groups": ["admin"], "redirect": false}
+  "4": {"id": 4, "name": "Monitoreo", "url": "/grafana/", "lang": "", "type": "link", "device": "", "icon": "external.svg", "groups": ["admin"], "redirect": false},
+  "5": {"id": 5, "name": "Asistente IA", "url": "/airi/", "lang": "", "type": "link", "device": "", "icon": "external.svg", "groups": [], "redirect": true}
 }
 JSON
 )
@@ -62,9 +63,9 @@ JSON
 # Si "groups" queda vacio, la entrada es visible para todas las personas
 # usuarias.
 
-echo "Escribiendo las 4 entradas en la appconfig de External Sites..."
+echo "Escribiendo las 5 entradas en la appconfig de External Sites..."
 occ config:app:set external sites --value="$SITES_JSON"
-occ config:app:set external max_site --value=4
+occ config:app:set external max_site --value=5
 
 echo "Verificando que lo guardado sea JSON valido con la forma esperada..."
 occ config:app:get external sites | docker exec -i "$CONTENEDOR" php -r '

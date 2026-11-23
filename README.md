@@ -43,6 +43,7 @@ mismo esquema, IP y puerto:
 | `/element/` | Chat Element/Matrix | Keycloak |
 | `/jitsi/` | Videoconferencia Jitsi | Sin cuenta adicional |
 | `/voip/` | Telefonía WebRTC | Keycloak; extensión SIP automática |
+| `/airi/` | [Asistente IA con chat y voz en español](evidencias/asistente-ia/README.md) | Keycloak; habilitación por empresa |
 | `/grafana/` | Monitoreo | Administrador de Grafana |
 | `/keycloak/admin/` | Consola de identidad | Administrador de Keycloak |
 
