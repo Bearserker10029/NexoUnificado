@@ -172,6 +172,8 @@ services:
         condition: service_started
       jitsi-web:
         condition: service_started
+      collabora:
+        condition: service_started
     healthcheck:
       test: [ "CMD", "wget", "-q", "-O", "-", "http://127.0.0.1/healthz" ]
       interval: 15s
@@ -525,6 +527,40 @@ services:
       - nextcloud_data:/var/www/html
       - ./nextcloud/poblar-menu-entrypoint.sh:/poblar-menu-entrypoint.sh:ro
     entrypoint: [ "/bin/sh", "/poblar-menu-entrypoint.sh" ]
+    networks: [ srv ]
+
+  # Edicion compartida: Collabora Online (CODE) integrado en Nextcloud Office.
+  # Sin puertos publicados: el navegador llega por Nginx (/browser, /cool,
+  # /hosting) y Collabora llama a Nextcloud por el listener interno :8082.
+  collabora:
+    image: collabora/code:latest
+    container_name: nexo-collabora
+    restart: unless-stopped
+    cap_add: [ MKNOD ]
+    environment:
+      aliasgroup1: "http://proxy:8082"
+      dictionaries: "es_ES en_US"
+      server_name: "${NEXO_HOST:-localhost}:8443"
+      extra_params: "--o:ssl.enable=false --o:ssl.termination=true --o:net.frame_ancestors=https://${NEXO_HOST:-localhost}:8443"
+    networks: [ srv ]
+
+  # Configura la app richdocuments (Nextcloud Office) para usar Collabora.
+  # Tarea unica; se recrea sola al cambiar NEXO_HOST.
+  collabora-init:
+    image: nextcloud:35-apache
+    container_name: nexo-collabora-init
+    restart: "no"
+    depends_on:
+      nextcloud-menu-init:
+        condition: service_completed_successfully
+      collabora:
+        condition: service_started
+    environment:
+      NEXO_URL: https://${NEXO_HOST:-localhost}:8443
+    volumes:
+      - nextcloud_data:/var/www/html
+      - ./nextcloud/collabora-setup.sh:/collabora-setup.sh:ro
+    entrypoint: [ "/bin/sh", "/collabora-setup.sh" ]
     networks: [ srv ]
 
   # H14 (rama "desarrollo"): antivirus de red interno, sin exponer puertos.
