@@ -1,0 +1,12 @@
+Objetivo asterisk=172.22.0.2 red nexo_srv
+ii  sipvicious  0.3.3-2.1  all           tools to audit SIP based VoIP systems
+
+## svmap (paquete sipvicious: comando svmap = sipvicious_svmap) 172.22.0.2 -p 5060
+WARNING:root:found nothing
+exit=0
+
+## svwar -e100-120 -m INVITE 172.22.0.2 -p 5060
+WARNING:TakeASip:using an INVITE scan on an endpoint (i.e. SIP phone) may cause it to ring and wake up people in the middle of the night
+ERROR:TakeASip:socket error: timed out
+WARNING:root:found nothing
+exit=0

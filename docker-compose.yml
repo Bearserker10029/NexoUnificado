@@ -27,7 +27,7 @@ volumes:
 
 services:
   certs:
-    image: alpine:3.20
+    image: alpine:3.22
     container_name: nexo-certs
     restart: "no"
     environment:
@@ -139,7 +139,7 @@ services:
   # Tarea de un solo uso: al cambiar NEXO_HOST se recrea y actualiza el estado
   # persistido de Keycloak, Synapse y Nextcloud antes de iniciar el proxy.
   host-update:
-    image: docker:27-cli
+    image: docker:28-cli
     container_name: nexo-host-update
     restart: "no"
     working_dir: /workspace
@@ -164,7 +164,7 @@ services:
         condition: service_completed_successfully
 
   proxy:
-    image: nginx:1.27-alpine
+    image: nginx:1.29-alpine
     container_name: nexo-proxy
     restart: unless-stopped
     environment:
@@ -214,7 +214,7 @@ services:
     networks: [ pub, srv, mgmt ]
 
   prometheus:
-    image: prom/prometheus:v2.55.1
+    image: prom/prometheus:v3.5.0
     container_name: nexo-prometheus
     restart: unless-stopped
     command:
@@ -233,14 +233,14 @@ services:
     networks: [ mgmt ]
 
   node-exporter:
-    image: prom/node-exporter:v1.8.2
+    image: prom/node-exporter:v1.9.1
     container_name: nexo-node-exporter
     restart: unless-stopped
     security_opt: [ "no-new-privileges:true" ]
     networks: [ mgmt ]
 
   blackbox:
-    image: prom/blackbox-exporter:v0.25.0
+    image: prom/blackbox-exporter:v0.27.0
     container_name: nexo-blackbox
     restart: unless-stopped
     command: [ "--config.file=/etc/blackbox/blackbox.yml" ]
@@ -297,7 +297,7 @@ services:
   # Agrega el inicio de sesion unico (SSO) contra Keycloak al homeserver.yaml
   # generado por synapse-init, sin tocar su generacion. Tarea unica e idempotente.
   synapse-oidc-patch:
-    image: alpine:3.20
+    image: alpine:3.22
     container_name: nexo-synapse-oidc-patch
     restart: "no"
     depends_on:

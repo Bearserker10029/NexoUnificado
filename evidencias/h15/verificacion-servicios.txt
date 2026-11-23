@@ -1,0 +1,42 @@
+# 2026-11-23T09:05:01-05:00 verificacion tras actualizar etiquetas (imagenes nuevas en ejecucion)
+nexo-proxy	nginx:1.29-alpine	Up About a minute (healthy)
+nexo-grafana	grafana/grafana:11.6.0	Up About a minute (healthy)
+nexo-prometheus	prom/prometheus:v3.5.0	Up About a minute (healthy)
+nexo-blackbox	prom/blackbox-exporter:v0.27.0	Up 14 minutes
+nexo-node-exporter	prom/node-exporter:v1.9.1	Up 14 minutes
+## healthz TLS 8443
+ok
+ -> HTTP 200
+## healthz HTTP 8081
+ok
+ -> HTTP 200
+## LOGIN: / redirige al flujo OIDC y Keycloak publica su discovery
+C:/Program Files/Git/ HTTP 302 -> https://localhost:8443/docs/apps/user_oidc/login/1/nlogin OIDC Nextcloud HTTP 303 -> https://127.0.0.1:8443/keycloak/realms/nexo/protocol/openid-connect/auth?client_id=nextcloud&response_type=code&scope=openid+email+profile&redirect_uri=https%3A%2F%2F127.0.0.1%3A8443%2Fdocs%2Fapps%2Fuser_oidc%2Fcode&claims=%7B%22id_token%22%3A%7B%22email%22%3Anull%2C%22name%22%3Anull%2C%22quota%22%3Anull%2C%22groups%22%3Anull%7D%2C%22userinfo%22%3A%7B%22email%22%3Anull%2C%22name%22%3Anull%2C%22quota%22%3Anull%2C%22groups%22%3Anull%7D%7D&state=ER7KSEEDKGC0XH2JLSXX38IMTUGX9N1B&nonce=8PYAQEY2C6VAFB7THWMNAJTLC9EQ53HE&code_challenge=eDe3V7ZLbTvmC1V-UU6Dy1XQG4jXI0Km16d--7WYGck&code_challenge_method=S256
+keycloak discovery HTTP 200
+## Element / Jitsi / Grafana
+element/ HTTP 200
+jitsi/ HTTP 200
+grafana/api/health HTTP 200
+voip/ HTTP 200
+## Cache (X-Cache-Status)
+X-Cache-Status: MISS
+X-Cache-Status: MISS
+## Prometheus targets
+blackbox_https up
+blackbox_https up
+node up
+prometheus up
+## LLAMADA: Asterisk SIP/TLS 5061 abierto y 5060 cerrado
+asterisk (172.22.0.9:5061) open
+(5060/udp: sin respuesta/cerrado)
+## Asterisk endpoints PJSIP/transportes
+
+Transport:  <TransportId........>  <Type>  <cos>  <tos>  <BindAddress....................>
+==========================================================================================
+
+Transport:  transport-tls             tls      0      0  0.0.0.0:5061
+Transport:  transport-ws               ws      0      0  0.0.0.0:8088
+
+Objects found: 2
+
+grafana HTTP 200

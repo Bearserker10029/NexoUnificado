@@ -1,0 +1,19 @@
+AUDITORIA AUTORIZADA contra el propio sistema Nexo_Unificado (entorno local de desarrollo).
+Fecha: 2026-11-23T08:15:33-05:00
+Autorizacion: equipo del proyecto (TEL139, PUCP); la ejecucion fue solicitada por el responsable del hito H15/hacking etico.
+Objetivo: asterisk (red nexo_srv)
+
+## Sockets de escucha de Asterisk
+sh: 1: netstat: not found
+
+## /proc/net (hex; puerto 13C4=5060, 13C5=5061, 1F98=8088)
+TCP-LISTEN
+00000000:1F98
+00000000:13C5
+00000000:13AE
+0B00007F:87D5
+UDP
+0B00007F:9A0D
+00000000:9D1E
+local_address
+00000000000000000000000000000000:D472
