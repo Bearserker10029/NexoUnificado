@@ -1,0 +1,41 @@
+/* SPDX-FileCopyrightText: 2026 Kent Lin, Luis Quillas, Jeniffer Castillo
+ * SPDX-License-Identifier: Apache-2.0
+ * Hallmark · pre-emit critique: P4 H4 E4 S4 R5 V3 */
+:root {
+  --paper: #f4f7fa;
+  --white: #fff;
+  --ink: #16283d;
+  --muted: #496178;
+  --line: #bac9d7;
+  --accent: #05549b;
+  --focus: #137cba;
+  --tint: #e8f2fc;
+  --font: system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 1rem/1.55 var(--font); }
+a { color: var(--accent); }
+.top, main { max-width: 46rem; padding-inline: 1rem; margin-inline: auto; }
+.top { display: flex; justify-content: space-between; gap: .75rem; padding-block: 1rem; border-bottom: 1px solid var(--line); }
+.top a { white-space: nowrap; }
+.top span { text-align: right; overflow-wrap: anywhere; }
+main { padding-block: 1.8rem 3rem; min-width: 0; }
+h1 { margin: 0; font-size: clamp(2rem, 6vw, 3rem); line-height: 1.1; overflow-wrap: anywhere; }
+.intro, .notice { color: var(--muted); }
+#chat { display: grid; gap: .7rem; margin-block: 1.5rem; }
+.message { padding: .85rem 1rem; border: 1px solid var(--line); border-radius: .6rem; background: var(--white); }
+.message.user { background: var(--tint); }
+.message p { margin: .3rem 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.message audio { display: block; width: 100%; margin-top: .5rem; }
+.message button { margin-top: .5rem; }
+.notice { margin-bottom: 0; }
+textarea { display: block; width: 100%; min-height: 5.5rem; resize: vertical; margin-block: .35rem .75rem; padding: .75rem; border: 1px solid var(--line); border-radius: .5rem; background: var(--white); color: var(--ink); font: inherit; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; }
+.autoplay { display: flex; align-items: center; gap: .35rem; white-space: nowrap; }
+input { accent-color: var(--accent); }
+button { border: 1px solid var(--accent); border-radius: .5rem; background: var(--accent); color: var(--white); padding: .5rem .9rem; font: inherit; font-weight: 600; cursor: pointer; white-space: nowrap; }
+button:hover:not(:disabled) { background: var(--ink); }
+button:disabled { opacity: .65; cursor: wait; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }

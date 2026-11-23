@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TENANTS = ROOT / "tenants"
 REGISTRY = TENANTS / "registry.json"
 SERVICES = {"chat", "telefonia", "videoconferencia"}
+AI_PROVIDERS = ("gemini",)
 
 
 def load_registry() -> dict:
@@ -57,6 +58,8 @@ def add_tenant(args: argparse.Namespace) -> None:
         raise ValueError(f"El prefijo {args.range_prefix} ya esta asignado")
     tenants.append({"name": name, "display_name": args.display_name or args.name.upper(),
                     "range_prefix": args.range_prefix, "services": services})
+    if args.ai_provider:
+        tenants[-1]["ai_provider"] = args.ai_provider
     tenants.sort(key=lambda t: t["name"])
     save_registry(registry)
     render(registry)
@@ -441,8 +444,13 @@ def jitsi_services(name: str, index: int) -> str:
 def render_compose(registry: dict) -> None:
     output = ["""# GENERADO por scripts/nexo-tenant.py. Carga automatica junto al despliegue base.
 services:
-  asterisk:
-    env_file: [ .env ]
+"""]
+    if registry["tenants"]:
+        output.append("  asterisk:\n    environment:\n")
+        for tenant in registry["tenants"]:
+            secret = f"TENANT_{tenant['name'].upper().replace('-', '_')}_SIP_PASSWORD"
+            output.append(f"      {secret}: ${{{secret}:-}}\n")
+    output.append("""\
   keycloak:
     volumes:
       - ./tenants:/opt/keycloak/nexo/tenants:ro
@@ -454,7 +462,7 @@ services:
       NEXO_TENANTS: /tenants/registry.json
     volumes:
       - ./tenants/registry.json:/tenants/registry.json:ro
-"""]
+""")
     output.append("""  nextcloud-tenants-init:
     image: nextcloud:35-apache
     container_name: nexo-nextcloud-tenants-init
@@ -531,6 +539,9 @@ def render(registry: dict) -> None:
         unknown = tenant_services(tenant) - SERVICES
         if unknown:
             raise ValueError(f"Servicios desconocidos en {tenant['name']}: {unknown}")
+        provider = tenant.get("ai_provider")
+        if provider is not None and provider not in AI_PROVIDERS:
+            raise ValueError(f"Proveedor IA desconocido en {tenant['name']}: {provider!r}")
         render_asterisk(tenant)
         render_keycloak(tenant)
         render_matrix(tenant)
@@ -550,6 +561,7 @@ def main() -> None:
     add.add_argument("--range-prefix", type=int, required=True, help="1 para 1xxx, 2 para 2xxx")
     add.add_argument("--display-name")
     add.add_argument("--services", default="chat,telefonia,videoconferencia")
+    add.add_argument("--ai-provider", choices=AI_PROVIDERS)
     sub.add_parser("render", help="Regenerar archivos desde registry.json")
     args = parser.parse_args()
     try:

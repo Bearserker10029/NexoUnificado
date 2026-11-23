@@ -4,6 +4,7 @@
     {
       "name": "acme",
       "display_name": "ACME",
+      "ai_provider": "gemini",
       "range_prefix": 1,
       "services": [
         "chat",

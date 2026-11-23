@@ -1,0 +1,71 @@
+# SPDX-FileCopyrightText: 2026 Kent Lin, Luis Quillas, Jeniffer Castillo
+# SPDX-License-Identifier: Apache-2.0
+import importlib
+import os
+import sys
+import time
+import unittest
+from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import Mock, patch
+from urllib.parse import parse_qs, urlsplit
+
+ROOT = Path(__file__).resolve().parents[1]
+ORIGIN = "https://nexo.test:8443"
+sys.path.insert(0, str(ROOT / "assistant"))
+try:
+    with patch.dict(os.environ, {"NEXO_URL": ORIGIN}):
+        assistant = importlib.import_module("app")
+finally:
+    sys.path.pop(0)
+
+
+class AssistantTest(unittest.TestCase):
+    def setUp(self):
+        self.client = assistant.app.test_client()
+        self.provider = SimpleNamespace(ready=True, reply=Mock(return_value="Hola desde Nexo."))
+        self.enterContext(patch.object(assistant, "REGISTRY", ROOT / "tenants" / "registry.json"))
+        self.enterContext(patch.dict(assistant.PROVIDERS, {"gemini": self.provider}))
+
+    def post(self, path, payload, origin=ORIGIN):
+        return self.client.post(path, base_url=ORIGIN, json=payload, headers={"Origin": origin})
+
+    def login_as(self, tenant):
+        with self.client.session_transaction(base_url=ORIGIN) as session:
+            session["user"] = {"issuer": assistant.issuer(tenant),
+                               "sub": "test-user", "expires": time.time() + 60}
+
+    def test_login_selects_tenant_realm_and_uses_pkce(self):
+        response = self.client.get("/airi/?tenant=acme", base_url=ORIGIN)
+        self.assertEqual(response.status_code, 302)
+        target = urlsplit(response.location)
+        params = parse_qs(target.query)
+        self.assertEqual(target.path, "/keycloak/realms/nexo-acme/protocol/openid-connect/auth")
+        self.assertEqual(params["code_challenge_method"], ["S256"])
+        self.assertEqual(params["redirect_uri"], [f"{ORIGIN}/airi/callback"])
+        self.assertEqual(self.client.get("/airi/callback?state=invalid", base_url=ORIGIN).status_code, 400)
+
+    def test_disabled_and_cross_tenant_requests_do_not_reach_provider(self):
+        messages = {"messages": [{"role": "user", "text": "Hola"}]}
+        self.login_as("beta")
+        self.assertIn("deshabilitado", self.client.get("/airi/?tenant=beta", base_url=ORIGIN).text)
+        self.assertEqual(self.post("/airi/api/beta/chat", messages).status_code, 403)
+        self.assertEqual(self.post("/airi/api/acme/chat", messages).status_code, 401)
+        self.login_as("acme")
+        self.assertEqual(self.post("/airi/api/acme/chat", messages, "https://otro.test").status_code, 403)
+        self.provider.reply.assert_not_called()
+
+    def test_speech_ticket_only_applies_to_the_exact_reply(self):
+        self.login_as("acme")
+        chat = self.post("/airi/api/acme/chat", {"messages": [{"role": "user", "text": "Hola"}]})
+        self.assertEqual(chat.status_code, 200)
+        answer = chat.get_json()
+        ticket = answer["speech_ticket"]
+        endpoint = "/airi/api/acme/speech"
+        with patch.object(assistant.requests, "post") as pocket:
+            self.assertEqual(self.post(endpoint, {"text": "Distinto", "ticket": ticket}).status_code, 403)
+            pocket.assert_not_called()
+            pocket.return_value.content = b"RIFF"
+            audio = self.post(endpoint, {"text": answer["text"], "ticket": ticket})
+            self.assertEqual(audio.content_type, "audio/wav")
+            self.assertEqual(audio.data, b"RIFF")

@@ -23,6 +23,7 @@ volumes:
   nextcloud_db_data:
   nextcloud_data:
   clamav_signatures:
+  pocket_tts_models:
 
 services:
   certs:
@@ -108,6 +109,33 @@ services:
       start_period: 15s
     networks: [ srv ]
 
+  assistant:
+    build: ./assistant
+    restart: unless-stopped
+    environment:
+      NEXO_URL: https://${NEXO_HOST:-localhost}:8443
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.5-flash-lite}
+      AI_SESSION_SECRET: ${AI_SESSION_SECRET:-}
+    volumes:
+      - ./tenants:/tenants:ro
+    security_opt: [ "no-new-privileges:true" ]
+    networks: [ srv ]
+
+  pocket-tts:
+    build: ./pocket-tts
+    restart: unless-stopped
+    volumes:
+      - pocket_tts_models:/models
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=3)" ]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 120s
+    security_opt: [ "no-new-privileges:true" ]
+    networks: [ srv ]
+
   # Tarea de un solo uso: al cambiar NEXO_HOST se recrea y actualiza el estado
   # persistido de Keycloak, Synapse y Nextcloud antes de iniciar el proxy.
   host-update:
@@ -117,8 +145,12 @@ services:
     working_dir: /workspace
     environment:
       NEXO_HOST: ${NEXO_HOST:?Define NEXO_HOST en el archivo .env}
+      NEXO_HOST_UPDATE_CONTAINER: '1'
+      KC_ADMIN_USER: ${KC_ADMIN_USER:-nexo_admin}
+      KC_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD:?}
+      KC_VOIP_CLIENT_SECRET: ${KC_VOIP_CLIENT_SECRET:?}
     volumes:
-      - .:/workspace:ro
+      - ./scripts:/workspace/scripts:ro
       - /var/run/docker.sock:/var/run/docker.sock
     entrypoint: [ "/bin/sh", "/workspace/scripts/actualizar-host.sh" ]
     depends_on:
@@ -508,7 +540,7 @@ services:
     networks: [ srv ]
 
   # Puebla el menu unificado (External Sites) con Telefonia, Videoconferencia,
-  # Chat y Monitoreo. Tarea unica: reescribe la lista completa en cada
+  # Chat, Monitoreo y Asistente IA. Tarea unica: reescribe la lista completa en cada
   # arranque, asi que un cambio manual con occ (grupos, iconos) se revierte
   # al volver a correr "docker compose up -d" salvo que tambien se edite
   # nextcloud/poblar-menu-entrypoint.sh.

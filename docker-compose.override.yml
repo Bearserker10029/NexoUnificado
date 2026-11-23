@@ -1,7 +1,9 @@
 # GENERADO por scripts/nexo-tenant.py. Carga automatica junto al despliegue base.
 services:
   asterisk:
-    env_file: [ .env ]
+    environment:
+      TENANT_ACME_SIP_PASSWORD: ${TENANT_ACME_SIP_PASSWORD:-}
+      TENANT_BETA_SIP_PASSWORD: ${TENANT_BETA_SIP_PASSWORD:-}
   keycloak:
     volumes:
       - ./tenants:/opt/keycloak/nexo/tenants:ro

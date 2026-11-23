@@ -4,12 +4,13 @@
 set -eu
 export MSYS_NO_PATHCONV=1
 cd "$(dirname "$0")/.."
-[ -f .env ] || { echo "No existe .env." >&2; exit 1; }
-# Windows suele guardar .env como CRLF; el shell de Alpine exige LF.
-ENV_NORMALIZED="/tmp/nexo-host-update.env"
-sed 's/\r$//' .env > "$ENV_NORMALIZED"
-. "$ENV_NORMALIZED"
-rm -f "$ENV_NORMALIZED"
+if [ "${NEXO_HOST_UPDATE_CONTAINER:-}" != 1 ]; then
+  [ -f .env ] || { echo "No existe .env." >&2; exit 1; }
+  ENV_NORMALIZED="/tmp/nexo-host-update.env"
+  sed 's/\r$//' .env > "$ENV_NORMALIZED"
+  . "$ENV_NORMALIZED"
+  rm -f "$ENV_NORMALIZED"
+fi
 : "${NEXO_HOST:?Define NEXO_HOST en .env}"
 : "${KC_ADMIN_USER:?Define KC_ADMIN_USER en .env}"
 : "${KC_ADMIN_PASSWORD:?Define KC_ADMIN_PASSWORD en .env}"
@@ -76,6 +77,9 @@ kcadm update "clients/${VOIP_ID}" -r nexo \
   -s "baseUrl=/voip/" \
   -s "attributes={\"post.logout.redirect.uris\":\"${NEXO_URL}/voip/*\",\"pkce.code.challenge.method\":\"S256\"}"
 echo "Cliente voip creado/actualizado."
+
+# El cliente público usa PKCE S256. Crea o actualiza en realms ya persistidos.
+. ./scripts/configurar-asistente-oidc.sh
 
 # Synapse comparte esquema, IP y puerto con Nextcloud/Element.
 echo "Actualizando homeserver.yaml de Synapse..."

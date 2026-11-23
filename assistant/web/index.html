@@ -1,0 +1,36 @@
+<!doctype html>
+<!-- SPDX-FileCopyrightText: 2026 Kent Lin, Luis Quillas, Jeniffer Castillo
+     SPDX-License-Identifier: Apache-2.0 -->
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Asistente IA · Nexo Unificado</title>
+  <link rel="stylesheet" href="/airi/assets/style.css">
+  <script src="/airi/assets/app.js" defer></script>
+</head>
+<body data-tenant="{{ tenant }}">
+  <header class="top">
+    <a href="/docs/apps/files/">Volver a Nextcloud</a>
+    <span>{{ company }}</span>
+  </header>
+  <main>
+    <h1>Asistente IA</h1>
+    {% if status %}
+    <p class="notice" role="status">{{ status }}</p>
+    {% else %}
+    <p class="intro">Escribe una pregunta para recibir una respuesta en texto y voz en español.</p>
+    <section id="chat" role="log" aria-label="Conversación"></section>
+    <form id="composer">
+      <label for="question">Tu pregunta</label>
+      <textarea id="question" rows="3" maxlength="2000" required></textarea>
+      <div class="actions">
+        <label class="autoplay"><input id="autoplay" type="checkbox" checked> Leer en voz alta</label>
+        <button id="send" type="submit">Enviar</button>
+      </div>
+      <p id="status" class="notice" role="status" hidden></p>
+    </form>
+    {% endif %}
+  </main>
+</body>
+</html>
