@@ -1,0 +1,91 @@
+---
+- name: Preparar Docker antes del despliegue
+  ansible.builtin.import_playbook: prepare.yml
+
+- name: Desplegar Nexo Unificado con Docker Compose
+  hosts: nexo
+  gather_facts: false
+  vars:
+    nexo_src: "{{ playbook_dir }}/.."
+    nexo_dir: "{{ nexo_src }}"
+    secrets_dir: "{{ playbook_dir }}/.secrets"
+    asterisk_public_ip: "127.0.0.1"
+    security_sshd: false
+    skip_host_update: false
+    compose_files: "-f docker-compose.yml -f docker-compose.override.yml -f security/docker-compose.security.yml{{ ' -f security/docker-compose.sshd.yml' if security_sshd else '' }}"
+    contenido:
+      - docker-compose.yml
+      - docker-compose.override.yml
+      - asterisk
+      - assistant
+      - blackbox
+      - grafana
+      - keycloak
+      - matrix
+      - nextcloud
+      - nginx
+      - pocket-tts
+      - prometheus
+      - scripts
+      - security
+      - tenants
+      - voip
+      - voip-gateway
+  tasks:
+    - name: Detectar una pila nexo desplegada desde otro directorio
+      ansible.builtin.command:
+        argv: [docker, ps, -a, --filter, label=com.docker.compose.project=nexo,
+               --format, '{% raw %}{{ .Label "com.docker.compose.project.working_dir" }}{% endraw %}']
+      register: otras
+      changed_when: false
+
+    - name: Detener el despliegue si otra pila nexo esta activa
+      ansible.builtin.assert:
+        that: >-
+          otras.stdout_lines | reject('equalto', nexo_dir)
+          | reject('search', '[\\\\/]' ~ (nexo_dir | realpath | basename) ~ '$')
+          | list | length == 0
+        fail_msg: >-
+          Ya existe una pila nexo en {{ otras.stdout_lines | unique | join(', ') }}.
+          No se modificara; detenla antes de aprovisionar este directorio.
+
+    - name: Copiar configuracion cuando el destino es independiente
+      ansible.builtin.copy:
+        src: "{{ nexo_src }}/{{ item }}"
+        dest: "{{ nexo_dir }}/"
+        mode: "0644"
+        directory_mode: "0755"
+      loop: "{{ contenido }}"
+      when: (nexo_dir | realpath) != (nexo_src | realpath)
+
+    - name: Comprobar si ya existe un archivo de entorno
+      ansible.builtin.stat:
+        path: "{{ nexo_dir }}/.env"
+      register: env_actual
+
+    - name: Generar el entorno inicial sin reemplazar credenciales existentes
+      ansible.builtin.template:
+        src: env.j2
+        dest: "{{ nexo_dir }}/.env"
+        mode: "0600"
+      when: not env_actual.stat.exists
+      no_log: true
+
+    - name: Validar la configuracion Compose completa
+      ansible.builtin.command:
+        cmd: "docker compose {{ compose_files }} config --quiet"
+        chdir: "{{ nexo_dir }}"
+      changed_when: false
+
+    - name: Construir y levantar los servicios
+      ansible.builtin.command:
+        cmd: "docker compose {{ compose_files }} up -d --build --remove-orphans"
+        chdir: "{{ nexo_dir }}"
+      environment:
+        NEXO_SKIP_HOST_UPDATE: "{{ '1' if skip_host_update else '0' }}"
+      register: up
+      changed_when: >-
+        (up.stdout_lines + up.stderr_lines)
+        | reject('search', 'nexo-(certs|synapse-init|synapse-oidc-patch|host-update|nextcloud-init|nextcloud-menu-init|nextcloud-tenants-init|collabora-init|ollama-init)')
+        | select('search', 'Created|Recreated|Started|Pulled')
+        | list | length > 0

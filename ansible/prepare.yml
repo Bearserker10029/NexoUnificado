@@ -1,0 +1,38 @@
+---
+- name: Preparar el servidor Docker
+  hosts: nexo
+  gather_facts: false
+  vars:
+    nexo_src: "{{ playbook_dir }}/.."
+    nexo_dir: "{{ nexo_src }}"
+  tasks:
+    - name: Comprobar que el daemon Docker responde
+      ansible.builtin.command: docker version
+      register: docker_version
+      changed_when: false
+      failed_when: docker_version.rc != 0
+
+    - name: Comprobar que Docker Compose esta disponible
+      ansible.builtin.command: docker compose version
+      register: compose_version
+      changed_when: false
+      failed_when: compose_version.rc != 0
+
+    - name: Comprobar permisos sobre el daemon Docker
+      ansible.builtin.command: docker info --format '{{ '{{.ServerVersion}}' }}'
+      register: docker_info
+      changed_when: false
+
+    - name: Crear directorios de despliegue y secretos
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: directory
+        mode: "{{ item.mode }}"
+      loop:
+        - { path: "{{ nexo_dir }}", mode: "0755" }
+        - { path: "{{ nexo_dir }}/certs", mode: "0755" }
+        - { path: "{{ playbook_dir }}/.secrets", mode: "0700" }
+
+    - name: Mostrar versiones detectadas
+      ansible.builtin.debug:
+        msg: "Docker y Compose disponibles; despliegue en {{ nexo_dir }}"

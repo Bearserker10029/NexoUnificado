@@ -1,0 +1,77 @@
+---
+- name: Verificar que los servicios de Nexo Unificado responden
+  hosts: nexo
+  gather_facts: false
+  vars:
+    nexo_src: "{{ playbook_dir }}/.."
+    nexo_dir: "{{ nexo_src }}"
+    security_sshd: false
+    compose_files: "-f docker-compose.yml -f docker-compose.override.yml -f security/docker-compose.security.yml{{ ' -f security/docker-compose.sshd.yml' if security_sshd else '' }}"
+    base_url: "https://127.0.0.1:8443"
+    expected_services:
+      - proxy
+      - asterisk
+      - voip-gateway
+      - keycloak
+      - synapse
+      - element
+      - jitsi-web
+      - nextcloud
+      - collabora
+      - fail2ban
+  tasks:
+    - name: Esperar al healthcheck HTTP del proxy
+      ansible.builtin.uri:
+        url: http://127.0.0.1:8081/healthz
+        status_code: 200
+      register: health_http
+      retries: 40
+      delay: 10
+      until: health_http.status == 200
+
+    - name: Comprobar HTTPS y los puntos de entrada principales
+      ansible.builtin.uri:
+        url: "{{ base_url }}{{ item.path }}"
+        validate_certs: false
+        status_code: 200
+      loop:
+        - { name: Proxy TLS, path: /healthz }
+        - { name: Keycloak, path: /keycloak/realms/nexo/.well-known/openid-configuration }
+        - { name: Element, path: /element/ }
+        - { name: Jitsi, path: /jitsi/ }
+        - { name: Nextcloud, path: /docs/status.php }
+        - { name: Telefonia, path: /voip/ }
+        - { name: Grafana, path: /grafana/api/health }
+      register: endpoints
+      retries: 20
+      delay: 10
+      until: endpoints.status == 200
+
+    - name: Listar servicios en ejecucion
+      ansible.builtin.command:
+        cmd: "docker compose {{ compose_files }} ps --status running --services"
+        chdir: "{{ nexo_dir }}"
+      register: running
+      changed_when: false
+
+    - name: Comprobar servicios esenciales y modo multiempresa
+      ansible.builtin.assert:
+        that:
+          - expected_services | difference(running.stdout_lines) | length == 0
+          - "'synapse-acme' in running.stdout_lines"
+          - "'synapse-beta' in running.stdout_lines"
+          - "'jitsi-web-acme' in running.stdout_lines"
+          - "'jitsi-web-beta' in running.stdout_lines"
+        success_msg: "Servicios base y multiempresa responden correctamente."
+
+    - name: Detectar contenedores con healthcheck en fallo
+      ansible.builtin.command:
+        argv: [docker, ps, --filter, label=com.docker.compose.project=nexo,
+               --filter, health=unhealthy, --format, '{% raw %}{{ .Names }}{% endraw %}']
+      register: unhealthy
+      changed_when: false
+
+    - name: Confirmar que no hay contenedores enfermos
+      ansible.builtin.assert:
+        that: unhealthy.stdout_lines | length == 0
+        fail_msg: "Contenedores unhealthy: {{ unhealthy.stdout_lines | join(', ') }}"

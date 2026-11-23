@@ -2,6 +2,10 @@
 # Actualiza el estado persistido al cambiar NEXO_HOST. Compose ejecuta este
 # script automaticamente mediante el servicio host-update.
 set -eu
+if [ "${NEXO_SKIP_HOST_UPDATE:-0}" = "1" ]; then
+  echo "Actualizacion de host omitida: NEXO_HOST no cambio en esta instalacion."
+  exit 0
+fi
 export MSYS_NO_PATHCONV=1
 cd "$(dirname "$0")/.."
 if [ "${NEXO_HOST_UPDATE_CONTAINER:-}" != 1 ]; then

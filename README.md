@@ -32,6 +32,15 @@ docker compose ps --all
 `.env` contiene únicamente las credenciales de los administradores técnicos y
 secretos internos de servicios. No contiene cuentas ni claves de usuarios finales.
 
+## Automatización y seguridad de infraestructura
+
+El hito H12 aprovisiona y verifica toda la pila con Ansible, conserva las credenciales
+existentes y puede ejecutarse dos veces para comprobar su idempotencia. La guía está en
+[docs/h12-ansible.md](docs/h12-ansible.md).
+
+La configuración de límites de tasa, fail2ban y la auditoría TLS local se documenta en
+[docs/seguridad-infra.md](docs/seguridad-infra.md).
+
 ## Acceso
 
 Sustituye `192.168.1.39` por el `NEXO_HOST` configurado. Todas las rutas usan el
