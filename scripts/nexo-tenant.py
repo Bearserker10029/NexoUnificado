@@ -498,8 +498,12 @@ services:
       - synapse_{name}_data:/data
       - ./tenants/{name}/matrix/homeserver.yaml.template:/template/homeserver.yaml:ro
       - ./matrix/tenant-entrypoint.sh:/nexo/tenant-entrypoint.sh:ro
-      - ./certs/server.crt:/certs/server.crt:ro
-    depends_on: [ keycloak ]
+      - ./certs/public:/certs:ro
+    depends_on:
+      keycloak:
+        condition: service_started
+      certs:
+        condition: service_completed_successfully
     networks: [ srv ]
   element-{name}:
     image: vectorim/element-web:latest

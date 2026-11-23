@@ -82,6 +82,12 @@ class MultiempresaEstatico(unittest.TestCase):
             self.assertIn(f"/realms/nexo-{name}", config["oidc_providers"][0]["issuer"])
         self.assertEqual(len(set(servers)), 2)
 
+    def test_homeservers_esperan_el_certificado_publico(self):
+        for name in ("synapse", "synapse-acme", "synapse-beta"):
+            service = self.compose["services"][name]
+            self.assertIn("./certs/public:/certs:ro", service["volumes"])
+            self.assertEqual(service["depends_on"]["certs"]["condition"], "service_completed_successfully")
+
     def test_realms_y_grupos_contratados(self):
         for name in ("acme", "beta"):
             realm = json.loads((ROOT / f"tenants/{name}/keycloak/realm.json.template").read_text(encoding="utf-8"))

@@ -45,8 +45,12 @@ services:
       - synapse_acme_data:/data
       - ./tenants/acme/matrix/homeserver.yaml.template:/template/homeserver.yaml:ro
       - ./matrix/tenant-entrypoint.sh:/nexo/tenant-entrypoint.sh:ro
-      - ./certs/server.crt:/certs/server.crt:ro
-    depends_on: [ keycloak ]
+      - ./certs/public:/certs:ro
+    depends_on:
+      keycloak:
+        condition: service_started
+      certs:
+        condition: service_completed_successfully
     networks: [ srv ]
   element-acme:
     image: vectorim/element-web:latest
@@ -147,8 +151,12 @@ services:
       - synapse_beta_data:/data
       - ./tenants/beta/matrix/homeserver.yaml.template:/template/homeserver.yaml:ro
       - ./matrix/tenant-entrypoint.sh:/nexo/tenant-entrypoint.sh:ro
-      - ./certs/server.crt:/certs/server.crt:ro
-    depends_on: [ keycloak ]
+      - ./certs/public:/certs:ro
+    depends_on:
+      keycloak:
+        condition: service_started
+      certs:
+        condition: service_completed_successfully
     networks: [ srv ]
   element-beta:
     image: vectorim/element-web:latest

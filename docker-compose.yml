@@ -340,9 +340,11 @@ services:
       REQUESTS_CA_BUNDLE: /data/nexo-ca-bundle.pem
     volumes:
       - synapse_data:/data
-      - ./certs/server.crt:/certs/server.crt:ro
+      - ./certs/public:/certs:ro
     security_opt: [ "no-new-privileges:true" ]
     depends_on:
+      certs:
+        condition: service_completed_successfully
       synapse-init:
         condition: service_completed_successfully
       synapse-oidc-patch:
