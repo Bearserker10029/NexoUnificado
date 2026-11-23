@@ -4,7 +4,7 @@
     {
       "name": "acme",
       "display_name": "ACME",
-      "ai_provider": "gemini",
+      "ai_provider": "ollama",
       "range_prefix": 1,
       "services": [
         "chat",
@@ -27,6 +27,7 @@
     {
       "name": "beta",
       "display_name": "BETA",
+      "ai_provider": null,
       "range_prefix": 2,
       "services": [
         "chat",
