@@ -63,7 +63,7 @@ Script: [`scripts/h13-pruebas.sh`](../scripts/h13-pruebas.sh) (se ejecuta desde 
 
 | Origen | Prueba | Resultado esperado |
 |--------|--------|--------------------|
-| VLAN10 | `curl http://192.168.30.10:8081/healthz` | **No** (solo 8443 permitido) — usar `curl -k https://192.168.30.10:8443/` → OK |
+| VLAN10 | `curl -k https://192.168.30.10:8443/healthz` | `ok` (HTTP 200) |
 | VLAN10 | `ssh 192.168.30.10` | Falla (timeout) |
 | VLAN10 | 5061 / RTP | Falla |
 | VLAN20 | TCP 5061 | Abre |
@@ -74,7 +74,7 @@ Script: [`scripts/h13-pruebas.sh`](../scripts/h13-pruebas.sh) (se ejecuta desde 
 | WireGuard | VLAN10/20 | Falla |
 | Cualquiera | UDP 5060 | Cerrado (nunca publicado) |
 
-> Nota: el `healthz` del proxy está en el puerto 80 interno (publicado como 8081). Si se exige `healthz` desde VLAN10 solo por 8443, usar la URL HTTPS pública del proxy; ajustar la regla 1 si se decide permitir 8081 solo para monitoreo.
+> Nota: `/healthz` también responde por TLS en 8443 (bloque HTTPS de `default.conf`), de modo que la prueba permitida de VLAN 10 y el monitoreo viajan cifrados y cuadran con la regla 1. El `/healthz` HTTP del puerto 80 (publicado en 8081) se mantiene para el healthcheck interno de Docker.
 
 ## 6. Pendiente (impedimento y plan)
 

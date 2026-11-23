@@ -9,6 +9,6 @@ tcp() { if timeout 4 bash -c "</dev/tcp/$SRV/$2" 2>/dev/null; then echo "$1 tcp/
 {
   echo "# $(date -Is) origen=$V host=$(hostname) ip=$(hostname -I)"
   tcp HTTPS 8443; tcp SSH 22; tcp SIP-TLS 5061
-  echo "healthz:"; curl -sk --max-time 4 "https://$SRV:8443/element/" -o /dev/null -w "  https 8443 -> HTTP %{http_code}\n" || echo "  https 8443 -> fallo"
+curl -sk --max-time 4 "https://$SRV:8443/healthz" -o /dev/null -w "  healthz https 8443 -> HTTP %{http_code}\n" || echo "  https 8443 -> fallo"
   [ "$V" = wireguard ] && sudo wg show
 } | tee "$OUT"
