@@ -1,0 +1,26 @@
+# H12/Seguridad: se carga como tercer archivo de Compose, sin sustituir la pila base.
+services:
+  proxy:
+    volumes:
+      - proxy_logs:/var/log/nginx
+
+  fail2ban:
+    image: crazymax/fail2ban:latest
+    container_name: nexo-fail2ban
+    restart: unless-stopped
+    # Comparte el namespace del proxy: los bloqueos iptables protegen HTTPS/WSS.
+    network_mode: service:proxy
+    depends_on:
+      proxy:
+        condition: service_started
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - proxy_logs:/var/log/nginx:ro
+      - asterisk_logs:/var/log/asterisk:ro
+      - ./security/fail2ban/jail.d:/etc/fail2ban/jail.d:ro
+      - ./security/fail2ban/filter.d:/etc/fail2ban/filter.d:ro
+
+volumes:
+  proxy_logs:

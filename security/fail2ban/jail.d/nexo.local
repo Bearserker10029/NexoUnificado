@@ -1,0 +1,28 @@
+[DEFAULT]
+bantime = 15m
+findtime = 10m
+maxretry = 5
+backend = auto
+banaction = iptables-allports
+chain = INPUT
+ignoreip = 127.0.0.1/8 ::1
+
+[nexo-keycloak]
+enabled = true
+port = http,https
+logpath = /var/log/nginx/nexo-access.log
+filter = nexo-keycloak
+
+[asterisk]
+enabled = true
+port = 8088
+logpath = /var/log/asterisk/security
+filter = asterisk-security
+
+[sshd]
+# En Docker Desktop no existe el sshd del host. En el servidor Linux se activa
+# con security/fail2ban/jail.d/sshd.local (ver docs/seguridad-infra.md).
+enabled = false
+port = ssh
+logpath = /var/log/auth.log
+filter = sshd

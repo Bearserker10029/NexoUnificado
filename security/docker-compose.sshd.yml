@@ -1,0 +1,6 @@
+# Activar unicamente en un servidor Linux con /var/log/auth.log.
+services:
+  fail2ban:
+    volumes:
+      - /var/log/auth.log:/var/log/auth.log:ro
+      - ./security/fail2ban/jail.d/sshd.local.example:/etc/fail2ban/jail.d/sshd.local:ro
