@@ -6,3 +6,9 @@ matrix/usuarios.txt
 jitsi/
 
 ansible/.secrets/
+.trivy-cache/
+
+# WireGuard: nunca versionar claves reales
+*.key
+wg*.conf
+!*.example

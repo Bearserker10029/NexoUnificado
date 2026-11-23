@@ -1,0 +1,30 @@
+# nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+
+## GET /element/ intento 1
+HTTP/1.1 200 OK
+Strict-Transport-Security: max-age=31536000
+X-Cache-Status: MISS
+## GET /element/ intento 2
+HTTP/1.1 200 OK
+Strict-Transport-Security: max-age=31536000
+X-Cache-Status: HIT
+## GET /element/ intento 3
+HTTP/1.1 200 OK
+Strict-Transport-Security: max-age=31536000
+X-Cache-Status: HIT
+## GET /_matrix/ (sin cache, upstream caido)
+HTTP/1.1 502 Bad Gateway
+## Directivas proxy_cache por ruta
+5:proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=nexo:10m inactive=60m;
+93:    location /voip/ {
+251:    location /_matrix/ {
+287:    location /element/ {
+293:        proxy_cache nexo;
+294:        proxy_cache_valid 200 302 10m;
+295:        proxy_cache_valid 404 1m;
+302:    location /jitsi/ {
+311:        proxy_cache nexo;
+312:        proxy_cache_valid 200 302 10m;
+313:        proxy_cache_valid 404 1m;

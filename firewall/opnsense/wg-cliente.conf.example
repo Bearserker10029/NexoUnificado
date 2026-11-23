@@ -1,0 +1,10 @@
+# EJEMPLO. Reemplazar las claves por las reales en el equipo cliente; NO versionar.
+[Interface]
+Address = 10.99.0.2/32
+PrivateKey = <CLAVE_PRIVADA_DEL_CLIENTE>
+
+[Peer]
+PublicKey = <CLAVE_PUBLICA_DE_OPNSENSE>
+Endpoint = <IP_WAN_OPNSENSE>:51820
+AllowedIPs = 192.168.30.10/32, 192.168.99.0/24
+PersistentKeepalive = 25
