@@ -7,6 +7,7 @@ import json
 import os
 import re
 import secrets
+import threading
 import time
 from functools import lru_cache
 from pathlib import Path
@@ -17,7 +18,7 @@ import requests
 from flask import Flask, Response, abort, jsonify, redirect, render_template, request, send_from_directory, session
 from itsdangerous import BadData, URLSafeTimedSerializer
 
-from providers import ProviderError, provider_for
+from providers import EndpointError, ProviderError, provider_for, public_https_url
 
 PREFIX = "/airi"
 CLIENT_ID = "nexo-assistant"
@@ -25,6 +26,8 @@ NEXO_URL = os.environ["NEXO_URL"].rstrip("/")
 CALLBACK = f"{NEXO_URL}{PREFIX}/callback"
 KEYCLOAK = "http://keycloak:8080"
 REGISTRY = Path("/tenants/registry.json")
+CONFIG_PATH = Path(os.getenv("ASSISTANT_DATA", "/data")) / "tenant-config.json"
+CONFIG_LOCK = threading.Lock()
 STAGE = Path(__file__).with_name("stage")
 AUTH_SECONDS = 300
 app = Flask(__name__, static_folder="web/assets", static_url_path=f"{PREFIX}/assets", template_folder="web")
@@ -49,6 +52,33 @@ def tenants():
         }
     except (OSError, ValueError, TypeError, KeyError):
         abort(503, "No se pudo leer la configuración de las empresas.")
+
+
+def load_config(tenant):
+    """Configuración propia de la empresa (modelo de IA, voz y personaje); {} si usa los valores predeterminados."""
+    try:
+        data = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+        config = data.get(tenant, {})
+        return config if isinstance(config, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def save_config(tenant, config):
+    with CONFIG_LOCK:
+        try:
+            data = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            data = {}
+        if config:
+            data[tenant] = config
+        else:
+            data.pop(tenant, None)
+        CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
+        temporary = CONFIG_PATH.with_suffix(".tmp")
+        temporary.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        os.chmod(temporary, 0o600)
+        os.replace(temporary, CONFIG_PATH)
 
 
 def realm_for(tenant):
@@ -79,12 +109,12 @@ def assistant_url(tenant):
     return f"{PREFIX}/" + (f"?{urlencode({'tenant': tenant})}" if tenant else "")
 
 
-def begin_login(tenant):
+def begin_login(tenant, after=""):
     verifier = secrets.token_urlsafe(48)
     challenge = base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest()).rstrip(b"=").decode()
     pending = {
         "tenant": tenant, "verifier": verifier, "state": secrets.token_urlsafe(32),
-        "nonce": secrets.token_urlsafe(32), "expires": time.time() + AUTH_SECONDS,
+        "nonce": secrets.token_urlsafe(32), "expires": time.time() + AUTH_SECONDS, "after": after,
     }
     session["oidc"] = pending
     query = urlencode({
@@ -118,7 +148,7 @@ def index():
         abort(404)
     if not user_for(tenant):
         return begin_login(tenant)
-    provider = provider_for(tenant, company)
+    provider = provider_for(tenant, company, load_config(tenant))
     status = ""
     if not provider:
         status = "El asistente está deshabilitado para tu empresa."
@@ -148,19 +178,23 @@ def stage_index():
     user = user_for(tenant)
     if not user:
         return redirect(assistant_url(tenant))
-    provider = provider_for(tenant, tenants().get(tenant))
+    provider = provider_for(tenant, tenants().get(tenant), load_config(tenant))
     if not provider or not provider.ready:
         return redirect(assistant_url(tenant))
     index_file = STAGE / "index.html"
     if not index_file.is_file():
         abort(404)
     profile = hmac.new(app.secret_key.encode(), json.dumps([user["issuer"], user["sub"]]).encode(), "sha256").hexdigest()
-    html = index_file.read_bytes().replace(
-        b"<head>", f'<head><meta name="nexo-profile" content="{profile}">'.encode(), 1,
+    metas = (
+        f'<meta name="nexo-profile" content="{profile}">'
+        f'<meta name="nexo-admin" content="{"true" if user.get("admin") else "false"}">'
     )
+    html = index_file.read_bytes().replace(b"<head>", f"<head>{metas}".encode(), 1)
     response = Response(html, mimetype="text/html")
     response.headers["Content-Security-Policy"] = (
-        f"default-src 'self'; script-src 'self' 'wasm-unsafe-eval' {stage_script_hashes()}; "
+        # 'unsafe-eval': el render Live2D (Pixi) lo exige. data:: AIRI carga el módulo de audio de la
+        # animación de labios (AudioWorklet) desde una URL data:. El resto sigue siendo del mismo origen.
+        f"default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval' data: {stage_script_hashes()}; "
         "style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; "
         "connect-src 'self' blob: data:; worker-src 'self' blob:; media-src 'self' blob: data:; "
         "frame-ancestors 'self'; form-action 'self'; base-uri 'none'; object-src 'none'"
@@ -210,10 +244,82 @@ def callback():
     except (requests.RequestException, jwt.PyJWTError, ValueError, KeyError):
         abort(401, "Keycloak no pudo verificar la sesión del asistente.")
     session.clear()
+    groups = claims.get("groups") if isinstance(claims.get("groups"), list) else []
     session["user"] = {
         "sub": claims["sub"], "issuer": claims["iss"], "expires": claims["exp"],
+        "admin": bool(tenant) and f"{tenant}-administradores" in groups,
     }
     return redirect(assistant_url(tenant))
+
+
+CONFIG_TEXT = re.compile(r"[A-Za-z0-9._:/@+-]{1,80}")
+KEY_PLACEHOLDER = "nexo-session"
+
+
+def settings_payload(tenant):
+    config = load_config(tenant)
+    chat, speech = config.get("chat") or {}, config.get("speech") or {}
+    return {
+        "chat": {"base_url": chat.get("base_url", ""), "model": chat.get("model", ""),
+                 "api_key_set": bool(chat.get("api_key"))},
+        "speech": {"base_url": speech.get("base_url", ""), "model": speech.get("model", ""),
+                   "voice": speech.get("voice", ""), "api_key_set": bool(speech.get("api_key"))},
+    }
+
+
+def _clean_text(value, label):
+    value = (value or "").strip()
+    if value and not CONFIG_TEXT.fullmatch(value):
+        raise ValueError(f"{label} contiene caracteres no permitidos.")
+    return value
+
+
+def apply_settings(tenant, data):
+    """Aplica los ajustes que el administrador hizo en AIRI. Lanza ValueError/EndpointError con un mensaje."""
+    config = dict(load_config(tenant))
+    for part in ("chat", "speech"):
+        if part not in data:
+            continue
+        item = data[part]
+        if not isinstance(item, dict):
+            raise ValueError("Formato de ajustes inválido.")
+        if item.get("reset") or not (item.get("base_url") or "").strip():
+            config.pop(part, None)
+            continue
+        old = config.get(part) or {}
+        key = (item.get("api_key") or "").strip()
+        entry = {
+            "provider": "openai", "base_url": public_https_url(item["base_url"]),
+            "model": _clean_text(item.get("model"), "El modelo"),
+            "api_key": old.get("api_key", "") if not key or key == KEY_PLACEHOLDER else key,
+        }
+        if part == "chat" and not entry["model"]:
+            raise ValueError("Indica el modelo de lenguaje.")
+        if part == "speech":
+            entry["voice"] = _clean_text(item.get("voice"), "La voz")
+        config[part] = entry
+    save_config(tenant, config)
+
+
+@app.route(f"{PREFIX}/api/<tenant>/settings", methods=["GET", "PUT"])
+def tenant_settings(tenant):
+    """Ajustes de la empresa. Solo el administrador; se editan desde la configuración original de AIRI."""
+    company = tenants().get(tenant)
+    if company is None or company.get("ai_provider", "ollama") is None:
+        return jsonify(error="El asistente no está habilitado para esta empresa."), 404
+    user = user_for(tenant)
+    if not user:
+        return jsonify(error="La sesión caducó. Vuelve a abrir el asistente."), 401
+    if not user.get("admin"):
+        return jsonify(error="Solo el administrador de la empresa puede configurar el asistente."), 403
+    if request.method == "PUT":
+        if request.headers.get("Origin", NEXO_URL) not in (NEXO_URL, "null") or not request.is_json:
+            return jsonify(error="Origen o formato inválido."), 403
+        try:
+            apply_settings(tenant, request.get_json(silent=True) or {})
+        except (ValueError, EndpointError) as exc:
+            return jsonify(error=str(exc)), 400
+    return jsonify(settings_payload(tenant))
 
 
 def api_access(tenant):
@@ -222,7 +328,7 @@ def api_access(tenant):
         return None, None, (jsonify(error="La sesión caducó. Vuelve a abrir el asistente."), 401)
     if request.method == "POST" and (request.headers.get("Origin") != NEXO_URL or not request.is_json):
         return None, None, (jsonify(error="Origen o formato inválido."), 403)
-    provider = provider_for(tenant, tenants().get(tenant))
+    provider = provider_for(tenant, tenants().get(tenant), load_config(tenant))
     if not provider:
         return None, None, (jsonify(error="El asistente está deshabilitado para esta empresa."), 403)
     if not provider.ready:
@@ -279,16 +385,26 @@ def speech(tenant):
         return jsonify(error="La autorización de audio caducó."), 403
     if claims != [user["issuer"], user["sub"], hashlib.sha256(text.encode()).hexdigest()]:
         return jsonify(error="La autorización de audio no corresponde a esta respuesta."), 403
-    return synthesize(text)
+    return synthesize(tenant, text)
 
 
-def synthesize(text):
+def synthesize(tenant, text):
+    speech_config = load_config(tenant).get("speech") or {}
     try:
-        audio = requests.post("http://pocket-tts:8000/speech", json={"text": text}, timeout=(3, 115))
+        if speech_config.get("provider") == "openai" and speech_config.get("base_url"):
+            audio = requests.post(
+                public_https_url(speech_config["base_url"]) + "/audio/speech",
+                headers={"Authorization": f"Bearer {speech_config['api_key']}"} if speech_config.get("api_key") else {},
+                json={"model": speech_config.get("model") or "tts-1", "input": text,
+                      "voice": speech_config.get("voice") or "alloy", "response_format": "wav"},
+                timeout=(5, 115), allow_redirects=False,
+            )
+        else:
+            audio = requests.post("http://pocket-tts:8000/speech", json={"text": text}, timeout=(3, 115))
         audio.raise_for_status()
-    except requests.RequestException:
+    except (EndpointError, requests.RequestException):
         return jsonify(error="La voz no está disponible. Puedes volver a intentar reproducirla."), 503
-    return audio.content, 200, {"Content-Type": "audio/wav"}
+    return audio.content, 200, {"Content-Type": audio.headers.get("Content-Type", "audio/wav")}
 
 
 def stage_error(message, status):
@@ -300,9 +416,11 @@ def stage_models(tenant):
     _, _, error = api_access(tenant)
     if error:
         return error
+    chat = load_config(tenant).get("chat") or {}
+    speech = load_config(tenant).get("speech") or {}
     return jsonify(object="list", data=[
         {"id": model, "object": "model", "created": 0, "owned_by": "nexo"}
-        for model in ("nexo-chat", "pocket-tts")
+        for model in (chat.get("model") or "nexo-chat", speech.get("model") or "pocket-tts")
     ])
 
 
@@ -362,4 +480,4 @@ def stage_speech(tenant):
     text = body.get("input") if isinstance(body, dict) else None
     if not isinstance(text, str) or not 1 <= len(text.strip()) <= 3000:
         return stage_error("Se requiere texto para sintetizar.", 400)
-    return synthesize(text.strip())
+    return synthesize(tenant, text.strip())

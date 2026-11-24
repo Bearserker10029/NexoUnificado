@@ -1,8 +1,11 @@
 # SPDX-FileCopyrightText: 2026 Kent Lin, Luis Quillas, Jeniffer Castillo
 # SPDX-License-Identifier: Apache-2.0
+import ipaddress
 import json
 import os
 import re
+import socket
+from urllib.parse import urlsplit
 
 import requests
 
@@ -18,7 +21,13 @@ SYSTEM_PROMPT = (
 
 
 class Gemini:
-    def __init__(self, tenant=None):
+    def __init__(self, tenant=None, key=None, model=None):
+        if key:
+            self.key = key.strip()
+            self.model = model or os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
+            if not re.fullmatch(r"[a-z0-9.-]+", self.model):
+                raise ValueError("Modelo de Gemini inválido")
+            return
         raw_keys = os.getenv("GEMINI_API_KEYS", "").strip()
         self.key = os.getenv("GEMINI_API_KEY", "").strip()
         if raw_keys:
@@ -99,12 +108,83 @@ class Ollama:
         raise ProviderError("Ollama no devolvió una respuesta de texto.")
 
 
+class EndpointError(ValueError):
+    pass
+
+
+def public_https_url(url):
+    """Valida una URL que la empresa configura: solo HTTPS hacia direcciones públicas.
+
+    Evita que el servidor del asistente consulte la red interna (SSRF) por orden de un administrador.
+    """
+    parts = urlsplit((url or "").strip())
+    if parts.scheme != "https" or not parts.hostname or parts.username or parts.password or parts.fragment:
+        raise EndpointError("La URL debe usar HTTPS y no incluir credenciales.")
+    try:
+        addresses = {info[4][0] for info in socket.getaddrinfo(parts.hostname, parts.port or 443, type=socket.SOCK_STREAM)}
+    except OSError as exc:
+        raise EndpointError("No se pudo resolver el servidor indicado.") from exc
+    if not addresses or any(not ipaddress.ip_address(address).is_global for address in addresses):
+        raise EndpointError("La URL debe apuntar a un servidor público, no a la red interna.")
+    return url.strip().rstrip("/")
+
+
+class OpenAICompatible:
+    """Cualquier servicio con la API de chat de OpenAI (OpenAI, Azure, vLLM, LM Studio expuesto, etc.)."""
+
+    ready = True
+
+    def __init__(self, base_url, key, model):
+        self.base_url = base_url
+        self.key = key
+        self.model = model
+
+    def reply(self, messages):
+        try:
+            response = requests.post(
+                public_https_url(self.base_url) + "/chat/completions",
+                headers={"Authorization": f"Bearer {self.key}"} if self.key else {},
+                json={
+                    "model": self.model,
+                    "messages": [
+                        {"role": "system", "content": SYSTEM_PROMPT},
+                        *[{"role": m["role"], "content": m["text"]} for m in messages],
+                    ],
+                    "max_tokens": 400,
+                    "temperature": 0.2,
+                },
+                timeout=(5, 60),
+                allow_redirects=False,
+            )
+            response.raise_for_status()
+            answer = response.json()["choices"][0]["message"]["content"]
+            if isinstance(answer, str) and answer.strip():
+                return answer.strip()[:3000]
+        except (EndpointError, requests.RequestException, ValueError, KeyError, IndexError, TypeError) as exc:
+            raise ProviderError("El modelo configurado por la empresa no pudo generar una respuesta.") from exc
+        raise ProviderError("El modelo configurado por la empresa no devolvió texto.")
+
+
+def custom_provider(config):
+    """Proveedor definido por el administrador de la empresa, o None para usar el predeterminado."""
+    chat = (config or {}).get("chat") or {}
+    kind = chat.get("provider")
+    if kind == "gemini" and chat.get("api_key"):
+        return Gemini(key=chat["api_key"], model=chat.get("model") or None)
+    if kind == "openai" and chat.get("base_url") and chat.get("model"):
+        return OpenAICompatible(chat["base_url"], chat.get("api_key", ""), chat["model"])
+    return None
+
+
 PROVIDERS = {"gemini": Gemini, "ollama": lambda _: Ollama()}
 
 
-def provider_for(tenant, company):
+def provider_for(tenant, company, config=None):
     if company is None:
         return None
+    custom = custom_provider(config)
+    if custom is not None:
+        return custom
     name = company.get("ai_provider", "ollama")
     factory = PROVIDERS.get(name) if isinstance(name, str) else None
     return factory(tenant) if factory else None

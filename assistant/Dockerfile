@@ -23,5 +23,6 @@ COPY app.py providers.py ./
 COPY web ./web
 COPY --from=airi /airi/apps/stage-web/dist ./stage
 COPY --from=airi /airi/LICENSE ./stage/AIRI-LICENSE.txt
+RUN mkdir -p /data && chown 10001:10001 /data
 USER 10001:10001
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--threads", "8", "--timeout", "150", "app:app"]
