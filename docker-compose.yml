@@ -115,6 +115,7 @@ services:
     networks: [ srv ]
 
   assistant:
+    image: ghcr.io/bearserker10029/nexo-assistant:latest
     build: ./assistant
     restart: unless-stopped
     environment:
