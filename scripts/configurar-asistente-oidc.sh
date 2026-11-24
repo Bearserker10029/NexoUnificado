@@ -14,6 +14,12 @@ configure_assistant_client() {
     kcadm update "clients/$client_id" "$@"
   else
     kcadm create clients "$@" >/dev/null
+    client_id=$(kcadm get clients -r "$realm" -q clientId=nexo-assistant --fields id --format csv --noquotes)
+  fi
+  # Los grupos del usuario viajan en el id_token: el asistente reconoce asi al administrador de la empresa.
+  mapper=$(kcadm get "clients/$client_id/protocol-mappers/models" -r "$realm" --fields name --format csv --noquotes | grep -x grupos || true)
+  if [ -z "$mapper" ]; then
+    kcadm create "clients/$client_id/protocol-mappers/models" -r "$realm"       -s name=grupos -s protocol=openid-connect -s protocolMapper=oidc-group-membership-mapper       -s 'config."claim.name"=groups' -s 'config."full.path"=false'       -s 'config."id.token.claim"=true' -s 'config."access.token.claim"=false'       -s 'config."userinfo.token.claim"=false' >/dev/null
   fi
 }
 

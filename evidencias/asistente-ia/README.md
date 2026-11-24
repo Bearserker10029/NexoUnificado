@@ -23,6 +23,14 @@ Arranca con `docker compose up -d --build` y consulta `docker compose logs -f ol
 
 Para desactivar el asistente de una empresa, usa `"ai_provider": null`. Para elegir Gemini, usa `"ai_provider": "gemini"` y registra la clave de esa empresa en `GEMINI_API_KEYS`, un objeto JSON en el `.env` del servidor. Ejemplo con un valor de muestra: `GEMINI_API_KEYS='{"acme":"CLAVE_DE_ACME"}'`. Si defines ese mapa, cada empresa con Gemini requiere su propia entrada. `GEMINI_API_KEY` sigue disponible para despliegues que usan una sola clave y omiten el mapa. `GEMINI_MODEL` conserva el valor predeterminado `gemini-3.5-flash-lite`.
 
+## Quién configura el asistente
+
+- **Valores predeterminados:** modelo Ollama y voz Pocket TTS ejecutados por el proveedor del servicio (compartidos por todas las empresas) y personaje 3D (Avatar Sample A).
+- **Usuarios de la empresa:** los ajustes de AIRI no se abren (`#/settings` vuelve al inicio) y la API de ajustes responde 403.
+- **Administrador de la empresa** (grupo `<empresa>-administradores` en Keycloak, que llega en el `id_token` del cliente `nexo-assistant`): usa los ajustes originales de AIRI. En el proveedor «Compatible con OpenAI» (y en la voz) indica su URL HTTPS, clave y modelo; AIRI guarda el cambio en el servidor (`PUT /airi/api/<empresa>/settings`) con el aviso «Configuración guardada para toda la empresa». Desde entonces todos los usuarios de la empresa usan ese modelo. El personaje que elija entre los incluidos también se aplica a toda la empresa.
+- **Dónde se guarda:** `/data/tenant-config.json` (volumen `assistant_data`, permisos 600). Las claves nunca vuelven al navegador: las llamadas del administrador al servicio externo pasan por el servidor de la empresa.
+- **Límites:** las URLs deben ser HTTPS hacia direcciones públicas (se rechaza la red interna). Para volver a los valores predeterminados, el administrador deja la URL base de «Compatible con OpenAI» en la del propio Nexo o la vacía.
+
 ## Modelo y licencias
 
 La ruta de IA predeterminada funciona localmente con Ollama (MIT), Pocket TTS (MIT) y AIRI (MIT), sin depender de una API propietaria. Los pesos de Qwen2.5 1.5B son Apache-2.0 y los de Pocket TTS son CC BY 4.0. Gemini queda como opción propietaria por empresa.

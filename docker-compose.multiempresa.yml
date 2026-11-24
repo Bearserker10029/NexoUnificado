@@ -22,11 +22,15 @@ services:
     depends_on:
       nextcloud-menu-init:
         condition: service_completed_successfully
+        # menu-init reescribe el menu base en cada arranque; sin esto el menu
+        # de las empresas quedaba pisado hasta recrear este contenedor.
+        restart: true
     environment:
       NEXO_URL: https://${NEXO_HOST:-localhost}:8443
       KC_NEXTCLOUD_CLIENT_SECRET: ${KC_NEXTCLOUD_CLIENT_SECRET:?}
     volumes:
       - nextcloud_data:/var/www/html
+      - ./nextcloud/apps/nexo_sync:/var/www/html/custom_apps/nexo_sync:ro
       - ./tenants/registry.json:/tenants/registry.json:ro
       - ./nextcloud/tenants-oidc-setup.sh:/tenants-oidc-setup.sh:ro
     entrypoint: [ "/bin/sh", "/tenants-oidc-setup.sh" ]

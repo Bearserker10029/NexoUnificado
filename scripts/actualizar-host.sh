@@ -82,6 +82,26 @@ kcadm update "clients/${VOIP_ID}" -r nexo \
   -s "attributes={\"post.logout.redirect.uris\":\"${NEXO_URL}/voip/*\",\"pkce.code.challenge.method\":\"S256\"}"
 echo "Cliente voip creado/actualizado."
 
+# Realms de empresa (nexo-<empresa>): los realms ya persistidos conservan la IP con
+# la que se importaron, asi que se actualizan sus clientes igual que los del realm base.
+for REALM in $(kcadm get realms --fields realm --format csv --noquotes | tr -d '\r' | grep '^nexo-' || true); do
+  TENANT="${REALM#nexo-}"
+  update_tenant_client() {
+    CID=$(kcadm get clients -r "$REALM" -q "clientId=$1" --fields id --format csv --noquotes | tr -d '\r')
+    [ -n "$CID" ] || return 0
+    kcadm update "clients/${CID}" -r "$REALM" \
+      -s "redirectUris=[\"$2\"]" -s "webOrigins=[\"${NEXO_URL}\"]" -s "rootUrl=$3" \
+      -s "attributes.\"post.logout.redirect.uris\"=$4"
+    if [ -n "${5:-}" ]; then
+      kcadm update "clients/${CID}" -r "$REALM" -s "secret=$5"
+    fi
+  }
+  update_tenant_client nextcloud "${NEXO_URL}/docs/apps/user_oidc/code*" "${NEXO_URL}" "${NEXO_URL}/docs/*" "${KC_NEXTCLOUD_CLIENT_SECRET:-}"
+  update_tenant_client nexo-portal "${NEXO_URL}/voip-sso/${TENANT}/callback" "${NEXO_URL}/${TENANT}/" "${NEXO_URL}/${TENANT}/*" "${KC_VOIP_CLIENT_SECRET:-}"
+  update_tenant_client synapse "${NEXO_URL}/${TENANT}/_synapse/client/oidc/callback" "${NEXO_URL}" "+" "${KC_SYNAPSE_CLIENT_SECRET:-}"
+  echo "Clientes del realm ${REALM} actualizados."
+done
+
 # El cliente público usa PKCE S256. Crea o actualiza en realms ya persistidos.
 . ./scripts/configurar-asistente-oidc.sh
 

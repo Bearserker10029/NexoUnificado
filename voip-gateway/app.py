@@ -457,6 +457,150 @@ def company_admin(tenant):
         abort(502, "No se pudo conectar con Keycloak.")
 
 
+# --- Sincronización Nextcloud -> Keycloak -------------------------------------
+# La app nexo_sync de Nextcloud llama a este endpoint (red interna srv) cada vez que
+# el administrador de una empresa crea/borra usuarios o los mueve de sector desde
+# Nextcloud. Keycloak sigue siendo la fuente de identidad (SSO, Matrix, SIP).
+SYNC_SECRET = os.environ.get("NEXO_SYNC_SECRET", "")
+KC_ADMIN_USER = os.environ.get("KC_ADMIN_USER", "")
+KC_ADMIN_PASSWORD = os.environ.get("KC_ADMIN_PASSWORD", "")
+KC_INTERNAL = "http://keycloak:8080"
+USERNAME_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{0,63}$")
+
+
+def _kc_master_token():
+    response = requests.post(
+        f"{KC_INTERNAL}/realms/master/protocol/openid-connect/token",
+        data={"grant_type": "password", "client_id": "admin-cli",
+              "username": KC_ADMIN_USER, "password": KC_ADMIN_PASSWORD},
+        timeout=10)
+    response.raise_for_status()
+    return response.json()["access_token"]
+
+
+def _sync_group_ok(tenant, name):
+    services = {f"{tenant}-servicio-{item}" for item in TENANTS[tenant].get("services", [])}
+    return name.startswith(f"{tenant}-area-") and len(name) <= 100 or name in services
+
+
+def _find_login_provider(identifier):
+    """Devuelve el id de proveedor user_oidc (keycloak=1, luego una empresa por orden del registro)
+    del realm donde existe el usuario o correo, o None."""
+    token = _kc_master_token()
+    realms = [("nexo", 1)] + [(f"nexo-{name}", index + 2) for index, name in enumerate(TENANTS)]
+    for realm, provider_id in realms:
+        for params in ({"username": identifier, "exact": "true"}, {"email": identifier, "exact": "true"}):
+            response = requests.get(f"{KC_INTERNAL}/admin/realms/{realm}/users", params=params,
+                                    headers={"Authorization": f"Bearer {token}"}, timeout=10)
+            if response.ok and response.json():
+                return provider_id
+    return None
+
+
+@app.route("/entrar", methods=["GET", "POST"])
+def entrar():
+    """Página única de acceso: identifica la empresa de la persona y la envía a su login SSO."""
+    if request.method == "GET":
+        return render_template("entrar.html", error=None)
+    identifier = request.form.get("identifier", "").strip().lower()[:254]
+    provider_id = _find_login_provider(identifier) if identifier and KC_ADMIN_PASSWORD else None
+    if provider_id is None:
+        return render_template("entrar.html", error="No encontramos una cuenta con ese usuario o correo."), 404
+    return redirect(f"/docs/apps/user_oidc/login/{provider_id}", code=303)
+
+
+@app.post("/internal/sync")
+def internal_sync():
+    # Nginx añade X-Forwarded-Proto; este endpoint solo es para la red interna.
+    if request.headers.get("X-Forwarded-Proto") or not SYNC_SECRET or not KC_ADMIN_PASSWORD:
+        abort(404)
+    supplied = request.headers.get("X-Nexo-Sync-Secret", "")
+    if not secrets.compare_digest(supplied.encode(), SYNC_SECRET.encode()):
+        abort(403)
+    data = request.get_json(silent=True) or {}
+    tenant = data.get("tenant", "")
+    action = data.get("action", "")
+    if tenant not in TENANTS:
+        return jsonify(error="Empresa desconocida"), 404
+    realm_url = f"{KC_INTERNAL}/admin/realms/nexo-{tenant}"
+    headers = {"Authorization": f"Bearer {_kc_master_token()}"}
+
+    def kc(method, resource, **kwargs):
+        response = requests.request(method, f"{realm_url}/{resource}", headers=headers,
+                                    timeout=10, allow_redirects=False, **kwargs)
+        response.raise_for_status()
+        return response
+
+    def find_user(username):
+        found = kc("GET", "users", params={"username": username, "exact": "true"}).json()
+        return found[0] if found else None
+
+    def find_group(name):
+        found = kc("GET", "groups", params={"search": name, "exact": "true"}).json()
+        return next((item for item in found if item["name"] == name), None)
+
+    def ensure_group(name):
+        if not _sync_group_ok(tenant, name):
+            abort(403, "Grupo no permitido para esta empresa")
+        group = find_group(name)
+        if group is None:
+            kc("POST", "groups", json={"name": name})
+            group = find_group(name)
+        return group
+
+    username = str(data.get("username", "")).lower()
+    if action != "ensure_group" and not USERNAME_RE.match(username):
+        return jsonify(error="Nombre de usuario no válido"), 400
+
+    if action == "ensure_group":
+        ensure_group(data.get("group", ""))
+        return jsonify(ok=True)
+    if action == "ensure_user":
+        user = find_user(username)
+        created = user is None
+        if created:
+            display = (data.get("display_name") or username).strip()
+            first, _, last = display.partition(" ")
+            kc("POST", "users", json={
+                "username": username, "enabled": True, "emailVerified": True,
+                "firstName": first or username, "lastName": last or "-",
+                "email": data.get("email") or f"{username}@{tenant}.nexo.local",
+                "credentials": [{"type": "password", "temporary": True,
+                                 "value": data.get("password") or secrets.token_urlsafe(24)}],
+            })
+            user = find_user(username)
+            for service in TENANTS[tenant].get("services", []):
+                kc("PUT", f"users/{user['id']}/groups/{ensure_group(f'{tenant}-servicio-{service}')['id']}", json={})
+        return jsonify(ok=True, created=created)
+    user = find_user(username)
+    if user is None:
+        return jsonify(error="Usuario inexistente en Keycloak"), 404
+    if action == "set_membership":
+        group = ensure_group(data.get("group", ""))
+        method = "PUT" if data.get("member") else "DELETE"
+        kc(method, f"users/{user['id']}/groups/{group['id']}", **({"json": {}} if method == "PUT" else {}))
+        return jsonify(ok=True)
+    if action == "update_user":
+        display = (data.get("display_name") or "").strip()
+        update = {}
+        if display and display != username:
+            first, _, last = display.partition(" ")
+            update.update(firstName=first, lastName=last or "-")
+        if data.get("email"):
+            update["email"] = data["email"]
+        if update:
+            kc("PUT", f"users/{user['id']}", json={**user, **update})
+        return jsonify(ok=True)
+    if action == "set_password":
+        kc("PUT", f"users/{user['id']}/reset-password",
+           json={"type": "password", "temporary": True, "value": data.get("password", "")})
+        return jsonify(ok=True)
+    if action == "delete_user":
+        kc("DELETE", f"users/{user['id']}")
+        return jsonify(ok=True)
+    return jsonify(error="Acción desconocida"), 400
+
+
 @app.get("/authorize")
 def authorize():
     original = request.headers.get("X-Original-URI", "")
