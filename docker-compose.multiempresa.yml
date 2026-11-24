@@ -77,6 +77,7 @@ services:
     environment:
       PUBLIC_URL: https://${NEXO_HOST:-localhost}:8443/acme/jitsi
       XMPP_SERVER: jitsi-prosody-acme
+      XMPP_BOSH_URL_BASE: http://xmpp.acme.meet.jitsi:5280
       XMPP_DOMAIN: acme.meet.jitsi
       XMPP_MUC_DOMAIN: muc.acme.meet.jitsi
       XMPP_INTERNAL_MUC_DOMAIN: internal-muc.acme.meet.jitsi
@@ -183,6 +184,7 @@ services:
     environment:
       PUBLIC_URL: https://${NEXO_HOST:-localhost}:8443/beta/jitsi
       XMPP_SERVER: jitsi-prosody-beta
+      XMPP_BOSH_URL_BASE: http://xmpp.beta.meet.jitsi:5280
       XMPP_DOMAIN: beta.meet.jitsi
       XMPP_MUC_DOMAIN: muc.beta.meet.jitsi
       XMPP_INTERNAL_MUC_DOMAIN: internal-muc.beta.meet.jitsi
