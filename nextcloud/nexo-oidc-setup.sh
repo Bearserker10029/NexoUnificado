@@ -48,6 +48,8 @@ done
 # imagen "nextcloud" todavia esta reescribiendo config.php por su cuenta.
 sleep 10
 
+chown www-data:www-data /var/www/html/custom_apps
+
 occ app:install user_oidc 2>/dev/null || occ app:enable user_oidc
 occ app:enable external 2>/dev/null || true
 

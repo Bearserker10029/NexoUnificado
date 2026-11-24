@@ -1,15 +1,31 @@
-# Nexo Unificado
+<p align="center">
+  <img src="docs/banner.svg" alt="Nexo Unificado" width="100%">
+</p>
 
+<h1 align="center">Nexo Unificado</h1>
+
+<p align="center">
 Plataforma de comunicaciones con un único acceso HTTPS y autenticación centralizada
 mediante Keycloak. Nextcloud sirve como menú unificado; Element/Matrix y la
 telefonía WebRTC delegan su autenticación en Keycloak, y Jitsi se abre dentro de
-la misma plataforma sin una cuenta adicional.
+la misma plataforma sin una cuenta adicional. Incluye edición compartida
+(Collabora), antivirus (ClamAV), monitoreo (Prometheus y Grafana), un asistente
+de IA con chat y voz, y soporte para varias empresas aisladas.
+</p>
+
+<p align="center">
+  [<a href="Guia.md">Guía de instalación</a>] [<a href="docs/informe/README.md">Informe del proyecto</a>] [<a href="evidencias/asistente-ia/README.md">Asistente IA</a>] [<a href="evidencias/h10/avance-hito.md">Hito H10</a>]
+</p>
 
 ## Requisitos
 
-- Docker Desktop con WSL2.
+- Docker Desktop con WSL2 (Docker Engine y Docker Compose v2 o superior).
 - Puertos libres: `8081` y `8443` TCP, `10000–10002` y `20000–20199` UDP.
 - Los servicios web no publican puertos independientes: todo pasa por Nginx.
+- Para entrar desde otros equipos, el runtime de contenedores debe publicar `8443`
+  en todas las interfaces (no solo en `localhost`); Docker Desktop lo hace por
+  defecto. Algunos runtimes alternativos solo escuchan en `127.0.0.1`, y
+  entonces `https://<NEXO_HOST>:8443` falla con «conexión rechazada».
 
 ## Configuración y arranque
 
@@ -31,78 +47,11 @@ docker compose ps --all
 
 `.env` contiene únicamente las credenciales de los administradores técnicos y
 secretos internos de servicios. No contiene cuentas ni claves de usuarios finales.
+Comprueba que las tareas de inicialización (`certs`, `synapse-oidc-patch`,
+`nextcloud-init`, `nextcloud-menu-init`, `nextcloud-tenants-init`, etc.) terminan
+con `Exited (0)` en `docker compose ps --all`.
 
-## Automatización y seguridad de infraestructura
-
-El hito H12 aprovisiona y verifica toda la pila con Ansible, conserva las credenciales
-existentes y puede ejecutarse dos veces para comprobar su idempotencia. La guía está en
-[docs/h12-ansible.md](docs/h12-ansible.md).
-
-La configuración de límites de tasa, fail2ban y la auditoría TLS local se documenta en
-[docs/seguridad-infra.md](docs/seguridad-infra.md).
-
-## Acceso
-
-Sustituye `192.168.1.39` por el `NEXO_HOST` configurado. Todas las rutas usan el
-mismo esquema, IP y puerto:
-
-| Ruta | Servicio | Autenticación |
-|---|---|---|
-| `/` y `/docs/` | Nextcloud, menú unificado | Keycloak |
-| `/element/` | Chat Element/Matrix | Keycloak |
-| `/jitsi/` | Videoconferencia Jitsi | Sin cuenta adicional |
-| `/voip/` | Telefonía WebRTC | Keycloak; extensión SIP automática |
-| `/airi/` | [Asistente IA con chat y voz en español](evidencias/asistente-ia/README.md) | Keycloak; habilitación por empresa |
-| `/grafana/` | Monitoreo | Administrador de Grafana |
-| `/keycloak/admin/` | Consola de identidad | Administrador de Keycloak |
-
-El certificado es autofirmado y exclusivo del laboratorio. Para confiarlo solo
-en el usuario actual de Windows:
-
-```powershell
-Import-Certificate -FilePath ".\certs\server.crt" -CertStoreLocation Cert:\CurrentUser\Root
-```
-
-## Administración de usuarios
-
-Los usuarios, incluidos `usuario1` y `usuario2`, se crean desde la consola de
-**Keycloak**, no desde `.env`, Nextcloud ni Matrix:
-
-1. Abre `/keycloak/admin/` e inicia sesión con `KC_ADMIN_USER` y
-   `KC_ADMIN_PASSWORD`.
-2. Selecciona el realm **nexo**.
-3. Entra en **Users → Add user**, completa el nombre y habilita la cuenta.
-4. En **Credentials**, asigna una clave temporal o definitiva.
-
-Al primer acceso:
-
-- Nextcloud crea su cuenta mediante `user_oidc`.
-- Synapse crea su identidad Matrix mediante OIDC.
-- `voip-gateway` le asigna una extensión del rango `2000–2999` y genera una clave
-  SIP aleatoria interna. El softphone recibe esa configuración tras completar
-  OIDC; la persona no introduce ninguna clave SIP.
-
-Los usuarios que ya existían en el volumen de Keycloak se conservan. Eliminar
-sus variables antiguas de `.env` no borra sus cuentas.
-
-La cuenta local de Nextcloud definida por `NC_ADMIN_USER` queda como acceso de
-administración en `/docs/admin-login`. No es una cuenta para usuarios finales.
-
-## Flujo de sesión única
-
-1. La persona entra a la raíz y Nextcloud la deriva a Keycloak.
-2. Al abrir **Chat**, Element utiliza la API de Matrix en `/_matrix/` y el
-   callback OIDC en `/_synapse/client/oidc/callback`, ambos bajo el mismo HTTPS.
-3. **Videoconferencia** abre Jitsi en `/jitsi/`; no pide una cuenta propia.
-4. **Telefonía** ejecuta Authorization Code Flow con PKCE contra Keycloak. Si ya
-   hay sesión, Keycloak no vuelve a pedir credenciales. El gateway valida el
-   token, provisiona PJSIP mediante AMI y devuelve la configuración al softphone.
-
-Las claves SIP no se comparten entre usuarios, no están en `.env` y solo se
-transmiten por HTTPS/WSS. El volumen `asterisk_dynamic` conserva la asignación
-de extensiones para que cada identidad mantenga la suya.
-
-## Cambio de IP o de nombre de host
+### Cambio de IP o de nombre de host
 
 Edita únicamente `NEXO_HOST` en `.env`, sin `https://` ni puerto, y ejecuta:
 
@@ -126,6 +75,94 @@ docker compose logs voip-gateway
 docker compose logs asterisk
 ```
 
+### Apagado
+
+```powershell
+docker compose down
+```
+
+Conserva usuarios, datos y extensiones. No uses `down -v` salvo que quieras borrar
+todos los volúmenes persistentes.
+
+## Acceso
+
+Sustituye `192.168.1.39` por el `NEXO_HOST` configurado. Todas las rutas usan el
+mismo esquema, IP y puerto:
+
+| Ruta | Servicio | Autenticación |
+|---|---|---|
+| `/` y `/docs/` | Nextcloud, menú unificado | Keycloak |
+| `/element/` | Chat Element/Matrix | Keycloak |
+| `/jitsi/` | Videoconferencia Jitsi | Sin cuenta adicional |
+| `/voip/` | Telefonía WebRTC | Keycloak; extensión SIP automática |
+| `/airi/` | [Asistente IA con chat y voz en español](evidencias/asistente-ia/README.md) | Keycloak; habilitación por empresa |
+| `/grafana/` | Monitoreo | Administrador de Grafana |
+| `/keycloak/admin/` | Consola de identidad (proveedor) | Administrador de Keycloak |
+| `/docs/admin-login` | Acceso local de administración de Nextcloud | `NC_ADMIN_USER` |
+
+Collabora Online (edición compartida de documentos) no tiene una ruta propia para
+las personas: se abre desde Nextcloud Office.
+
+El certificado es autofirmado y exclusivo del laboratorio. Para confiarlo solo
+en el usuario actual de Windows:
+
+```powershell
+Import-Certificate -FilePath ".\certs\server.crt" -CertStoreLocation Cert:\CurrentUser\Root
+```
+
+## Administración de empresas y usuarios
+
+Hay tres niveles. El detalle paso a paso está en la sección 6 de [Guia.md](Guia.md):
+
+| Quién | Qué hace | Dónde |
+|---|---|---|
+| Proveedor | Da de alta empresas y su administrador | `tenants/registry.json`, `scripts/` y Keycloak |
+| Administrador de empresa | Crea sectores y usuarios de su empresa | Nextcloud: **Sectores y usuarios** y **Cuentas** |
+| Usuario | Usa Nextcloud, Telefonía, Videoconferencia, Chat y el asistente | Nextcloud |
+
+El proveedor añade la empresa en `tenants/registry.json` y ejecuta
+`python scripts/nexo-tenant.py render` seguido de `docker compose up -d --build`.
+Después crea al administrador de la empresa con `scripts/crear-admin-empresa.sh`.
+Desde ahí, los sectores y los usuarios se crean en Nextcloud y se sincronizan con
+Keycloak.
+
+Los usuarios del modo tradicional (realm **nexo**) se crean desde la consola de
+Keycloak, no desde `.env`, Nextcloud ni Matrix:
+
+1. Abre `/keycloak/admin/` e inicia sesión con `KC_ADMIN_USER` y
+   `KC_ADMIN_PASSWORD`.
+2. Selecciona el realm **nexo**.
+3. Entra en **Users → Add user**, completa el nombre y habilita la cuenta.
+4. En **Credentials**, asigna una clave temporal o definitiva.
+
+Al primer acceso:
+
+- Nextcloud crea su cuenta mediante `user_oidc`.
+- Synapse crea su identidad Matrix mediante OIDC.
+- `voip-gateway` le asigna una extensión del rango `2000–2999` y genera una clave
+  SIP aleatoria interna. El softphone recibe esa configuración tras completar
+  OIDC; la persona no introduce ninguna clave SIP.
+
+Los usuarios que ya existían en el volumen de Keycloak se conservan. Eliminar
+sus variables antiguas de `.env` no borra sus cuentas.
+
+La cuenta local de Nextcloud definida por `NC_ADMIN_USER` queda como acceso de
+administración en `/docs/admin-login`. No es una cuenta para usuarios finales.
+
+### Flujo de sesión única
+
+1. La persona entra a la raíz y Nextcloud la deriva a Keycloak.
+2. Al abrir **Chat**, Element utiliza la API de Matrix en `/_matrix/` y el
+   callback OIDC en `/_synapse/client/oidc/callback`, ambos bajo el mismo HTTPS.
+3. **Videoconferencia** abre Jitsi en `/jitsi/`; no pide una cuenta propia.
+4. **Telefonía** ejecuta Authorization Code Flow con PKCE contra Keycloak. Si ya
+   hay sesión, Keycloak no vuelve a pedir credenciales. El gateway valida el
+   token, provisiona PJSIP mediante AMI y devuelve la configuración al softphone.
+
+Las claves SIP no se comparten entre usuarios, no están en `.env` y solo se
+transmiten por HTTPS/WSS. El volumen `asterisk_dynamic` conserva la asignación
+de extensiones para que cada identidad mantenga la suya.
+
 ## Telefonía WebRTC
 
 El plan de marcado solo permite llamadas entre extensiones dinámicas `2000–2999`.
@@ -141,33 +178,12 @@ docker exec nexo-asterisk asterisk -rx "pjsip show contacts"
 docker exec nexo-asterisk asterisk -rx "dialplan show internal"
 ```
 
-## Apagado
-
-```powershell
-docker compose down
-```
-
-Conserva usuarios, datos y extensiones. No uses `down -v` salvo que quieras borrar
-todos los volúmenes persistentes.
-
-## Licencias
-
-Asterisk es GPLv2+; Keycloak usa Apache-2.0; Nextcloud Server y `user_oidc` usan
-AGPLv3+; MariaDB usa GPLv2; ClamAV usa GPLv2. Tryit-JsSIP y JsSIP conservan su
-licencia MIT en `voip/LICENSE` y `voip/ATTRIBUTION.txt`. Flask, Requests, PyJWT y
-Gunicorn mantienen sus licencias permisivas en la imagen `voip-gateway`.
-
-| Componente del asistente | Licencia |
-| --- | --- |
-| [AIRI Stage Web](https://github.com/moeru-ai/airi/blob/v0.15.4/LICENSE) | MIT |
-| [Pocket TTS](https://github.com/kyutai-labs/pocket-tts/blob/v3.3.0/LICENSE) | MIT |
-| [Pesos de Pocket TTS](https://huggingface.co/kyutai/pocket-tts-without-voice-cloning) | CC BY 4.0 |
-| Gemini API | Servicio propietario opcional |
-
 ## Modo multiempresa (H10)
 
 `docker-compose.override.yml` incorpora automáticamente ACME (`1xxx`) y BETA
-(`2xxx`) sin eliminar el modo tradicional. El archivo
+(`2xxx`) sin eliminar el modo tradicional. Cada empresa tiene su realm de Keycloak
+(`nexo-<empresa>`), su Synapse, su Element y su Jitsi, y Nextcloud configura un
+proveedor OIDC y un menú distintos para cada una. El archivo
 `docker-compose.multiempresa.yml` conserva una copia equivalente por
 compatibilidad; no es necesario indicarlo con `-f`. Element/Matrix gestiona las
 llamadas 1:1 dentro de cada empresa; Asterisk solo interconecta empresas mediante
@@ -187,3 +203,34 @@ docker compose up -d --build
 `scripts/new-secrets.ps1` genera los secretos SIP de ACME y BETA que faltan en
 `.env`. El CDR interempresas queda en Asterisk bajo
 `/var/log/asterisk/cdr-custom/interempresas.csv`.
+
+## Automatización y seguridad de infraestructura
+
+El hito H12 aprovisiona y verifica toda la pila con Ansible, conserva las credenciales
+existentes y puede ejecutarse dos veces para comprobar su idempotencia. La guía está en
+[docs/h12-ansible.md](docs/h12-ansible.md).
+
+La configuración de límites de tasa, fail2ban y la auditoría TLS local se documenta en
+[docs/seguridad-infra.md](docs/seguridad-infra.md).
+
+Otros documentos técnicos:
+
+- [docs/h13-opnsense.md](docs/h13-opnsense.md): segmentación con OPNsense (avance
+  parcial; la VM no está desplegada).
+- [docs/h15-trivy.md](docs/h15-trivy.md): escaneo de vulnerabilidades antes y después.
+- [docs/nginx-cache.md](docs/nginx-cache.md): caché de estáticos en Nginx.
+- [docs/informe/](docs/informe/README.md): informe consolidado del proyecto.
+
+## Licencias
+
+Asterisk es GPLv2+; Keycloak usa Apache-2.0; Nextcloud Server y `user_oidc` usan
+AGPLv3+; MariaDB usa GPLv2; ClamAV usa GPLv2. Tryit-JsSIP y JsSIP conservan su
+licencia MIT en `voip/LICENSE` y `voip/ATTRIBUTION.txt`. Flask, Requests, PyJWT y
+Gunicorn mantienen sus licencias permisivas en la imagen `voip-gateway`.
+
+| Componente del asistente | Licencia |
+| --- | --- |
+| [AIRI Stage Web](https://github.com/moeru-ai/airi/blob/v0.15.4/LICENSE) | MIT |
+| [Pocket TTS](https://github.com/kyutai-labs/pocket-tts/blob/v3.3.0/LICENSE) | MIT |
+| [Pesos de Pocket TTS](https://huggingface.co/kyutai/pocket-tts-without-voice-cloning) | CC BY 4.0 |
+| Gemini API | Servicio propietario opcional |

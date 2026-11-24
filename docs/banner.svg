@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520" role="img" aria-label="Nexo Unificado: plataforma de comunicaciones con asistente de IA estilo anime">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a0f1e"/>
+      <stop offset="1" stop-color="#14203f"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.75" cy="0.45" r="0.5">
+      <stop offset="0" stop-color="#4fb4ff" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#4fb4ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowL" cx="0" cy="0" r="0.8">
+      <stop offset="0" stop-color="#9fe0ff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#9fe0ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b9e6fa"/>
+      <stop offset="1" stop-color="#6fb9e6"/>
+    </linearGradient>
+    <linearGradient id="hairD" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7cc3ec"/>
+      <stop offset="1" stop-color="#4e97cf"/>
+    </linearGradient>
+    <radialGradient id="eye" cx="0.5" cy="0.35" r="0.7">
+      <stop offset="0" stop-color="#bff0ff"/>
+      <stop offset="0.55" stop-color="#3f9be0"/>
+      <stop offset="1" stop-color="#1f4f9a"/>
+    </radialGradient>
+    <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="#6fb9e6" fill-opacity="0.18"/>
+    </pattern>
+    <clipPath id="card"><rect x="0" y="0" width="1200" height="520" rx="28"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#card)">
+    <rect width="1200" height="520" fill="url(#bg)"/>
+    <rect width="1200" height="520" fill="url(#dots)"/>
+    <rect width="1200" height="520" fill="url(#glow)"/>
+    <rect width="700" height="520" fill="url(#glowL)"/>
+
+    <g stroke="#7fd0ff" stroke-opacity="0.35" stroke-width="1.5" fill="none">
+      <path d="M560 70 L640 120 L720 80 L790 130"/>
+      <path d="M640 120 L610 210 L690 250"/>
+      <path d="M720 80 L760 20"/>
+    </g>
+    <g fill="#9fe0ff" fill-opacity="0.8">
+      <circle cx="560" cy="70" r="5"/><circle cx="640" cy="120" r="7"/><circle cx="720" cy="80" r="5"/>
+      <circle cx="790" cy="130" r="4"/><circle cx="610" cy="210" r="4"/><circle cx="690" cy="250" r="5"/>
+    </g>
+
+    <rect x="70" y="70" width="140" height="140" rx="34" fill="#2b3550"/>
+    <g stroke="#ffb3d1" stroke-width="7" stroke-linecap="round" fill="none">
+      <path d="M140 140 L108 106"/><path d="M140 140 L176 108"/><path d="M140 140 L106 176"/><path d="M140 140 L178 174"/>
+    </g>
+    <g fill="#ffb3d1">
+      <circle cx="140" cy="140" r="19"/><circle cx="106" cy="104" r="10"/><circle cx="178" cy="106" r="10"/>
+      <circle cx="104" cy="178" r="10"/><circle cx="180" cy="176" r="10"/>
+    </g>
+    <circle cx="140" cy="140" r="8" fill="#2b3550"/>
+
+    <text x="68" y="300" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="78" fill="#aebbd6" font-weight="300">Nexo <tspan fill="#ffffff" font-weight="700">Unificado</tspan></text>
+    <text x="72" y="352" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="26" fill="#9fb0cf">Un solo acceso. Todas tus comunicaciones.</text>
+    <text x="72" y="388" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="26" fill="#9fb0cf">Chat, videollamadas, archivos y una IA que te acompaña.</text>
+
+    <g font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="18" font-weight="600" fill="#dff3ff" text-anchor="middle">
+      <rect x="72" y="426" width="116" height="38" rx="19" fill="#1d2c52" stroke="#4fb4ff" stroke-opacity="0.6"/><text x="130" y="451">Keycloak</text>
+      <rect x="198" y="426" width="124" height="38" rx="19" fill="#1d2c52" stroke="#4fb4ff" stroke-opacity="0.6"/><text x="260" y="451">Nextcloud</text>
+      <rect x="332" y="426" width="100" height="38" rx="19" fill="#1d2c52" stroke="#4fb4ff" stroke-opacity="0.6"/><text x="382" y="451">Element</text>
+      <rect x="442" y="426" width="80" height="38" rx="19" fill="#1d2c52" stroke="#4fb4ff" stroke-opacity="0.6"/><text x="482" y="451">Jitsi</text>
+      <rect x="532" y="426" width="130" height="38" rx="19" fill="#3a2442" stroke="#ff9cc6" stroke-opacity="0.7"/><text x="597" y="451" fill="#ffd3e6">Airi · Oshin</text>
+    </g>
+
+    <g transform="translate(760 70)">
+      <path d="M0 -26 L7 -8 L26 -8 L11 4 L17 24 L0 12 L-17 24 L-11 4 L-26 -8 L-7 -8 Z" fill="#e7c27a"/>
+    </g>
+    <path d="M1112 300 c-16 -20 -44 -2 -26 22 c10 12 26 22 26 22 s16 -10 26 -22 c18 -24 -10 -42 -26 -22z" fill="#ff7fb0"/>
+    <g fill="#ffffff" fill-opacity="0.85"><circle cx="1090" cy="90" r="3"/><circle cx="1150" cy="190" r="2.5"/><circle cx="740" cy="330" r="2.5"/><circle cx="1050" cy="40" r="2"/></g>
+
+    <path d="M790 230 C760 330 760 450 715 520 L1085 520 C1040 450 1040 330 1010 230 Z" fill="url(#hairD)"/>
+    <path d="M800 200 C740 280 760 400 700 520 L790 520 C800 440 810 340 830 260Z" fill="url(#hair)"/>
+    <path d="M1000 200 C1060 280 1040 400 1100 520 L1010 520 C1000 440 990 340 970 260Z" fill="url(#hair)"/>
+    <path d="M1010 170 C1090 170 1130 260 1125 350 C1118 410 1090 450 1070 500 C1070 430 1085 380 1075 320 C1065 250 1040 215 1010 200Z" fill="url(#hair)"/>
+
+    <path d="M735 520 C745 450 810 418 900 418 C990 418 1055 450 1065 520Z" fill="#f3f7fb"/>
+    <path d="M884 396 L845 418 L900 520 L955 418 L916 396 Z" fill="#7cc3ec"/>
+    <path d="M830 418 L900 470 L970 418 L955 408 L900 440 L845 408Z" fill="#26407f"/>
+    <path d="M885 450 L915 450 L925 520 L875 520Z" fill="#f2c94c"/>
+    <path d="M888 440 L912 440 L915 454 L885 454Z" fill="#d9ab2c"/>
+    <path d="M760 520 C768 470 800 440 830 430 L820 520Z" fill="#dfe8f3"/>
+    <path d="M1040 520 C1032 470 1000 440 970 430 L980 520Z" fill="#dfe8f3"/>
+
+    <path d="M884 360 L884 408 C890 418 910 418 916 408 L916 360Z" fill="#fbdcd0"/>
+    <path d="M800 280 C800 215 850 180 900 180 C950 180 1000 215 1000 280 C1000 332 962 376 926 392 C912 398 888 398 874 392 C838 376 800 332 800 280Z" fill="#ffeee6"/>
+
+    <path d="M796 285 C790 190 850 140 912 140 C985 140 1012 205 1004 285 C990 240 972 222 950 205 C945 245 915 262 885 246 C868 262 830 262 796 285Z" fill="url(#hair)"/>
+    <path d="M796 285 C792 330 800 360 812 385 C816 340 818 310 830 270Z" fill="url(#hair)"/>
+    <path d="M1004 285 C1008 330 1000 360 988 385 C984 340 982 310 970 270Z" fill="url(#hair)"/>
+    <path d="M880 150 C878 112 905 92 935 106 C915 110 905 126 910 148Z" fill="url(#hair)"/>
+    <path d="M830 200 C850 175 880 165 905 165" stroke="#e6f7ff" stroke-width="5" stroke-linecap="round" fill="none" stroke-opacity="0.8"/>
+
+    <g>
+      <ellipse cx="860" cy="298" rx="25" ry="32" fill="url(#eye)"/>
+      <ellipse cx="860" cy="302" rx="10" ry="16" fill="#12285c"/>
+      <circle cx="851" cy="287" r="8" fill="#fff"/><circle cx="868" cy="312" r="4" fill="#fff" fill-opacity="0.9"/>
+      <path d="M831 290 C838 266 880 264 891 284" stroke="#1c2848" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <path d="M831 290 L824 296" stroke="#1c2848" stroke-width="4" stroke-linecap="round"/>
+    </g>
+    <g>
+      <ellipse cx="940" cy="298" rx="25" ry="32" fill="url(#eye)"/>
+      <ellipse cx="940" cy="302" rx="10" ry="16" fill="#12285c"/>
+      <circle cx="931" cy="287" r="8" fill="#fff"/><circle cx="948" cy="312" r="4" fill="#fff" fill-opacity="0.9"/>
+      <path d="M909 284 C920 264 962 266 969 290" stroke="#1c2848" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <path d="M969 290 L976 296" stroke="#1c2848" stroke-width="4" stroke-linecap="round"/>
+    </g>
+    <path d="M850 262 C860 256 872 256 880 260" stroke="#7cc3ec" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M920 260 C928 256 940 256 950 262" stroke="#7cc3ec" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+    <ellipse cx="833" cy="334" rx="17" ry="9" fill="#ff9fb4" fill-opacity="0.55"/>
+    <ellipse cx="967" cy="334" rx="17" ry="9" fill="#ff9fb4" fill-opacity="0.55"/>
+    <path d="M898 330 L902 334" stroke="#e0a595" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M884 348 C894 360 908 360 916 348" stroke="#c4686f" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+
+    <g transform="translate(985 196) rotate(-20)" stroke="#e7c27a" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M-18 14 L0 -18 L18 14 Z"/><path d="M-9 14 L0 -2 L9 14"/>
+    </g>
+
+    <rect x="565" y="160" width="250" height="62" rx="31" fill="#0f1830" fill-opacity="0.92" stroke="#c9d6ee" stroke-width="2.5"/>
+    <text x="690" y="199" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="25" font-weight="600" fill="#ffffff" text-anchor="middle">¡Hola, soy Oshin!~</text>
+  </g>
+</svg>
