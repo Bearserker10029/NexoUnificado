@@ -28,14 +28,29 @@ while IFS= read -r tenant; do
     --clientsecret="${KC_NEXTCLOUD_CLIENT_SECRET}" \
     --discoveryuri="http://keycloak:8080/realms/nexo-${tenant}/.well-known/openid-configuration" \
     --unique-uid=0 \
+    --mapping-uid='preferred_username' \
     --mapping-display-name='name' \
     --mapping-email='email' \
     --mapping-groups='groups' \
     --group-provisioning=1 \
-    --group-whitelist-regex="/^${tenant}-(servicio-|administradores\$)/"
+    --group-whitelist-regex="/^${tenant}-(servicio-|area-|administradores\$)/"
 done < /tmp/nexo-tenants.txt
 
 occ user_oidc:provider --output=json
+
+# App que permite al administrador de empresa crear sectores y usuarios desde Nextcloud.
+occ app:enable nexo_sync
+
+# Grupos base de cada empresa (servicios y administradores) para poder delegarlos.
+while IFS= read -r tenant; do
+  [ -n "$tenant" ] || continue
+  occ group:add "${tenant}-administradores" >/dev/null 2>&1 || true
+done < /tmp/nexo-tenants.txt
+php -r '
+    foreach (json_decode(file_get_contents("/tenants/registry.json"), true)["tenants"] as $t) {
+        foreach ($t["services"] ?? [] as $s) { echo $t["name"], "-servicio-", $s, PHP_EOL; }
+    }
+' | while IFS= read -r group; do occ group:add "$group" >/dev/null 2>&1 || true; done
 
 # Cada empresa recibe entradas propias, visibles solo para sus grupos sincronizados.
 php <<'PHP' > /tmp/nexo-tenant-sites.json
@@ -51,8 +66,6 @@ $addSite = static function ($name, $url, $groups, $redirect) use (&$sites) {
 };
 foreach ($tenants as $tenant) {
     $name = $tenant['name'];
-    $addSite('Usuarios y áreas · ' . $tenant['display_name'],
-        "/voip-sso/$name/empresa/", ["$name-administradores"], true);
     foreach ([
         'telefonia' => ['Telefonía', "/$name/voip/embed.html"],
         'videoconferencia' => ['Videoconferencia', "/$name/jitsi/"],

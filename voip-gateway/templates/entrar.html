@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Iniciar sesión – Nextcloud</title>
+    <!-- Mismo aspecto que la pantalla de acceso de Nextcloud: se reutilizan sus hojas de estilo, su tema y su estructura. -->
+    <link rel="icon" href="/docs/apps/theming/favicon">
+    <link rel="stylesheet" href="/docs/core/css/server.css">
+    <link rel="stylesheet" href="/docs/apps/theming/css/default.css">
+    <link rel="stylesheet" href="/docs/core/css/guest.css">
+    <link rel="stylesheet" href="/docs/apps/theming/theme/default.css?plain=1">
+    <link rel="stylesheet" media="(prefers-color-scheme: light)" href="/docs/apps/theming/theme/light.css?plain=1">
+    <link rel="stylesheet" media="(prefers-color-scheme: dark)" href="/docs/apps/theming/theme/dark.css?plain=1">
+    <link rel="stylesheet" media="(prefers-contrast: more)" href="/docs/apps/theming/theme/light-highcontrast.css?plain=1">
+    <link rel="stylesheet" media="(prefers-color-scheme: dark) and (prefers-contrast: more)" href="/docs/apps/theming/theme/dark-highcontrast.css?plain=1">
+    <link rel="stylesheet" media="(prefers-reduced-motion: reduce)" href="/docs/apps/theming/theme/reduced-motion.css?plain=1">
+    <link rel="stylesheet" href="/docs/apps/theming/theme/default.css?plain=0">
+    <link rel="stylesheet" media="(prefers-color-scheme: light)" href="/docs/apps/theming/theme/light.css?plain=0">
+    <link rel="stylesheet" media="(prefers-color-scheme: dark)" href="/docs/apps/theming/theme/dark.css?plain=0">
+    <style>
+        #entrar { display: grid; gap: 12px; }
+        #entrar h2 { margin: 0; text-align: center; font-size: 20px; font-weight: bold; overflow-wrap: anywhere; }
+        #entrar p { margin: 0; text-align: center; }
+        #entrar label { display: grid; gap: 4px; font-weight: 600; }
+        #entrar input[type=text] { width: 100%; box-sizing: border-box; min-height: 44px; }
+        #entrar button { width: 100%; min-height: 44px; margin: 4px 0 0; }
+        #entrar .error { color: var(--color-error-text, #b00020); }
+    </style>
+</head>
+<body id="body-login" data-themes="">
+<div class="wrapper">
+    <div class="v-align">
+        <header>
+            <div id="header" class="header-guest">
+                <div class="logo"></div>
+            </div>
+        </header>
+        <div class="guest-content">
+            <h1 class="hidden-visually">Nextcloud</h1>
+            <div>
+                <div class="guest-box login-box">
+                    <form id="entrar" method="post" action="entrar">
+                        <h2>Acceder a su cuenta</h2>
+                        <p>Un solo acceso a archivos, chat, videollamadas y telefonía.</p>
+                        <label>Nombre de cuenta o correo electrónico
+                            <input type="text" name="identifier" autocomplete="username" maxlength="254" required autofocus>
+                        </label>
+                        <button type="submit" class="primary">Continuar</button>
+                        {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="guest-box"><p class="info">Nextcloud – un hogar seguro para todos tus datos</p></footer>
+</body>
+</html>

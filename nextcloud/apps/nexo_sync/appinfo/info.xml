@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <id>nexo_sync</id>
+    <name>Nexo · Sectores y usuarios</name>
+    <summary>Administración de empresa: sectores y alta de usuarios sincronizados con Keycloak</summary>
+    <description>Permite que el administrador de cada empresa cree sectores y usuarios desde Nextcloud; los cambios se replican a Keycloak.</description>
+    <version>1.0.0</version>
+    <licence>agpl</licence>
+    <author>Nexo Unificado</author>
+    <namespace>NexoSync</namespace>
+    <category>organization</category>
+    <dependencies>
+        <nextcloud min-version="30" max-version="40"/>
+    </dependencies>
+</info>

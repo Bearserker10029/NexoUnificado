@@ -305,14 +305,16 @@ def auth_block(name: str) -> str:
 """
 
 
-def render_nginx(tenant: dict) -> None:
+def render_nginx(tenant: dict, provider_id: int) -> None:
+    """provider_id: id del proveedor user_oidc de la empresa (keycloak=1, luego una por empresa en orden)."""
     name = tenant["name"]
     services = tenant_services(tenant)
     target = TENANTS / "nginx"
     target.mkdir(parents=True, exist_ok=True)
     parts = [f"""# Generado para {name}; se incluye dentro del servidor HTTPS existente.
+    # Sin pagina propia por empresa: todos entran por la pagina unica de acceso.
     location = /{name}/ {{
-        return 302 https://$http_host/{name}/element/;
+        return 302 https://$http_host/voip-sso/entrar;
     }}
     location = /_nexo_tenant_auth_{name} {{
         internal;
@@ -327,7 +329,16 @@ def render_nginx(tenant: dict) -> None:
     }}
 """]
     if "chat" in services:
-        parts.append(f"""    location /{name}/_matrix/ {{
+        parts.append(f"""    # Synapse compara la URL solicitada con public_baseurl (.../{name}/) y, al llegar sin
+    # el prefijo, redirige en bucle. En este endpoint se conserva el prefijo en el Host.
+    location ~ ^/{name}/_matrix/client/(v3|r0|unstable)/login/sso/redirect {{
+        rewrite ^/{name}/(.*)$ /$1 break;
+        proxy_set_header Host "$http_host/{name}";
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_pass http://synapse-{name}:8008;
+    }}
+    location /{name}/_matrix/ {{
         proxy_set_header Host $http_host;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto https;
@@ -474,11 +485,15 @@ services:
     depends_on:
       nextcloud-menu-init:
         condition: service_completed_successfully
+        # menu-init reescribe el menu base en cada arranque; sin esto el menu
+        # de las empresas quedaba pisado hasta recrear este contenedor.
+        restart: true
     environment:
       NEXO_URL: https://${NEXO_HOST:-localhost}:8443
       KC_NEXTCLOUD_CLIENT_SECRET: ${KC_NEXTCLOUD_CLIENT_SECRET:?}
     volumes:
       - nextcloud_data:/var/www/html
+      - ./nextcloud/apps/nexo_sync:/var/www/html/custom_apps/nexo_sync:ro
       - ./tenants/registry.json:/tenants/registry.json:ro
       - ./nextcloud/tenants-oidc-setup.sh:/tenants-oidc-setup.sh:ro
     entrypoint: [ \"/bin/sh\", \"/tenants-oidc-setup.sh\" ]
@@ -538,7 +553,7 @@ services:
 
 def render(registry: dict) -> None:
     seen = set()
-    for tenant in registry["tenants"]:
+    for index, tenant in enumerate(registry["tenants"]):
         tenant["name"] = validate_name(tenant["name"])
         prefix = int(tenant["range_prefix"])
         if prefix in seen or not 1 <= prefix <= 9:
@@ -553,7 +568,7 @@ def render(registry: dict) -> None:
         render_asterisk(tenant)
         render_keycloak(tenant)
         render_matrix(tenant)
-        render_nginx(tenant)
+        render_nginx(tenant, index + 2)
     active = {t["name"] for t in registry["tenants"]}
     for path in (TENANTS / "nginx").glob("tenant-*.conf") if (TENANTS / "nginx").exists() else []:
         if path.stem.removeprefix("tenant-") not in active:

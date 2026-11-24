@@ -1,0 +1,54 @@
+<?php
+declare(strict_types=1);
+
+namespace OCA\NexoSync\Service;
+
+use OCP\Http\Client\IClientService;
+use Psr\Log\LoggerInterface;
+
+/** Cliente del endpoint interno /internal/sync de voip-gateway. */
+class Gateway {
+    /** Contraseñas recién creadas, válidas solo durante la petición actual. */
+    private static array $pending = [];
+
+    public function __construct(private IClientService $clients, private LoggerInterface $logger) {
+    }
+
+    public static function remember(string $uid, string $password): void {
+        self::$pending[$uid] = $password;
+    }
+
+    public static function pending(string $uid): ?string {
+        return self::$pending[$uid] ?? null;
+    }
+
+    public static function forget(string $uid): void {
+        unset(self::$pending[$uid]);
+    }
+
+    /** @return string|null empresa si el grupo es empresa-area-* o empresa-servicio-*. */
+    public static function tenantOfGroup(string $gid): ?string {
+        return preg_match('/^([a-z][a-z0-9-]*?)-(?:area-.+|servicio-[a-z0-9-]+)$/', $gid, $m) ? $m[1] : null;
+    }
+
+    public function call(string $tenant, string $action, array $fields = []): bool {
+        $secret = (string)getenv('NEXO_SYNC_SECRET');
+        $url = (string)(getenv('NEXO_SYNC_URL') ?: 'http://voip-gateway:5000/internal/sync');
+        if ($secret === '') {
+            $this->logger->error('nexo_sync: NEXO_SYNC_SECRET no está definido');
+            return false;
+        }
+        try {
+            $this->clients->newClient()->post($url, [
+                'headers' => ['X-Nexo-Sync-Secret' => $secret],
+                'json' => ['tenant' => $tenant, 'action' => $action] + $fields,
+                'timeout' => 20,
+                'nextcloud' => ['allow_local_address' => true],
+            ]);
+            return true;
+        } catch (\Throwable $e) {
+            $this->logger->error('nexo_sync: fallo al sincronizar ' . $action . ' con Keycloak: ' . $e->getMessage());
+            return false;
+        }
+    }
+}

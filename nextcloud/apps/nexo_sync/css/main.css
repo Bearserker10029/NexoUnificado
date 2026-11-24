@@ -1,0 +1,6 @@
+#nexo-sync { max-width: 52rem; padding: 2rem; }
+#nexo-sync form { display: grid; gap: .5rem; max-width: 26rem; margin-bottom: 1rem; }
+#nexo-sync table { border-collapse: collapse; }
+#nexo-sync th, #nexo-sync td { text-align: left; padding: .35rem 1.2rem .35rem 0; }
+#nexo-sync .ok { color: var(--color-success-text, #1b6e2e); }
+#nexo-sync .err { color: var(--color-error-text, #b00020); }

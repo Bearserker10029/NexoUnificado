@@ -11,6 +11,8 @@ function New-Secret([string]$prefix) {
 $required = [ordered]@{
     KC_VOIP_CLIENT_SECRET = (New-Secret "NexoVoipOIDC")
     VOIP_SESSION_SECRET = (New-Secret "NexoVoipSession")
+    NEXO_SYNC_SECRET = (New-Secret "NexoSync")
+    AI_SESSION_SECRET = (New-Secret "NexoAssistantSession")
     VOIP_AMI_SECRET = (New-Secret "NexoVoipAMI")
     JICOFO_AUTH_PASSWORD = (New-Secret "NexoJicofo")
     JICOFO_COMPONENT_SECRET = (New-Secret "NexoJicofoComponent")
