@@ -43,7 +43,7 @@
       "rootUrl": "${NEXO_URL}",
       "baseUrl": "/docs/",
       "attributes": {
-        "post.logout.redirect.uris": "${NEXO_URL}/docs/*"
+        "post.logout.redirect.uris": "${NEXO_URL}/*"
       },
       "protocolMappers": [
         {

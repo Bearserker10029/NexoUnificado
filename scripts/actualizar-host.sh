@@ -96,7 +96,7 @@ for REALM in $(kcadm get realms --fields realm --format csv --noquotes | tr -d '
       kcadm update "clients/${CID}" -r "$REALM" -s "secret=$5"
     fi
   }
-  update_tenant_client nextcloud "${NEXO_URL}/docs/apps/user_oidc/code*" "${NEXO_URL}" "${NEXO_URL}/docs/*" "${KC_NEXTCLOUD_CLIENT_SECRET:-}"
+  update_tenant_client nextcloud "${NEXO_URL}/docs/apps/user_oidc/code*" "${NEXO_URL}" "${NEXO_URL}/*" "${KC_NEXTCLOUD_CLIENT_SECRET:-}"
   update_tenant_client nexo-portal "${NEXO_URL}/voip-sso/${TENANT}/callback" "${NEXO_URL}/${TENANT}/" "${NEXO_URL}/${TENANT}/*" "${KC_VOIP_CLIENT_SECRET:-}"
   update_tenant_client synapse "${NEXO_URL}/${TENANT}/_synapse/client/oidc/callback" "${NEXO_URL}" "+" "${KC_SYNAPSE_CLIENT_SECRET:-}"
   echo "Clientes del realm ${REALM} actualizados."

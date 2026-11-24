@@ -33,6 +33,7 @@ services:
       - ./nextcloud/apps/nexo_sync:/var/www/html/custom_apps/nexo_sync:ro
       - ./tenants/registry.json:/tenants/registry.json:ro
       - ./nextcloud/tenants-oidc-setup.sh:/tenants-oidc-setup.sh:ro
+      - ./nextcloud/external-icons:/nexo-icons:ro
     entrypoint: [ "/bin/sh", "/tenants-oidc-setup.sh" ]
     networks: [ srv ]
   synapse-acme:

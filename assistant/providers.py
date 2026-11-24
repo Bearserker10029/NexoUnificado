@@ -72,42 +72,6 @@ class Gemini:
         raise ProviderError("Gemini no devolvió una respuesta de texto.")
 
 
-class Ollama:
-    ready = True
-
-    def __init__(self):
-        self.model = os.getenv("OLLAMA_MODEL", "qwen2.5:1.5b")
-
-    def reply(self, messages):
-        try:
-            response = requests.post(
-                "http://ollama:11434/api/chat",
-                json={
-                    "model": self.model,
-                    "messages": [
-                        {"role": "system", "content": SYSTEM_PROMPT},
-                        *[{"role": message["role"], "content": message["text"]} for message in messages],
-                    ],
-                    "stream": False,
-                    "keep_alive": "5m",
-                    "options": {"num_gpu": 0, "num_ctx": 2048, "num_predict": 180, "temperature": 0.2},
-                },
-                timeout=(3, 100),
-                allow_redirects=False,
-            )
-            if response.status_code == 404:
-                raise ProviderError("Ollama todavía no tiene el modelo local. Espera a que termine la descarga.")
-            response.raise_for_status()
-            answer = response.json()["message"]["content"]
-            if isinstance(answer, str) and answer.strip():
-                return answer.strip()[:3000]
-        except requests.Timeout as exc:
-            raise ProviderError("El modelo local tardó demasiado. Intenta otra vez.") from exc
-        except (requests.RequestException, ValueError, KeyError, TypeError) as exc:
-            raise ProviderError("Ollama no pudo generar una respuesta.") from exc
-        raise ProviderError("Ollama no devolvió una respuesta de texto.")
-
-
 class EndpointError(ValueError):
     pass
 
@@ -176,7 +140,54 @@ def custom_provider(config):
     return None
 
 
-PROVIDERS = {"gemini": Gemini, "ollama": lambda _: Ollama()}
+class Groq(OpenAICompatible):
+    """Groq (API compatible con OpenAI) con la clave que define el proveedor del servicio."""
+
+    BASE_URL = "https://api.groq.com/openai/v1"
+
+    def __init__(self, tenant=None):
+        raw_keys = os.getenv("GROQ_API_KEYS", "").strip()
+        key = os.getenv("GROQ_API_KEY", "").strip()
+        if raw_keys:
+            try:
+                keys = json.loads(raw_keys)
+                value = keys.get(tenant) if isinstance(keys, dict) else None
+            except ValueError:
+                value = None
+            key = value.strip() if isinstance(value, str) else ""
+        model = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
+        if not re.fullmatch(r"[A-Za-z0-9._/-]+", model):
+            raise ValueError("GROQ_MODEL inválido")
+        super().__init__(self.BASE_URL, key, model)
+
+    @property
+    def ready(self):
+        return bool(self.key)
+
+
+class Fallback:
+    """Prueba los proveedores del servicio en orden; si uno falla o no tiene cuota, responde el siguiente."""
+
+    def __init__(self, providers):
+        self.providers = providers
+
+    @property
+    def ready(self):
+        return any(provider.ready for provider in self.providers)
+
+    def reply(self, messages):
+        last = None
+        for provider in self.providers:
+            if not provider.ready:
+                continue
+            try:
+                return provider.reply(messages)
+            except ProviderError as exc:
+                last = exc
+        raise last or ProviderError("El proveedor de IA todavía no está configurado.")
+
+
+PROVIDERS = {"gemini": Gemini, "groq": Groq}
 
 
 def provider_for(tenant, company, config=None):
@@ -185,6 +196,10 @@ def provider_for(tenant, company, config=None):
     custom = custom_provider(config)
     if custom is not None:
         return custom
-    name = company.get("ai_provider", "ollama")
-    factory = PROVIDERS.get(name) if isinstance(name, str) else None
-    return factory(tenant) if factory else None
+    names = company.get("ai_provider", "gemini")
+    if isinstance(names, str):
+        names = [names]
+    if not isinstance(names, list) or not names or any(name not in PROVIDERS for name in names):
+        return None
+    built = [PROVIDERS[name](tenant) for name in names]
+    return built[0] if len(built) == 1 else Fallback(built)

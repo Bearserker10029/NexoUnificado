@@ -18,6 +18,7 @@ use OCP\IUserSession;
 use OCP\User\Events\PasswordUpdatedEvent;
 use OCP\User\Events\PostLoginEvent;
 use OCP\User\Events\UserChangedEvent;
+use OCP\User\Events\BeforeUserDeletedEvent;
 use OCP\User\Events\UserCreatedEvent;
 use OCP\User\Events\UserDeletedEvent;
 
@@ -30,7 +31,8 @@ class Application extends App implements IBootstrap {
 
     public function register(IRegistrationContext $context): void {
         foreach ([UserCreatedEvent::class, UserAddedEvent::class, UserRemovedEvent::class,
-                  PasswordUpdatedEvent::class, UserDeletedEvent::class, UserChangedEvent::class] as $event) {
+                  PasswordUpdatedEvent::class, UserDeletedEvent::class, UserChangedEvent::class,
+                  BeforeUserDeletedEvent::class] as $event) {
             $context->registerEventListener($event, UserSyncListener::class);
         }
         $context->registerEventListener(PostLoginEvent::class, LoginListener::class);

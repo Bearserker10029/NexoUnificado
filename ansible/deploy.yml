@@ -86,6 +86,6 @@
       register: up
       changed_when: >-
         (up.stdout_lines + up.stderr_lines)
-        | reject('search', 'nexo-(certs|synapse-init|synapse-oidc-patch|host-update|nextcloud-init|nextcloud-menu-init|nextcloud-tenants-init|collabora-init|ollama-init)')
+        | reject('search', 'nexo-(certs|synapse-init|synapse-oidc-patch|host-update|nextcloud-init|nextcloud-menu-init|nextcloud-tenants-init|collabora-init)')
         | select('search', 'Created|Recreated|Started|Pulled')
         | list | length > 0

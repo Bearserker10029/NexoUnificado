@@ -501,7 +501,12 @@ def _find_login_provider(identifier):
 def entrar():
     """Página única de acceso: identifica la empresa de la persona y la envía a su login SSO."""
     if request.method == "GET":
-        return render_template("entrar.html", error=None)
+        response = app.make_response(render_template("entrar.html", error=None))
+        if request.args.get("salir"):
+            # Tras cerrar sesion: el navegador borra todas las cookies del sitio (Nextcloud, Keycloak,
+            # asistente y gateway). Solo cookies: "storage" borraria tambien los historiales de chat.
+            response.headers["Clear-Site-Data"] = '"cookies"'
+        return response
     identifier = request.form.get("identifier", "").strip().lower()[:254]
     provider_id = _find_login_provider(identifier) if identifier and KC_ADMIN_PASSWORD else None
     if provider_id is None:

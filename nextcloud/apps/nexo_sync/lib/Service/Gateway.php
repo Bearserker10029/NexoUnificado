@@ -11,6 +11,9 @@ class Gateway {
     /** Contraseñas recién creadas, válidas solo durante la petición actual. */
     private static array $pending = [];
 
+    /** true mientras la app fija la clave local aleatoria: ese cambio no debe viajar a Keycloak. */
+    public static bool $suppress = false;
+
     public function __construct(private IClientService $clients, private LoggerInterface $logger) {
     }
 
@@ -24,6 +27,20 @@ class Gateway {
 
     public static function forget(string $uid): void {
         unset(self::$pending[$uid]);
+    }
+
+    /** Empresas de un usuario que se va a borrar (los grupos desaparecen antes del evento final). */
+    private static array $tenants = [];
+
+    public static function rememberTenants(string $uid, array $tenants): void {
+        self::$tenants[$uid] = $tenants;
+    }
+
+    /** @return string[] */
+    public static function forgetTenants(string $uid): array {
+        $tenants = self::$tenants[$uid] ?? [];
+        unset(self::$tenants[$uid]);
+        return $tenants;
     }
 
     /** @return string|null empresa si el grupo es empresa-area-* o empresa-servicio-*. */

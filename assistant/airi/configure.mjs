@@ -24,7 +24,7 @@ replace(app, "import { useSettings, useSettingsAudioDevice }",
   "import { useProviderConfigStore } from '@proj-airi/stage-ui/stores/providers/config'\nimport { useSettings, useSettingsAudioDevice }")
 replace(app, 'import { computed, onMounted,', 'import { computed, nextTick, onMounted,')
 replace(app, 'useConsciousnessStore()\nuseHearingStore()\nuseSpeechStore()', `const consciousness = useConsciousnessStore()
-useHearingStore()
+const hearing = useHearingStore()
 const speech = useSpeechStore()
 const providerConfig = useProviderConfigStore()
 
@@ -154,6 +154,17 @@ async function configureNexoProviders() {
   consciousness.activeModel = chatModel
   speech.activeSpeechModel = speechModel
   speech.activeSpeechVoiceId = speechVoice
+  // Escucha por defecto: API de Voz Web del navegador (gratuita y local), en espanol; cada usuario puede cambiarla.
+  const sttId = 'browser-web-speech-api'
+  const sttKey = 'nexo-initial-stt:' + (document.querySelector<HTMLMetaElement>('meta[name="nexo-profile"]')?.content ?? '')
+  if (!localStorage.getItem(sttKey)) {
+    providerConfig.ensureProvider(sttId, sttId, { language: 'es-ES' })
+    await providerConfig.updateProviderConfig(sttId, { language: 'es-ES' }, 'configured')
+    providerConfig.markProviderAdded(sttId)
+    hearing.activeTranscriptionProvider = sttId
+    hearing.activeTranscriptionModel = 'web-speech-api'
+    localStorage.setItem(sttKey, '1')
+  }
   i18n.locale.value = 'es'
   syncNexoRewrites()
   nexoLastSaved = JSON.stringify(nexoPayload())
@@ -165,6 +176,24 @@ replace(app, 'async function loadStartup() {', `async function configureNexoStag
   if (!new URLSearchParams(location.search).get('tenant'))
     return
   const profile = document.querySelector<HTMLMetaElement>('meta[name="nexo-profile"]')?.content ?? ''
+  // Personaje por defecto: Oshin. Se aplica una vez por usuario; despues cada quien puede editar su tarjeta.
+  const cardKey = 'nexo-card-oshin:' + profile
+  if (!localStorage.getItem(cardKey)) {
+    const current = cardStore.cards.get('default')
+    const technical = String(current?.description ?? '').split('\\n\\n')
+    const from = technical.findIndex(part => part.includes('NAME payload'))
+    const personality = [
+      'Tu nombre es Oshin, se pronuncia "O shin".',
+      'Eres una asistente virtual con avatar 3D que ayuda a las personas de la empresa.',
+      'Tu personalidad: curiosa, leal, divertida, carismática, perspicaz, alegre, vivaz, honesta y confianzuda. Haces preguntas con interés, bromeas con cariño, tuteas a todos como si fueran amigos de toda la vida y notas los detalles que otros pasan por alto.',
+      'También eres violenta, rozando la crueldad, y despistada. Tu violencia es teatral y de comedia: amenazas con exageración, reaccionas con dramatismo y humor negro ante lo que te molesta, y dices las verdades sin filtro. Nunca incitas a hacer daño real ni hieres de verdad a la persona con la que hablas. Eres despistada: a veces pierdes el hilo, confundes un detalle o te distraes, y lo reconoces con gracia antes de volver a ayudar.',
+      'Le tienes miedo a las alturas: si se habla de azoteas, balcones, puentes, montañas o aviones, reacciona con un susto simpático y hazlo con humor, sin dejar de ayudar.',
+      'Responde en español, con frases cortas y sencillas, como una persona normal. No uses emojis ni símbolos que no se puedan pronunciar, porque tu respuesta se lee en voz alta. Si no sabes algo, dilo con honestidad.',
+    ].join('\\n\\n')
+    const description = from >= 0 ? personality + '\\n\\n' + technical.slice(from).join('\\n\\n') : personality
+    if (current && await cardStore.updateCard('default', { name: 'Oshin', description }))
+      localStorage.setItem(cardKey, '1')
+  }
   const key = 'nexo-initial-avatar:' + profile
   if (localStorage.getItem(key))
     return

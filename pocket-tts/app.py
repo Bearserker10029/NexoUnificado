@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Kent Lin, Luis Quillas, Jeniffer Castillo
 # SPDX-License-Identifier: Apache-2.0
 import io
+import os
 from contextlib import asynccontextmanager
 from threading import Lock
 
@@ -16,7 +17,7 @@ inference = Lock()
 
 @asynccontextmanager
 async def lifespan(app):
-    torch.set_num_threads(2)
+    torch.set_num_threads(int(os.environ.get('TTS_THREADS', '2')))
     model = TTSModel.load_model(language="spanish")
     app.state.model = model
     app.state.voice = model.get_state_for_audio_prompt("lola")
@@ -40,7 +41,8 @@ def speech(payload: Speech):
     text = payload.text.strip()
     if not text:
         raise HTTPException(400, "Se requiere texto")
-    if not inference.acquire(blocking=False):
+    # Las frases llegan en paralelo: se encolan en vez de rechazarlas.
+    if not inference.acquire(timeout=120):
         raise HTTPException(503, "La voz está ocupada")
     try:
         model = app.state.model

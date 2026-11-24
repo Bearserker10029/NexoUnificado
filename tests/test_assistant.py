@@ -27,31 +27,50 @@ class AssistantTest(unittest.TestCase):
         self.client = assistant.app.test_client()
         self.provider = SimpleNamespace(ready=True, reply=Mock(return_value="Hola desde Nexo."))
         self.enterContext(patch.object(assistant, "REGISTRY", ROOT / "tenants" / "registry.json"))
-        self.enterContext(patch.dict(providers.PROVIDERS, {"ollama": lambda _: self.provider}))
+        self.enterContext(patch.dict(providers.PROVIDERS, {"gemini": lambda _: self.provider}))
 
     def test_provider_selection_defaults_only_for_registered_tenants(self):
         self.assertIs(providers.provider_for("acme", {}), self.provider)
         self.assertIsNone(providers.provider_for("", None))
         self.assertIsNone(providers.provider_for("beta", {"ai_provider": None}))
         self.assertIsNone(providers.provider_for("beta", {"ai_provider": "invalid"}))
+
+    def test_gemini_uses_the_key_of_each_tenant(self):
         with patch.dict(os.environ, {
             "GEMINI_API_KEY": "legacy-fixture",
             "GEMINI_API_KEYS": '{"acme":"acme-fixture"}',
         }):
-            self.assertEqual(providers.provider_for("acme", {"ai_provider": "gemini"}).key, "acme-fixture")
-            self.assertFalse(providers.provider_for("beta", {"ai_provider": "gemini"}).ready)
+            self.assertEqual(providers.Gemini("acme").key, "acme-fixture")
+            self.assertFalse(providers.Gemini("beta").ready)
 
-    def test_ollama_uses_internal_api_in_cpu_mode(self):
-        with patch.object(providers.requests, "post") as post:
-            post.return_value.status_code = 200
-            post.return_value.json.return_value = {"message": {"content": "Una respuesta local."}}
-            answer = providers.Ollama().reply([{"role": "user", "text": "Hola"}])
-        self.assertEqual(answer, "Una respuesta local.")
-        self.assertEqual(post.call_args.args[0], "http://ollama:11434/api/chat")
-        data = post.call_args.kwargs["json"]
-        self.assertEqual(data["options"]["num_gpu"], 0)
-        self.assertEqual(data["messages"][-1], {"role": "user", "content": "Hola"})
-        self.assertFalse(data["stream"])
+    def test_company_model_replaces_the_default_provider(self):
+        config = {"chat": {"provider": "openai", "base_url": "https://api.example.test/v1", "model": "m", "api_key": "k"}}
+        self.assertIsInstance(providers.provider_for("acme", {}, config), providers.OpenAICompatible)
+        with self.assertRaises(providers.EndpointError):
+            providers.public_https_url("https://127.0.0.1/v1")
+
+    def test_fallback_uses_the_next_provider_when_one_fails(self):
+        broken = SimpleNamespace(ready=True, reply=Mock(side_effect=providers.ProviderError("sin cuota")))
+        working = SimpleNamespace(ready=True, reply=Mock(return_value="Respuesta de respaldo."))
+        unconfigured = SimpleNamespace(ready=False, reply=Mock())
+        chain = providers.Fallback([unconfigured, broken, working])
+        self.assertTrue(chain.ready)
+        self.assertEqual(chain.reply([{"role": "user", "text": "Hola"}]), "Respuesta de respaldo.")
+        unconfigured.reply.assert_not_called()
+        with self.assertRaises(providers.ProviderError):
+            providers.Fallback([broken]).reply([{"role": "user", "text": "Hola"}])
+        self.assertFalse(providers.Fallback([unconfigured]).ready)
+
+    def test_groq_uses_the_provider_key_and_the_openai_compatible_api(self):
+        with patch.dict(os.environ, {"GROQ_API_KEY": "fixture", "GROQ_MODEL": "openai/gpt-oss-20b"}):
+            groq = providers.Groq("acme")
+        self.assertTrue(groq.ready)
+        with patch.object(providers, "public_https_url", side_effect=lambda url: url),                 patch.object(providers.requests, "post") as post:
+            post.return_value.json.return_value = {"choices": [{"message": {"content": "Hola desde Groq."}}]}
+            self.assertEqual(groq.reply([{"role": "user", "text": "Hola"}]), "Hola desde Groq.")
+        self.assertEqual(post.call_args.args[0], "https://api.groq.com/openai/v1/chat/completions")
+        self.assertEqual(post.call_args.kwargs["json"]["model"], "openai/gpt-oss-20b")
+        self.assertEqual(post.call_args.kwargs["headers"], {"Authorization": "Bearer fixture"})
 
     def post(self, path, payload, origin=ORIGIN):
         return self.client.post(path, base_url=ORIGIN, json=payload, headers={"Origin": origin})

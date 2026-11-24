@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TENANTS = ROOT / "tenants"
 REGISTRY = TENANTS / "registry.json"
 SERVICES = {"chat", "telefonia", "videoconferencia"}
-AI_PROVIDERS = ("gemini", "ollama")
+AI_PROVIDERS = ("gemini", "groq")
 
 
 def load_registry() -> dict:
@@ -206,7 +206,7 @@ def render_keycloak(tenant: dict) -> None:
         "standardFlowEnabled": True, "directAccessGrantsEnabled": False,
         "redirectUris": ["${NEXO_URL}/docs/apps/user_oidc/code*"], "webOrigins": ["${NEXO_URL}"],
         "rootUrl": "${NEXO_URL}", "baseUrl": "/docs/",
-        "attributes": {"post.logout.redirect.uris": "${NEXO_URL}/docs/*"},
+        "attributes": {"post.logout.redirect.uris": "${NEXO_URL}/*"},
         "protocolMappers": [{"name": "grupos-servicios", "protocol": "openid-connect",
             "protocolMapper": "oidc-group-membership-mapper",
             "config": {"claim.name": "groups", "full.path": "false", "id.token.claim": "true",
@@ -496,6 +496,7 @@ services:
       - ./nextcloud/apps/nexo_sync:/var/www/html/custom_apps/nexo_sync:ro
       - ./tenants/registry.json:/tenants/registry.json:ro
       - ./nextcloud/tenants-oidc-setup.sh:/tenants-oidc-setup.sh:ro
+      - ./nextcloud/external-icons:/nexo-icons:ro
     entrypoint: [ \"/bin/sh\", \"/tenants-oidc-setup.sh\" ]
     networks: [ srv ]
 """)
@@ -563,7 +564,9 @@ def render(registry: dict) -> None:
         if unknown:
             raise ValueError(f"Servicios desconocidos en {tenant['name']}: {unknown}")
         provider = tenant.get("ai_provider")
-        if provider is not None and provider not in AI_PROVIDERS:
+        # Una cadena o una lista en orden de preferencia (respaldo si el primero falla).
+        listed = provider if isinstance(provider, list) else [provider]
+        if provider is not None and (not listed or any(item not in AI_PROVIDERS for item in listed)):
             raise ValueError(f"Proveedor IA desconocido en {tenant['name']}: {provider!r}")
         render_asterisk(tenant)
         render_keycloak(tenant)

@@ -47,6 +47,11 @@ existan; no vuelvas a copiar `.env.example` sobre un `.env` ya configurado:
 .\scripts\new-secrets.ps1
 ```
 
+Para el asistente de IA, el proveedor define en `.env` `GEMINI_API_KEY` y
+`GROQ_API_KEY` (con `GEMINI_MODEL` y `GROQ_MODEL`; el modelo gratuito de Groq por
+defecto es `openai/gpt-oss-20b`). Es el modelo que usan todas las empresas salvo
+que una configure el suyo (ver la sección 7).
+
 `.env` no debe compartirse ni subirse a Git. Las contraseñas de los usuarios
 finales tampoco van ahí: sus cuentas se crean posteriormente en Keycloak. Las
 variables `H10_*_PASSWORD` que genera el script son **solo credenciales de
@@ -127,59 +132,116 @@ netsh advfirewall firewall add rule name="Nexo WebRTC" dir=in action=allow proto
 Los demás equipos deben usar la IP configurada en `NEXO_HOST`; no uses
 `127.0.0.1` ni `localhost` desde un cliente remoto.
 
-## 6. Administrar empresas, usuarios y áreas
+## 6. Administrar empresas, usuarios y sectores
 
-El proveedor entra por `https://TU_IP:8443/administracion/`. Comparte con cada
-administrador únicamente el enlace de Nextcloud de su empresa. Sustituye
-`TU_IP` por el valor de `NEXO_HOST`.
+Hay un solo acceso para todos: `https://TU_IP:8443/` (o `/docs/`). La página de
+inicio de sesión es la de Nextcloud: la persona escribe su usuario y su clave sin
+elegir empresa; el sistema la deduce a partir de la cuenta. Sustituye `TU_IP` por
+el valor de `NEXO_HOST`.
 
-### Designar al administrador de una empresa
+Hay tres niveles, cada uno con su propio alcance:
 
-1. Abre el enlace de administración e inicia sesión con `KC_ADMIN_USER` y
-   `KC_ADMIN_PASSWORD` de `.env`.
-2. En **Manage realms**, selecciona `nexo-acme` para ACME o `nexo-beta` para BETA.
-3. Abre **Users**, elige una cuenta de ese realm o créala con **Add user** y
-   configura su contraseña en **Credentials**.
-4. En la pestaña **Groups** de la cuenta, usa **Join Group** para agregarla a
-   `acme-administradores` o `beta-administradores`, según corresponda.
+| Quién | Qué hace | Dónde |
+|---|---|---|
+| Proveedor | Da de alta empresas y su administrador | Archivos del repositorio y Keycloak (`/administracion/`) |
+| Administrador de empresa | Crea sectores y usuarios de su empresa | Nextcloud: **Sectores y usuarios** y **Cuentas** |
+| Usuario | Usa Nextcloud, Telefonía, Videoconferencia, Chat y el asistente | Nextcloud |
 
-Si actualizaste una instalación con realms existentes y faltan los grupos de
-administración, sincronízalos con Keycloak en ejecución. Desde PowerShell, en la
-raíz del repositorio, ejecuta:
+### 6.1 El proveedor da de alta una empresa
+
+1. Añade la empresa a `tenants/registry.json`, con su nombre, los servicios que
+   contrata (`telefonia`, `videoconferencia`, `chat`) y, si se quiere, el modelo de
+   IA por defecto (`ai_provider`).
+2. Regenera la configuración y levanta los servicios nuevos:
 
 ```powershell
-cmd.exe /c "docker exec -i nexo-keycloak sh -s < scripts\sincronizar-grupos-empresas.sh"
+python scripts/nexo-tenant.py render
+docker compose up -d --build
 ```
 
-### Crear áreas y asignar usuarios
+3. Comprueba que las tareas de inicialización terminaron con `Exited (0)` (sección 3).
+   Se crean automáticamente el realm `nexo-<empresa>`, los grupos de servicio
+   (`<empresa>-servicio-telefonia`, etc.), el grupo `<empresa>-administradores` y los
+   servicios propios de la empresa.
 
-1. Abre el enlace de Nextcloud de tu empresa e inicia sesión con su cuenta
-   administradora. En el laboratorio, ACME usa
-   `https://TU_IP:8443/docs/apps/user_oidc/login/2` y BETA usa
-   `https://TU_IP:8443/docs/apps/user_oidc/login/3`. Si cambian los ID, consulta
-   `docker compose exec --user www-data nextcloud php occ user_oidc:provider --output=json`.
-   Si acabas de recibir el permiso,
-   cierra la sesión de Nextcloud y vuelve a entrar para actualizar el menú.
-   Después del primer acceso, el navegador recuerda ese proveedor para volver
-   a entrar desde `https://TU_IP:8443/docs/` al cerrar sesión.
-2. En el menú de aplicaciones, abre **Usuarios y áreas · ACME** o **Usuarios y
-   áreas · BETA**.
-3. En **Crear área**, registra las áreas que necesite tu empresa, por ejemplo,
-   **Administración**, **Psicología** u **Oficina**.
-4. En **Crear usuario**, completa sus datos y asigna una contraseña temporal.
-   Keycloak solicitará cambiarla en el primer inicio de sesión.
-5. En **Asignar un grupo**, selecciona al usuario y su área. Repite la operación
-   para cada servicio que corresponda, como Chat o Telefonía.
+### 6.2 El proveedor crea al administrador de la empresa
 
-Los grupos de área organizan a los usuarios de la empresa. Los grupos de servicio
-controlan el acceso a las aplicaciones. En Keycloak, las áreas creadas por el
-portal aparecen con el prefijo `acme-area-` o `beta-area-`. Si ya habías creado
-un área en Keycloak, puedes añadir ese prefijo al nombre del grupo existente
-para que aparezca en el portal y conserve sus miembros.
+**Opción A, con el script** (recomendada). La cuenta queda con una clave temporal,
+que la persona debe cambiar en su primer acceso, y dentro del grupo
+`<empresa>-administradores` y de los servicios contratados. El script se puede
+repetir sin problema. Desde PowerShell, en la raíz del repositorio (cambia los
+valores de `TENANT`, `ADMIN_USER`, `ADMIN_EMAIL` y `ADMIN_PASSWORD`):
 
-Nextcloud, Matrix y la extensión de telefonía se aprovisionan automáticamente en
-el primer acceso. No crees cuentas independientes dentro de Element o Asterisk.
-Las identidades y el directorio Matrix están separados por empresa.
+```powershell
+cmd.exe /c "docker exec -i -e TENANT=acme -e ADMIN_USER=admin.acme -e ADMIN_EMAIL=admin@acme.test -e ADMIN_PASSWORD=ClaveTemporal#2026 nexo-keycloak sh -s < scripts\crear-admin-empresa.sh"
+```
+
+**Opción B, desde Keycloak.**
+
+1. Abre `https://TU_IP:8443/administracion/` e inicia sesión con `KC_ADMIN_USER` y
+   `KC_ADMIN_PASSWORD` de `.env`.
+2. En **Manage realms**, selecciona `nexo-acme` (o `nexo-beta`).
+3. En **Users**, pulsa **Add user**, escribe el usuario, nombre y correo, activa
+   **Email verified** y crea la cuenta.
+4. En **Credentials**, define una contraseña y deja activada **Temporary**.
+5. En **Groups**, pulsa **Join Group** y añádela a `acme-administradores` y a los
+   grupos de servicio que correspondan.
+
+Entrega al administrador su usuario y la clave temporal por un canal seguro.
+
+### 6.3 El administrador crea sectores
+
+1. Entra en `https://TU_IP:8443/` con su cuenta. En el primer acceso, cambia la clave
+   temporal. Si acabas de recibir el permiso, cierra sesión y vuelve a entrar para
+   actualizar el menú.
+2. En el menú de aplicaciones, abre **Sectores y usuarios**. Solo lo ven los
+   administradores de empresa.
+3. En **Crear sector**, escribe el nombre (por ejemplo **Psicología**,
+   **Administración** o **Asuntos generales**) y pulsa **Crear sector**.
+4. El sector aparece en **Sectores existentes**, con su número de usuarios. Es un
+   grupo `<empresa>-area-<nombre>` que también se crea en Keycloak.
+
+### 6.4 El administrador crea usuarios
+
+1. En el menú de aplicaciones, abre **Cuentas** (o usa el enlace de **Sectores y
+   usuarios**).
+2. Pulsa **Cuenta nueva** y completa el identificador, el nombre y el correo.
+3. En **Grupos**, elige el sector del usuario y los grupos de servicio que
+   necesita (`<empresa>-servicio-telefonia`, `-videoconferencia`, `-chat`). Los
+   servicios controlan qué aplicaciones ve cada persona; los sectores organizan a
+   la gente.
+4. Define una contraseña temporal y crea la cuenta.
+5. La cuenta se crea también en Keycloak. Entrega al usuario su identificador y la
+   clave temporal. En su primer acceso la cambia y entra a Nextcloud.
+
+El administrador de empresa solo puede ver y gestionar los grupos y usuarios de su
+empresa.
+
+### 6.5 Cambios posteriores
+
+Todo se hace desde **Cuentas** de Nextcloud y se replica a Keycloak:
+
+- **Cambiar de sector o de servicios:** edita los grupos de la cuenta.
+- **Restablecer la clave:** define una contraseña nueva; el usuario deberá
+  cambiarla otra vez al entrar.
+- **Cambiar el nombre o el correo:** edita la cuenta.
+- **Dar de baja:** elimina la cuenta; también desaparece de Keycloak.
+
+La identidad vive en Keycloak. Tras sincronizarse, la clave local de Nextcloud queda
+bloqueada con un valor aleatorio: `/docs/admin-login` no permite entrar con la clave
+inicial y las políticas de Keycloak se aplican siempre.
+
+### 6.6 Entrar, cerrar sesión y cambiar de cuenta
+
+- **Primer acceso del usuario:** abre `https://TU_IP:8443/`, escribe su usuario y su
+  clave temporal y elige una clave nueva cuando Keycloak lo pida.
+- **Cerrar sesión:** termina también la sesión de Keycloak y borra las cookies del
+  sitio. Se puede entrar enseguida con otra cuenta sin errores de «state has
+  expired».
+
+Nextcloud, Matrix y la extensión de telefonía se aprovisionan en el primer acceso.
+No crees cuentas independientes dentro de Element o Asterisk. Las identidades y el
+directorio Matrix están separados por empresa.
 
 ## 7. Primer acceso y configuración de Chat
 
@@ -195,12 +257,29 @@ En el portal de cada empresa, selecciona su proveedor de identidad cuando
 Nextcloud lo solicite. Los enlaces visibles dependen de los grupos asignados en
 Keycloak. Las salas Jitsi permanecen separadas por empresa.
 
+### Asistente IA (AIRI)
+
+Se abre desde el menú de Nextcloud, en **Asistente IA**, dentro de Nextcloud y sin
+ocupar toda la pantalla. El personaje por defecto es **Oshin** (se pronuncia «O
+shin»), con avatar 3D.
+
+- **Voz y modelo por defecto.** Responde con el modelo del proveedor (Gemini y,
+  como respaldo, Groq) y habla con Pocket TTS, que corre en el servidor. Cada frase
+  tarda unos segundos en generarse en un equipo con pocos núcleos.
+- **Escuchar.** La entrada por voz usa la API de Voz Web del navegador (gratuita y
+  local), en español. Requiere Chrome, Edge o Safari y permitir el micrófono.
+- **Quién configura.** Todos los usuarios pueden cambiar el avatar y la tarjeta del
+  personaje. Los ajustes de modelo y voz solo los ve el administrador de la empresa:
+  si configura su propia API de chat o de voz, se aplica a toda la empresa y se
+  guarda en el servidor.
+- **Historial.** Cada usuario guarda su propio historial de conversación.
+
 ### Llamadas
 
 - **Dentro de la empresa.** Abre un chat directo en **Element** e inicia la
   llamada desde ahí. Asterisk bloquea la marcación de extensiones de la misma
   empresa, incluso con el prefijo `9`.
-- **Entre empresas.** Abre **Telefonía** en el portal y marca `9 + extensión`
+- **Entre empresas.** Abre **Telefonía** en el menú de Nextcloud y marca `9 + extensión`
   del destino. Por ejemplo, desde ACME marca `92001` para llamar a la extensión
   `2001` de BETA, si tu extensión tiene habilitadas las llamadas entre empresas.
 
@@ -258,6 +337,10 @@ docker compose logs asterisk
   usada y que el certificado esté instalado en el usuario actual de Windows.
 - **Failed to load service worker:** instala el certificado, cierra por completo
   el navegador y vuelve a abrir Chat.
+- **El asistente no responde o dice que la sesión caducó:** vuelve a abrirlo desde el
+  menú de Nextcloud. Si el problema continúa, revisa `docker compose logs assistant`.
+- **El asistente no habla:** comprueba `docker compose logs pocket-tts` (puede tardar
+  en arrancar tras reiniciar) y que el audio esté activado en AIRI.
 - **Telefonía de empresa no disponible:** comprueba que el usuario pertenece al
   grupo de servicio de telefonía de su empresa y revisa los logs de
   `voip-gateway` y `asterisk`.

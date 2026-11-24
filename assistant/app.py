@@ -305,7 +305,7 @@ def apply_settings(tenant, data):
 def tenant_settings(tenant):
     """Ajustes de la empresa. Solo el administrador; se editan desde la configuración original de AIRI."""
     company = tenants().get(tenant)
-    if company is None or company.get("ai_provider", "ollama") is None:
+    if company is None or company.get("ai_provider", "gemini") is None:
         return jsonify(error="El asistente no está habilitado para esta empresa."), 404
     user = user_for(tenant)
     if not user:
@@ -390,6 +390,7 @@ def speech(tenant):
 
 def synthesize(tenant, text):
     speech_config = load_config(tenant).get("speech") or {}
+    content_type = "audio/wav"
     try:
         if speech_config.get("provider") == "openai" and speech_config.get("base_url"):
             audio = requests.post(
@@ -399,12 +400,13 @@ def synthesize(tenant, text):
                       "voice": speech_config.get("voice") or "alloy", "response_format": "wav"},
                 timeout=(5, 115), allow_redirects=False,
             )
+            content_type = audio.headers.get("Content-Type", content_type)
         else:
             audio = requests.post("http://pocket-tts:8000/speech", json={"text": text}, timeout=(3, 115))
         audio.raise_for_status()
     except (EndpointError, requests.RequestException):
         return jsonify(error="La voz no está disponible. Puedes volver a intentar reproducirla."), 503
-    return audio.content, 200, {"Content-Type": audio.headers.get("Content-Type", "audio/wav")}
+    return audio.content, 200, {"Content-Type": content_type}
 
 
 def stage_error(message, status):

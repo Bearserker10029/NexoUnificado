@@ -11,6 +11,7 @@ use OCP\Group\Events\UserRemovedEvent;
 use OCP\IGroupManager;
 use OCP\User\Events\PasswordUpdatedEvent;
 use OCP\User\Events\UserChangedEvent;
+use OCP\User\Events\BeforeUserDeletedEvent;
 use OCP\User\Events\UserCreatedEvent;
 use OCP\User\Events\UserDeletedEvent;
 
@@ -28,10 +29,17 @@ class UserSyncListener implements IEventListener {
         } elseif ($event instanceof UserRemovedEvent) {
             $this->membership($event->getUser(), $event->getGroup()->getGID(), false);
         } elseif ($event instanceof PasswordUpdatedEvent) {
+            if (Gateway::$suppress) {
+                return;
+            }
+            $synced = false;
             foreach ($this->tenantsOf($event->getUser()) as $tenant) {
-                $this->gateway->call($tenant, 'set_password', [
+                $synced = $this->gateway->call($tenant, 'set_password', [
                     'username' => $event->getUser()->getUID(), 'password' => $event->getPassword(),
-                ]);
+                ]) || $synced;
+            }
+            if ($synced) {
+                $this->lockLocalPassword($event->getUser());
             }
         } elseif ($event instanceof UserChangedEvent) {
             // Nextcloud fija nombre y correo después de añadir los grupos.
@@ -44,8 +52,11 @@ class UserSyncListener implements IEventListener {
                     ]);
                 }
             }
+        } elseif ($event instanceof BeforeUserDeletedEvent) {
+            // Al borrar, los grupos ya no existen: se guardan las empresas antes.
+            Gateway::rememberTenants($event->getUser()->getUID(), $this->tenantsOf($event->getUser()));
         } elseif ($event instanceof UserDeletedEvent) {
-            foreach ($this->tenantsOf($event->getUser()) as $tenant) {
+            foreach (Gateway::forgetTenants($event->getUser()->getUID()) as $tenant) {
                 $this->gateway->call($tenant, 'delete_user', ['username' => $event->getUser()->getUID()]);
             }
         }
@@ -59,15 +70,32 @@ class UserSyncListener implements IEventListener {
         $uid = $user->getUID();
         $password = Gateway::pending($uid);
         if ($member && $password !== null) {
-            $this->gateway->call($tenant, 'ensure_user', [
+            $created = $this->gateway->call($tenant, 'ensure_user', [
                 'username' => $uid,
                 'display_name' => $user->getDisplayName(),
                 'email' => $user->getEMailAddress() ?: null,
                 'password' => $password,
             ]);
             Gateway::forget($uid);
+            if ($created) {
+                $this->lockLocalPassword($user);
+            }
         }
         $this->gateway->call($tenant, 'set_membership', ['username' => $uid, 'group' => $gid, 'member' => $member]);
+    }
+
+    /**
+     * La identidad vive en Keycloak. Tras sincronizar, la clave local de Nextcloud pasa a un valor
+     * aleatorio que nadie conoce: así no se puede entrar por el formulario local (/docs/admin-login)
+     * con la clave inicial y saltarse el SSO, el cambio de clave obligatorio ni el segundo factor.
+     */
+    private function lockLocalPassword($user): void {
+        Gateway::$suppress = true;
+        try {
+            $user->setPassword(bin2hex(random_bytes(32)));
+        } finally {
+            Gateway::$suppress = false;
+        }
     }
 
     /** @return string[] */

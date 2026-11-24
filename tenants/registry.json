@@ -4,7 +4,10 @@
     {
       "name": "acme",
       "display_name": "ACME",
-      "ai_provider": "ollama",
+      "ai_provider": [
+        "groq",
+        "gemini"
+      ],
       "range_prefix": 1,
       "services": [
         "chat",
