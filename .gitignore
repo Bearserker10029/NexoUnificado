@@ -12,3 +12,7 @@ ansible/.secrets/
 *.key
 wg*.conf
 !*.example
+
+# Python
+__pycache__/
+*.pyc

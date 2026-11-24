@@ -28,6 +28,7 @@ while IFS= read -r tenant; do
     --clientsecret="${KC_NEXTCLOUD_CLIENT_SECRET}" \
     --discoveryuri="http://keycloak:8080/realms/nexo-${tenant}/.well-known/openid-configuration"     --endsessionendpointuri="${NEXO_URL}/keycloak/realms/nexo-${tenant}/protocol/openid-connect/logout"     --postlogouturi="${NEXO_URL}/voip-sso/entrar?salir=1"     --send-id-token-hint=1 \
     --unique-uid=0 \
+    --check-bearer=1 \
     --mapping-uid='preferred_username' \
     --mapping-display-name='name' \
     --mapping-email='email' \

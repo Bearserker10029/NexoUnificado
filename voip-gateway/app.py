@@ -561,6 +561,10 @@ def internal_sync():
         ensure_group(data.get("group", ""))
         return jsonify(ok=True)
     if action == "ensure_user":
+        # El uid de Nextcloud (unique-uid=0) es este username: sin prefijo de empresa, dos realms
+        # podrian compartir cuenta y por tanto archivos. Se exige, no solo se recomienda.
+        if not username.startswith(tenant):
+            return jsonify(error=f"El usuario debe empezar por el prefijo de la empresa ({tenant})"), 400
         user = find_user(username)
         created = user is None
         if created:

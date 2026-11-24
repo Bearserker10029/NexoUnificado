@@ -17,6 +17,11 @@ configure_assistant_client() {
     client_id=$(kcadm get clients -r "$realm" -q clientId=nexo-assistant --fields id --format csv --noquotes)
   fi
   # Los grupos del usuario viajan en el id_token: el asistente reconoce asi al administrador de la empresa.
+  # El access_token lleva "nextcloud" como audiencia: asi Nextcloud (user_oidc, check-bearer) lo acepta y el asistente lee solo los archivos de esa persona.
+  audience=$(kcadm get "clients/$client_id/protocol-mappers/models" -r "$realm" --fields name --format csv --noquotes | grep -x audiencia-nextcloud || true)
+  if [ -z "$audience" ]; then
+    kcadm create "clients/$client_id/protocol-mappers/models" -r "$realm"       -s name=audiencia-nextcloud -s protocol=openid-connect -s protocolMapper=oidc-audience-mapper       -s 'config."included.client.audience"=nextcloud' -s 'config."id.token.claim"=false'       -s 'config."access.token.claim"=true' >/dev/null
+  fi
   mapper=$(kcadm get "clients/$client_id/protocol-mappers/models" -r "$realm" --fields name --format csv --noquotes | grep -x grupos || true)
   if [ -z "$mapper" ]; then
     kcadm create "clients/$client_id/protocol-mappers/models" -r "$realm"       -s name=grupos -s protocol=openid-connect -s protocolMapper=oidc-group-membership-mapper       -s 'config."claim.name"=groups' -s 'config."full.path"=false'       -s 'config."id.token.claim"=true' -s 'config."access.token.claim"=false'       -s 'config."userinfo.token.claim"=false' >/dev/null

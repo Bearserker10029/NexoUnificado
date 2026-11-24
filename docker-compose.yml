@@ -86,6 +86,7 @@ services:
   # Las claves SIP aleatorias solo viajan entre el gateway, el navegador por
   # HTTPS y Asterisk; la persona nunca tiene que introducirlas.
   voip-gateway:
+    image: ghcr.io/bearserker10029/nexo-voip-gateway:latest
     build: ./voip-gateway
     container_name: nexo-voip-gateway
     restart: unless-stopped
@@ -127,6 +128,9 @@ services:
       GROQ_API_KEYS: ${GROQ_API_KEYS:-}
       GROQ_MODEL: ${GROQ_MODEL:-openai/gpt-oss-20b}
       AI_SESSION_SECRET: ${AI_SESSION_SECRET:-}
+      # Lectura de archivos de Nextcloud con el token de Keycloak de cada usuario (vacío = desactivado).
+      NEXTCLOUD_INTERNAL_URL: http://nextcloud
+      NEXTCLOUD_HOST: ${NEXO_HOST:-localhost}
     volumes:
       - ./tenants:/tenants:ro
       # Configuración de IA de cada empresa (claves incluidas); solo la escribe el admin de la empresa.
@@ -135,6 +139,7 @@ services:
     networks: [ srv ]
 
   pocket-tts:
+    image: ghcr.io/bearserker10029/nexo-pocket-tts:latest
     build: ./pocket-tts
     restart: unless-stopped
     volumes:

@@ -1,0 +1,16 @@
+# Excluir del contexto de build (no se usan en la imagen)
+**/__pycache__
+**/*.pyc
+.git
+.gitignore
+.venv
+venv
+node_modules
+*.md
+*.log
+.env
+.env.*
+.vscode
+.idea
+Dockerfile
+.dockerignore

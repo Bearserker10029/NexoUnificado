@@ -18,6 +18,7 @@ import requests
 from flask import Flask, Response, abort, jsonify, redirect, render_template, request, send_from_directory, session
 from itsdangerous import BadData, URLSafeTimedSerializer
 
+import nextcloud
 from providers import EndpointError, ProviderError, provider_for, public_https_url
 
 PREFIX = "/airi"
@@ -40,6 +41,8 @@ app.config.update(
     SESSION_COOKIE_SAMESITE="Lax",
     MAX_CONTENT_LENGTH=32 * 1024,
 )
+FILE_TOKENS = {}  # token de Nextcloud de cada sesión; vive solo en el servidor, nunca en la cookie
+FILE_TOKENS_LOCK = threading.Lock()
 speech_ticket = URLSafeTimedSerializer(app.secret_key, salt="nexo-assistant-speech")
 
 
@@ -119,7 +122,7 @@ def begin_login(tenant, after=""):
     session["oidc"] = pending
     query = urlencode({
         "client_id": CLIENT_ID, "redirect_uri": CALLBACK, "response_type": "code",
-        "scope": "openid", "state": pending["state"], "nonce": pending["nonce"],
+        "scope": "openid profile", "state": pending["state"], "nonce": pending["nonce"],
         "code_challenge": challenge, "code_challenge_method": "S256",
     })
     return redirect(f"{issuer(tenant)}/protocol/openid-connect/auth?{query}")
@@ -234,6 +237,8 @@ def callback():
         )
         tokens.raise_for_status()
         token = tokens.json()["id_token"]
+        access = tokens.json().get("access_token")
+        access_ttl = int(tokens.json().get("expires_in") or 0)
         public_key = jwks(tenant).get_signing_key_from_jwt(token)
         claims = jwt.decode(
             token, public_key.key, algorithms=["RS256"], audience=CLIENT_ID,
@@ -244,6 +249,16 @@ def callback():
     except (requests.RequestException, jwt.PyJWTError, ValueError, KeyError):
         abort(401, "Keycloak no pudo verificar la sesión del asistente.")
     session.clear()
+    # Aislamiento entre empresas: el uid de Nextcloud es el username, así que solo cuentas con el
+    # prefijo de su empresa pueden usar el token de archivos (evita colisiones de uid entre realms).
+    if access and nextcloud.enabled() and tenant and str(claims.get("preferred_username", "")).startswith(tenant):
+        sid = secrets.token_urlsafe(32)
+        with FILE_TOKENS_LOCK:
+            now = time.time()
+            for key in [k for k, v in FILE_TOKENS.items() if v["expires"] < now]:
+                del FILE_TOKENS[key]
+            FILE_TOKENS[sid] = {"token": access, "expires": now + access_ttl - 10, "issuer": claims["iss"]}
+        session["files"] = sid
     groups = claims.get("groups") if isinstance(claims.get("groups"), list) else []
     session["user"] = {
         "sub": claims["sub"], "issuer": claims["iss"], "expires": claims["exp"],
@@ -336,6 +351,15 @@ def api_access(tenant):
     return user, provider, None
 
 
+def files_context(user, messages):
+    """Archivos de Nextcloud de la persona usuaria relacionados con su última pregunta."""
+    with FILE_TOKENS_LOCK:
+        entry = FILE_TOKENS.get(session.get("files"))
+    if not entry or entry["expires"] < time.time() or entry["issuer"] != user["issuer"]:
+        return None
+    return nextcloud.context_for(entry["token"], messages[-1]["text"]) or None
+
+
 def message_history():
     body = request.get_json(silent=True)
     messages = body.get("messages") if isinstance(body, dict) else None
@@ -361,7 +385,7 @@ def chat(tenant):
     if messages is None:
         return jsonify(error="La pregunta o el historial tienen un formato inválido."), 400
     try:
-        answer = provider.reply(messages)
+        answer = provider.reply(messages, files_context(user, messages))
     except ProviderError as exc:
         return jsonify(error=str(exc)), 502
     digest = hashlib.sha256(answer.encode()).hexdigest()
@@ -428,7 +452,7 @@ def stage_models(tenant):
 
 @app.post(f"{PREFIX}/api/<tenant>/v1/chat/completions")
 def stage_chat(tenant):
-    _, provider, error = api_access(tenant)
+    user, provider, error = api_access(tenant)
     if error:
         return error
     body = request.get_json(silent=True)
@@ -454,7 +478,7 @@ def stage_chat(tenant):
     if not history or history[-1]["role"] != "user":
         return stage_error("Se requiere una pregunta de texto.", 400)
     try:
-        answer = provider.reply(history[-5:])
+        answer = provider.reply(history[-5:], files_context(user, history))
     except ProviderError as exc:
         return stage_error(str(exc), 502)
     meta = {"id": f"chatcmpl-{secrets.token_hex(12)}", "created": int(time.time()), "model": "nexo-chat"}

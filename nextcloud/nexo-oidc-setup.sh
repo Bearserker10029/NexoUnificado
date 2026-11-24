@@ -66,6 +66,7 @@ occ "user_oidc:provider keycloak \
   --clientsecret='${KC_NEXTCLOUD_CLIENT_SECRET}' \
   --discoveryuri='http://keycloak:8080/realms/nexo/.well-known/openid-configuration' \
   --unique-uid=0 \
+  --check-bearer=1 \
   --mapping-display-name='name' \
   --mapping-email='email'"
 

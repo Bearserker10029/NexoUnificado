@@ -19,7 +19,7 @@ WORKDIR /app
 ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-COPY app.py providers.py ./
+COPY app.py providers.py nextcloud.py ./
 COPY web ./web
 COPY --from=airi /airi/apps/stage-web/dist ./stage
 COPY --from=airi /airi/LICENSE ./stage/AIRI-LICENSE.txt
