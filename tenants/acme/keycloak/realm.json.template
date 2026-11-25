@@ -65,6 +65,8 @@
       "name": "Servicios Nexo acme",
       "enabled": true,
       "optionalClientScopes": [
+        "profile",
+        "email",
         "offline_access",
         "microprofile-jwt",
         "kc-admin-api"

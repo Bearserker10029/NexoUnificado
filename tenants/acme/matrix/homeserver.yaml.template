@@ -36,8 +36,8 @@ oidc_providers:
     scopes: ["openid", "profile", "email"]
     user_mapping_provider:
       config:
-        localpart_template: "{{ user.preferred_username }}"
-        display_name_template: "{{ user.name }}"
+        localpart_template: "nexo{{ user.preferred_username }}"
+        display_name_template: "{{ user.name if user.name else user.preferred_username }}"
 sso:
   client_whitelist:
     - "${NEXO_URL}/acme/element/"

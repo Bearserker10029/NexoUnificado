@@ -8,7 +8,7 @@
   "brand": "Nexo · BETA",
   "disable_guests": true,
   "disable_custom_urls": true,
-  "force_verification": true,
+  "force_verification": false,
   "sso_redirect_options": {
     "immediate": true
   },

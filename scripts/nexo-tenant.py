@@ -214,8 +214,7 @@ def render_keycloak(tenant: dict) -> None:
     })
     clients.append({
         "clientId": "nexo-portal", "name": f"Servicios Nexo {name}", "enabled": True,
-        "optionalClientScopes": ["offline_access", "microprofile-jwt", "kc-admin-api"],
-        "protocol": "openid-connect", "publicClient": False, "secret": "${KC_VOIP_CLIENT_SECRET}",
+        "optionalClientScopes": ["profile", "email", "offline_access", "microprofile-jwt", "kc-admin-api"],        "protocol": "openid-connect", "publicClient": False, "secret": "${KC_VOIP_CLIENT_SECRET}",
         "standardFlowEnabled": True, "directAccessGrantsEnabled": False,
         "redirectUris": ["${NEXO_URL}/voip-sso/" + name + "/callback"],
         "webOrigins": ["${NEXO_URL}"], "rootUrl": "${NEXO_URL}/" + name + "/",
@@ -282,8 +281,8 @@ oidc_providers:
     scopes: [\"openid\", \"profile\", \"email\"]
     user_mapping_provider:
       config:
-        localpart_template: \"{{{{ user.preferred_username }}}}\"
-        display_name_template: \"{{{{ user.name }}}}\"
+        localpart_template: "nexo{{{{ user.preferred_username }}}}"
+        display_name_template: "{{{{ user.name if user.name else user.preferred_username }}}}"
 sso:
   client_whitelist:
     - \"${{NEXO_URL}}/{name}/element/\"
@@ -292,7 +291,7 @@ sso:
         "default_server_config": {"m.homeserver": {"base_url": "${NEXO_URL}/" + name,
                                                         "server_name": f"{name}.nexo.local"}},
         "brand": f"Nexo · {tenant['display_name']}", "disable_guests": True,
-        "disable_custom_urls": True, "force_verification": True,
+        "disable_custom_urls": True, "force_verification": False,
         "sso_redirect_options": {"immediate": True}, "show_labs_settings": False,
         "features": {"feature_group_calls": False}
     }
@@ -403,6 +402,7 @@ def jitsi_services(name: str, index: int) -> str:
     domain = f"{name}.meet.jitsi"
     common = f"""      PUBLIC_URL: https://${{NEXO_HOST:-localhost}}:8443/{name}/jitsi
       XMPP_SERVER: jitsi-prosody-{name}
+      XMPP_BOSH_URL_BASE: http://xmpp.{domain}:5280
       XMPP_DOMAIN: {domain}
       XMPP_MUC_DOMAIN: muc.{domain}
       XMPP_INTERNAL_MUC_DOMAIN: internal-muc.{domain}

@@ -58,7 +58,7 @@ services:
       - ./asterisk/manager.conf.template:/etc/asterisk/manager.conf.template:ro
       - ./asterisk/extensions.conf:/etc/asterisk/extensions.conf:ro
       - ./asterisk/http.conf:/etc/asterisk/http.conf:ro
-      - ./asterisk/rtp.conf:/etc/asterisk/rtp.conf:ro
+      - ./asterisk/rtp.conf:/etc/asterisk/rtp.conf.base:ro
       - ./asterisk/modules.conf:/etc/asterisk/modules.conf:ro
       - ./asterisk/logger.conf:/etc/asterisk/logger.conf:ro
       - ./asterisk/cdr.conf:/etc/asterisk/cdr.conf:ro
@@ -135,6 +135,9 @@ services:
       - ./tenants:/tenants:ro
       # Configuración de IA de cada empresa (claves incluidas); solo la escribe el admin de la empresa.
       - assistant_data:/data
+      # VRM optimizados (texturas 4096->2048, ~600MB a ~150MB VRAM por instancia)
+      - ./assistant/vrm-optimized/AvatarSample_B-Cgr_Y5fe.vrm:/app/stage/assets/AvatarSample_B-Cgr_Y5fe.vrm:ro
+      - ./assistant/vrm-optimized/AvatarSample_A-BNRNjuVT.vrm:/app/stage/assets/AvatarSample_A-BNRNjuVT.vrm:ro
     security_opt: [ "no-new-privileges:true" ]
     networks: [ srv ]
 

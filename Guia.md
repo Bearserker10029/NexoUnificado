@@ -132,6 +132,31 @@ netsh advfirewall firewall add rule name="Nexo WebRTC" dir=in action=allow proto
 Los demás equipos deben usar la IP configurada en `NEXO_HOST`; no uses
 `127.0.0.1` ni `localhost` desde un cliente remoto.
 
+Comprueba desde el otro equipo que el puerto responde:
+
+```powershell
+Test-NetConnection IP-DEL-SERVIDOR -Port 8443
+```
+
+`TcpTestSucceeded : True` indica que la web y el login llegan, pero no prueba el
+audio y el video, que viajan por UDP. Si una llamada conecta y queda muda, también
+puede estar bloqueando el firewall del **equipo cliente**: permite el navegador que
+usa para el softphone (PowerShell como administrador):
+
+```powershell
+New-NetFirewallRule -DisplayName "Chrome UDP" -Direction Inbound -Program "C:\Program Files\Google\Chrome\Application\chrome.exe" -Protocol UDP -Action Allow -Profile Any
+New-NetFirewallRule -DisplayName "Edge UDP" -Direction Inbound -Program "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" -Protocol UDP -Action Allow -Profile Any
+```
+
+Asterisk anuncia `NEXO_HOST` como dirección de audio (ICE): al arrancar, su
+entrypoint genera `rtp.conf` con `ice_host_candidates` para sustituir la IP interna
+del contenedor por la del servidor. Evita apagar el firewall de Windows, salvo en
+una prueba de un minuto, y vuelve a encenderlo.
+
+Algunas redes, como la Wi-Fi de una universidad, aíslan los equipos o filtran el UDP
+entre subredes. Si con las reglas anteriores no hay audio, conecta ambos equipos al
+punto de acceso de un celular y repite la prueba.
+
 ## 6. Administrar empresas, usuarios y sectores
 
 Hay un solo acceso para todos: `https://TU_IP:8443/` (o `/docs/`). La página de
@@ -272,6 +297,13 @@ shin»), con avatar 3D.
   personaje. Los ajustes de modelo y voz solo los ve el administrador de la empresa:
   si configura su propia API de chat o de voz, se aplica a toda la empresa y se
   guarda en el servidor.
+- **Nombre y personalidad.** La tarjeta de Oshin en AIRI define el personaje que se
+  ve, y el prompt del servidor (`SYSTEM_PROMPT` en `assistant/providers.py`) define
+  cómo responde el modelo: se llama Oshin y conserva su personalidad (curiosa,
+  divertida, sarcástica en tono suave, despistada y con miedo a las alturas, y habla
+  en español de Perú). Para
+  cambiarla, edita ese prompt y reconstruye la imagen del asistente
+  (`docker compose up -d --build assistant`).
 - **Historial.** Cada usuario guarda su propio historial de conversación.
 
 ### Llamadas
@@ -280,8 +312,13 @@ shin»), con avatar 3D.
   llamada desde ahí. Asterisk bloquea la marcación de extensiones de la misma
   empresa, incluso con el prefijo `9`.
 - **Entre empresas.** Abre **Telefonía** en el menú de Nextcloud y marca `9 + extensión`
-  del destino. Por ejemplo, desde ACME marca `92001` para llamar a la extensión
-  `2001` de BETA, si tu extensión tiene habilitadas las llamadas entre empresas.
+  del destino. Por ejemplo, desde ACME marca `92706` para llamar a beta1 (extensión
+  `2706`) y desde BETA marca `91362` para llamar a acme1 (extensión `1362`), si tu
+  extensión tiene habilitadas las llamadas entre empresas. Cada usuario ve su
+  extensión en el estado «registrado» del softphone (`sip:EXT@empresa.nexo.local`).
+- **Dos softphones en un mismo equipo.** Abre cada cuenta en una ventana InPrivate
+  distinta, porque Keycloak reutiliza la sesión del navegador. Usa audífonos o
+  silencia un micrófono para evitar el acople de audio.
 
 ### Configurar Chat
 
@@ -318,6 +355,11 @@ docker compose ps --all
 El arranque actualiza el certificado y las URLs de los servicios. Después,
 instala el nuevo `certs/server.crt` en los equipos clientes.
 
+Para ver la IP correcta ejecuta `ipconfig | findstr /i "IPv4"` y usa la del adaptador
+Wi-Fi o Ethernet real, no la de VirtualBox (`192.168.56.x`) ni la de WSL o Docker
+(`172.x`). Si el equipo cambia de red, la IP puede cambiar: repite este paso y
+vuelve a iniciar sesión en los softphones para que se registren de nuevo.
+
 ## 9. Diagnóstico
 
 ```powershell
@@ -328,6 +370,15 @@ docker compose logs voip-gateway
 docker compose logs asterisk
 ```
 
+- **Llamada conectada pero sin audio:** durante la llamada ejecuta
+  `docker exec nexo-asterisk asterisk -rx "pjsip show channelstats"`. Un canal con
+  `Receive` en 0 indica que su audio no llega al servidor: revisa las reglas UDP del
+  servidor y del cliente (sección 5) y el permiso de micrófono del navegador.
+- **Element pide «Confirm your digital identity»:** es la verificación de cifrado de
+  una sesión nueva. Elige «Can't confirm?» y luego «Reset identity». Si la sala vieja
+  no se descifra, crea una sala nueva sin cifrado.
+- **El asistente responde error 413:** el historial de la conversación es demasiado
+  largo para el límite de tamaño de Nginx. Abre un **Nuevo chat**.
 - **502:** comprueba que el servicio correspondiente esté activo y reinicia el
   proxy con `docker compose restart proxy` si se recreó un upstream por separado.
 - **400 al abrir administración:** usa `https://` en el puerto `8443`.

@@ -30,6 +30,15 @@ for dialplan in /etc/asterisk/tenants/*/asterisk/extensions.conf; do
 done
 chown asterisk:asterisk /etc/asterisk/dynamic/tenants-*.conf
 chmod 0644 /etc/asterisk/dynamic/tenants-*.conf
+# ICE detras de Docker: Asterisk anunciaria la IP interna del contenedor
+# (172.x), inalcanzable desde otras laptops. Se anuncia la IP publica del host.
+cp /etc/asterisk/rtp.conf.base /etc/asterisk/rtp.conf
+for ip in $(hostname -i 2>/dev/null); do
+  case "$ip" in *:*|127.*) continue ;; esac
+  printf '\nice_host_candidates=%s => %s\n' "$ip" "$ASTERISK_PUBLIC_IP" >> /etc/asterisk/rtp.conf
+done
+chown asterisk:asterisk /etc/asterisk/rtp.conf
+chmod 0644 /etc/asterisk/rtp.conf
 chown asterisk:asterisk /etc/asterisk/pjsip.conf /etc/asterisk/manager.conf
 chmod 0640 /etc/asterisk/pjsip.conf /etc/asterisk/manager.conf
 exec /usr/local/bin/entrypoint.sh "$@"

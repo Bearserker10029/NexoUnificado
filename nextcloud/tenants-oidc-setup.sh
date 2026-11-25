@@ -87,6 +87,10 @@ foreach ($tenants as $tenant) {
 echo json_encode((object) $sites, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
 PHP
 # Iconos del menu: se copian al almacenamiento de External Sites (blanco y variante -dark para tema claro).
+if ! ls /nexo-icons/nexo-*.svg >/dev/null 2>&1; then
+    echo "ERROR: /nexo-icons esta vacio. Revisa el bind mount ./nextcloud/external-icons" >&2
+    exit 1
+fi
 cat > /tmp/nexo-icons.php <<'PHP'
 <?php
 define('OC_CONSOLE', 1);
