@@ -5,6 +5,7 @@
   "sslRequired": "external",
   "registrationAllowed": false,
   "loginWithEmailAllowed": true,
+  "loginTheme": "nexo",
   "otpPolicyType": "totp",
   "otpPolicyAlgorithm": "HmacSHA1",
   "otpPolicyDigits": 6,

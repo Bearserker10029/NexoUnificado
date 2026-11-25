@@ -91,7 +91,8 @@ mismo esquema, IP y puerto:
 
 | Ruta | Servicio | Autenticación |
 |---|---|---|
-| `/` y `/docs/` | Nextcloud, menú unificado | Keycloak |
+| `/` y `/docs/` | Nextcloud, menú unificado | Keycloak; detecta la empresa de la cuenta |
+| `/voip-sso/entrar` | Entrada unificada de usuarios | Busca usuario/correo y abre el realm de su empresa |
 | `/element/` | Chat Element/Matrix | Keycloak |
 | `/jitsi/` | Videoconferencia Jitsi | Sin cuenta adicional |
 | `/voip/` | Telefonía WebRTC | Keycloak; extensión SIP automática |
@@ -124,7 +125,11 @@ El proveedor añade la empresa en `tenants/registry.json` y ejecuta
 `python scripts/nexo-tenant.py render` seguido de `docker compose up -d --build`.
 Después crea al administrador de la empresa con `scripts/crear-admin-empresa.sh`.
 Desde ahí, los sectores y los usuarios se crean en Nextcloud y se sincronizan con
-Keycloak.
+Keycloak. El administrador de empresa escribe un nombre corto en **Cuentas** (por
+ejemplo, `kent`) y Nextcloud antepone el identificador de la empresa (`acme.kent`).
+La clave inicial se replica a Keycloak como temporal y debe cambiarse en el primer
+acceso. Para iniciar sesión, se usa el identificador de la cuenta, no el nombre
+mostrado ni el correo del administrador que creó al usuario.
 
 Los usuarios del modo tradicional (realm **nexo**) se crean desde la consola de
 Keycloak, no desde `.env`, Nextcloud ni Matrix:

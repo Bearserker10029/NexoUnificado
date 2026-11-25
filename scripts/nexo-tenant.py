@@ -197,6 +197,8 @@ def render_keycloak(tenant: dict) -> None:
     target.mkdir(parents=True, exist_ok=True)
     services = tenant_services(tenant)
     groups = [{"name": f"{name}-servicio-{service}"} for service in sorted(services)]
+    if tenant.get("ai_provider", "gemini") is not None:
+        groups.append({"name": f"{name}-servicio-asistente-ia"})
     groups.append({"name": f"{name}-administradores",
                    "clientRoles": {"realm-management": ["manage-users"]}})
     clients = []
@@ -235,7 +237,7 @@ def render_keycloak(tenant: dict) -> None:
         })
     realm = {"realm": f"nexo-{name}", "enabled": True, "displayName": tenant["display_name"],
              "sslRequired": "external", "registrationAllowed": False, "loginWithEmailAllowed": True,
-             "groups": groups, "clients": clients}
+             "loginTheme": "nexo", "groups": groups, "clients": clients}
     (target / "realm.json.template").write_text(json.dumps(realm, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 

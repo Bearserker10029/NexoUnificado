@@ -5,6 +5,7 @@
   "sslRequired": "external",
   "registrationAllowed": false,
   "loginWithEmailAllowed": true,
+  "loginTheme": "nexo",
   "groups": [
     {
       "name": "acme-servicio-chat"
@@ -14,6 +15,9 @@
     },
     {
       "name": "acme-servicio-videoconferencia"
+    },
+    {
+      "name": "acme-servicio-asistente-ia"
     },
     {
       "name": "acme-administradores",

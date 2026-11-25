@@ -1,6 +1,259 @@
-#nexo-sync { max-width: 52rem; padding: 2rem; }
-#nexo-sync form { display: grid; gap: .5rem; max-width: 26rem; margin-bottom: 1rem; }
-#nexo-sync table { border-collapse: collapse; }
-#nexo-sync th, #nexo-sync td { text-align: left; padding: .35rem 1.2rem .35rem 0; }
-#nexo-sync .ok { color: var(--color-success-text, #1b6e2e); }
-#nexo-sync .err { color: var(--color-error-text, #b00020); }
+#nexo-sync {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 1rem 1.5rem 2rem;
+    display: grid;
+    gap: 1rem;
+}
+
+#nexo-sync .nx-header {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+#nexo-sync .nx-header h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+#nexo-sync .nx-tenant {
+    background: var(--color-primary-element);
+    color: var(--color-primary-element-text);
+    border-radius: var(--border-radius-pill, 999px);
+    padding: .15rem .8rem;
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+}
+
+#nexo-sync .nx-banner {
+    margin: 0;
+    padding: .7rem 1rem;
+    border-radius: var(--border-radius-container, 8px);
+    background: var(--color-success-background, rgba(70, 180, 80, .12));
+    border-left: 3px solid var(--color-success);
+}
+
+#nexo-sync .nx-banner.err {
+    background: var(--color-error-background, rgba(201, 60, 32, .1));
+    border-left-color: var(--color-error);
+}
+
+#nexo-sync .nx-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 1rem;
+}
+
+#nexo-sync .nx-assistant {
+    grid-column: 1 / -1;
+}
+
+/* En pantallas estrechas las tarjetas ocupan una columna; no necesitan zoom. */
+@media (max-width: 55rem) {
+    #nexo-sync .nx-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #nexo-sync .nx-assistant {
+        grid-column: auto;
+    }
+}
+
+#nexo-sync .nx-card {
+    background: var(--color-main-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-container, 8px);
+    padding: 1.1rem 1.25rem 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+}
+
+#nexo-sync .nx-card h3 {
+    margin: 0 0 .6rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+#nexo-sync .nx-empty {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+}
+
+#nexo-sync .nx-hint {
+    margin: 0 0 .9rem;
+    color: var(--color-text-maxcontrast);
+    line-height: 1.45;
+}
+
+#nexo-sync .nx-row {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    flex-wrap: nowrap;
+}
+
+#nexo-sync .nx-row input[type='text'] {
+    flex: 1;
+    min-width: 12rem;
+}
+
+#nexo-sync .nx-pill {
+    border-radius: 999px;
+    padding: .1rem .7rem;
+    font-size: .8rem;
+    font-weight: 600;
+}
+
+#nexo-sync .nx-pill.on {
+    background: var(--color-success-background, rgba(70, 180, 80, .15));
+    color: var(--color-success-text);
+}
+
+#nexo-sync .nx-pill.off {
+    background: var(--color-background-dark);
+    color: var(--color-text-maxcontrast);
+}
+
+#nexo-sync .nx-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#nexo-sync .nx-table th,
+#nexo-sync .nx-table td {
+    text-align: left;
+    padding: .55rem .75rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+#nexo-sync .nx-table thead th {
+    color: var(--color-text-maxcontrast);
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+#nexo-sync .nx-sector {
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+#nexo-sync .nx-provider-note {
+    margin-top: .8rem;
+    margin-bottom: 0;
+}
+
+#nexo-sync .nx-access-form {
+    display: flex;
+    align-items: center;
+    gap: .65rem 1rem;
+    flex-wrap: nowrap;
+}
+
+#nexo-sync .nx-access-form > label,
+#nexo-sync .nx-user-list label {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    min-width: 0;
+}
+
+#nexo-sync .nx-user-list {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-height: 9rem;
+    overflow-y: auto;
+    margin: .2rem 0;
+    padding: .65rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-container, 8px);
+    display: grid;
+    gap: .6rem 1rem;
+}
+
+#nexo-sync .nx-user-list legend {
+    padding: 0 .35rem;
+    color: var(--color-text-maxcontrast);
+    font-size: .85rem;
+}
+
+#nexo-sync .nx-access-form > label,
+#nexo-sync .nx-access-form > button,
+#nexo-sync .nx-access-form > span {
+    flex: 0 0 auto;
+}
+
+@media (max-width: 55rem) {
+    #nexo-sync .nx-user-list {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+#nexo-sync .nx-select-users {
+    min-height: 44px;
+}
+
+#nexo-sync .nx-sector-count {
+    margin-top: .75rem;
+    margin-bottom: 0;
+}
+
+#nexo-sync .nx-dialog:not([open]) {
+    display: none;
+}
+
+#nexo-sync .nx-dialog[open] {
+    display: block;
+}
+
+#nexo-sync .nx-dialog {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: min(42rem, calc(100vw - 2rem));
+    height: fit-content;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+    padding: 1.5rem;
+    color: var(--color-main-text);
+    background: var(--color-main-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-large, 12px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .25);
+}
+
+#nexo-sync .nx-dialog::backdrop {
+    background: rgba(0, 0, 0, .55);
+}
+
+#nexo-sync .nx-dialog .nx-user-list {
+    max-height: min(24rem, 50vh);
+    margin: 1rem 0;
+}
+
+#nexo-sync .nx-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+
+#nexo-sync .nx-sector-table {
+    max-height: min(28rem, 60vh);
+    margin: 1rem 0;
+    overflow: auto;
+}
+
+#nexo-sync .nx-sector-table thead {
+    position: sticky;
+    top: 0;
+    background: var(--color-main-background);
+}

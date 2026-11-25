@@ -480,7 +480,10 @@ def _kc_master_token():
 
 def _sync_group_ok(tenant, name):
     services = {f"{tenant}-servicio-{item}" for item in TENANTS[tenant].get("services", [])}
-    return name.startswith(f"{tenant}-area-") and len(name) <= 100 or name in services
+    if TENANTS[tenant].get("ai_provider", "gemini") is not None:
+        services.add(f"{tenant}-servicio-asistente-ia")
+    is_area = name.startswith(f"{tenant}-area-") and len(name) <= 100
+    return is_area or name in services or name == f"{tenant}-administradores"
 
 
 def _find_login_provider(identifier):
@@ -510,8 +513,10 @@ def entrar():
     identifier = request.form.get("identifier", "").strip().lower()[:254]
     provider_id = _find_login_provider(identifier) if identifier and KC_ADMIN_PASSWORD else None
     if provider_id is None:
-        return render_template("entrar.html", error="No encontramos una cuenta con ese usuario o correo."), 404
-    return redirect(f"/docs/apps/user_oidc/login/{provider_id}", code=303)
+        return render_template("entrar.html", error="No encontramos una cuenta con ese usuario o correo.",
+                               identifier=identifier), 404
+    # user_oidc lo reenvía a Keycloak gracias al ajuste aplicado por nextcloud/login-hint.php.
+    return redirect(f"/docs/apps/user_oidc/login/{provider_id}?{urlencode({'login_hint': identifier})}", code=303)
 
 
 @app.post("/internal/sync")

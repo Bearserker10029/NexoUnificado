@@ -82,9 +82,13 @@ kcadm update "clients/${VOIP_ID}" -r nexo \
   -s "attributes={\"post.logout.redirect.uris\":\"${NEXO_URL}/voip/*\",\"pkce.code.challenge.method\":\"S256\"}"
 echo "Cliente voip creado/actualizado."
 
+# Aplica el tema heredado también a los realms ya persistidos (import-realm no los sobrescribe).
+kcadm update realms/nexo -s loginTheme=nexo
+
 # Realms de empresa (nexo-<empresa>): los realms ya persistidos conservan la IP con
 # la que se importaron, asi que se actualizan sus clientes igual que los del realm base.
 for REALM in $(kcadm get realms --fields realm --format csv --noquotes | tr -d '\r' | grep '^nexo-' || true); do
+  kcadm update "realms/$REALM" -s loginTheme=nexo
   TENANT="${REALM#nexo-}"
   update_tenant_client() {
     CID=$(kcadm get clients -r "$REALM" -q "clientId=$1" --fields id --format csv --noquotes | tr -d '\r')

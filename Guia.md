@@ -159,10 +159,11 @@ punto de acceso de un celular y repite la prueba.
 
 ## 6. Administrar empresas, usuarios y sectores
 
-Hay un solo acceso para todos: `https://TU_IP:8443/` (o `/docs/`). La página de
-inicio de sesión es la de Nextcloud: la persona escribe su usuario y su clave sin
-elegir empresa; el sistema la deduce a partir de la cuenta. Sustituye `TU_IP` por
-el valor de `NEXO_HOST`.
+Hay un solo acceso para todos: `https://TU_IP:8443/` (o `/docs/`). Nginx dirige al
+portal de acceso de Nexo, que busca el identificador o correo en Keycloak y abre
+automáticamente el realm de la empresa correspondiente. La persona no elige
+empresa. Sustituye `TU_IP` por el valor de `NEXO_HOST`. La ruta de acceso directo
+es `https://TU_IP:8443/voip-sso/entrar`.
 
 Hay tres niveles, cada uno con su propio alcance:
 
@@ -231,13 +232,21 @@ Entrega al administrador su usuario y la clave temporal por un canal seguro.
 1. En el menú de aplicaciones, abre **Cuentas** (o usa el enlace de **Sectores y
    usuarios**).
 2. Pulsa **Cuenta nueva** y completa el identificador, el nombre y el correo.
+   Escribe un nombre corto como `kent`; el formulario antepone el prefijo de la
+   empresa y guarda `acme.kent` para ACME (o `beta.kent` para BETA). El ID debe
+   quedar en minúsculas y usar solo letras, números, punto, guion o guion bajo.
+   La validación del servidor comprueba el prefijo antes de crear la cuenta. El
+   nombre mostrado sí puede llevar mayúsculas y espacios (`Quillas ACME`).
 3. En **Grupos**, elige el sector del usuario y los grupos de servicio que
    necesita (`<empresa>-servicio-telefonia`, `-videoconferencia`, `-chat`). Los
    servicios controlan qué aplicaciones ve cada persona; los sectores organizan a
    la gente.
-4. Define una contraseña temporal y crea la cuenta.
+4. Define una contraseña temporal y crea la cuenta. Se sincroniza en Keycloak
+   como temporal; el usuario deberá cambiarla en el primer acceso.
 5. La cuenta se crea también en Keycloak. Entrega al usuario su identificador y la
-   clave temporal. En su primer acceso la cambia y entra a Nextcloud.
+   clave temporal por un canal seguro. Para entrar, debe usar el identificador
+   (`acme.kent`), no el nombre mostrado ni el correo del administrador que creó
+   la cuenta. Keycloak pedirá cambiar la clave antes de abrir Nextcloud.
 
 El administrador de empresa solo puede ver y gestionar los grupos y usuarios de su
 empresa.
@@ -258,8 +267,10 @@ inicial y las políticas de Keycloak se aplican siempre.
 
 ### 6.6 Entrar, cerrar sesión y cambiar de cuenta
 
-- **Primer acceso del usuario:** abre `https://TU_IP:8443/`, escribe su usuario y su
-  clave temporal y elige una clave nueva cuando Keycloak lo pida.
+- **Primer acceso del usuario:** abre `https://TU_IP:8443/`, escribe su ID completo
+  (por ejemplo, `acme.kent`) y su clave temporal, y elige una clave nueva cuando
+  Keycloak lo pida. Si Edge completa automáticamente el correo del administrador,
+  reemplázalo por el ID de la cuenta nueva antes de continuar.
 - **Cerrar sesión:** termina también la sesión de Keycloak y borra las cookies del
   sitio. Se puede entrar enseguida con otra cuenta sin errores de «state has
   expired».
@@ -287,6 +298,11 @@ Keycloak. Las salas Jitsi permanecen separadas por empresa.
 Se abre desde el menú de Nextcloud, en **Asistente IA**, dentro de Nextcloud y sin
 ocupar toda la pantalla. El personaje por defecto es **Oshin** (se pronuncia «O
 shin»), con avatar 3D.
+
+El proveedor habilita la función por empresa mediante `ai_provider` en el registro.
+Después, el administrador entra en **Sectores y usuarios** y concede acceso a **Todos**
+(incluidos los usuarios nuevos), **Nadie** o **Solo usuarios seleccionados**. Los permisos
+usan el grupo ordinario `<empresa>-servicio-asistente-ia` de Nextcloud/Keycloak, no Teams.
 
 - **Voz y modelo por defecto.** Responde con el modelo del proveedor (Gemini y,
   como respaldo, Groq) y habla con Pocket TTS, que corre en el servidor. Cada frase
@@ -384,6 +400,11 @@ docker compose logs asterisk
 - **400 al abrir administración:** usa `https://` en el puerto `8443`.
 - **No aparecen los grupos de empresa:** comprueba que estás en `nexo-acme` o
   `nexo-beta`. El realm general `nexo` tiene su propia lista de grupos.
+- **Keycloak muestra «Invalid username or password»:** comprueba que escribiste el
+  ID completo de la cuenta (por ejemplo, `acme.kent`) y su clave temporal asignada
+  al crearla, no el correo o la clave del administrador. Si el usuario o la clave
+  se corrigieron después de crear la cuenta, restablece la contraseña en **Cuentas**
+  y vuelve a intentar el acceso.
 - **Aviso de certificado:** comprueba que `NEXO_HOST` coincida con la dirección
   usada y que el certificado esté instalado en el usuario actual de Windows.
 - **Failed to load service worker:** instala el certificado, cierra por completo

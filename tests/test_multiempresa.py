@@ -97,6 +97,8 @@ class MultiempresaEstatico(unittest.TestCase):
             self.assertEqual(realm["realm"], f"nexo-{name}")
             groups = {group["name"] for group in realm["groups"]}
             services = {f"{name}-servicio-{s}" for s in self.tenants[name]["services"]}
+            if self.tenants[name].get("ai_provider", "gemini") is not None:
+                services.add(f"{name}-servicio-asistente-ia")
             admin = next(group for group in realm["groups"] if group["name"] == f"{name}-administradores")
             self.assertEqual(admin["clientRoles"], {"realm-management": ["manage-users"]})
             self.assertEqual(groups, services | {admin["name"]})

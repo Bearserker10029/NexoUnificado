@@ -42,6 +42,23 @@ occ user_oidc:provider --output=json
 # App que permite al administrador de empresa crear sectores y usuarios desde Nextcloud.
 occ app:enable nexo_sync
 
+# Teams (circles): solo los administradores de cada empresa pueden crear Teams.
+occ config:app:set circles limit_circle_creation \
+  --value="$(php -r '
+    $t = json_decode(file_get_contents("/tenants/registry.json"), true, 512, JSON_THROW_ON_ERROR)["tenants"];
+    echo implode(",", array_map(static fn ($x) => $x["name"] . "-administradores", $t));
+  ')"
+
+# Empresas para las que el proveedor habilitó la función de Asistente IA.
+occ config:app:set nexo_sync assistant_available \
+  --value="$(php -r '
+    $t = json_decode(file_get_contents("/tenants/registry.json"), true, 512, JSON_THROW_ON_ERROR)["tenants"];
+    echo implode(",", array_map(
+        static fn ($x) => $x["name"],
+        array_filter($t, static fn ($x) => !array_key_exists("ai_provider", $x) || $x["ai_provider"] !== null)
+    ));
+  ')"
+
 # Grupos base de cada empresa (servicios y administradores) para poder delegarlos.
 while IFS= read -r tenant; do
   [ -n "$tenant" ] || continue
@@ -50,6 +67,9 @@ done < /tmp/nexo-tenants.txt
 php -r '
     foreach (json_decode(file_get_contents("/tenants/registry.json"), true)["tenants"] as $t) {
         foreach ($t["services"] ?? [] as $s) { echo $t["name"], "-servicio-", $s, PHP_EOL; }
+        if (!array_key_exists("ai_provider", $t) || $t["ai_provider"] !== null) {
+            echo $t["name"], "-servicio-asistente-ia", PHP_EOL;
+        }
     }
 ' | while IFS= read -r group; do occ group:add "$group" >/dev/null 2>&1 || true; done
 
@@ -76,12 +96,9 @@ foreach ($tenants as $tenant) {
             $addSite($label . ' · ' . strtoupper($name), $path, ["$name-servicio-$service"], false, "nexo-$service.svg");
         }
     }
-}
-foreach ($tenants as $tenant) {
-    $name = $tenant['name'];
-    $groups = array_map(static fn ($service) => "$name-servicio-$service", $tenant['services'] ?? []);
-    if ($groups) {
-        $addSite('Asistente IA · ' . $tenant['display_name'], '/airi/?tenant=' . rawurlencode($name), $groups, false, 'nexo-asistente.svg');
+    if (!array_key_exists('ai_provider', $tenant) || $tenant['ai_provider'] !== null) {
+        $addSite('Asistente IA · ' . $tenant['display_name'], '/airi/?tenant=' . rawurlencode($name),
+            ["$name-servicio-asistente-ia", "$name-administradores"], false, 'nexo-asistente.svg');
     }
 }
 echo json_encode((object) $sites, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);

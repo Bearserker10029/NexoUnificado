@@ -8,6 +8,7 @@
         "groq",
         "gemini"
       ],
+      "allow_intercompany": true,
       "range_prefix": 1,
       "services": [
         "chat",
@@ -30,7 +31,10 @@
     {
       "name": "beta",
       "display_name": "BETA",
-      "ai_provider": null,
+      "ai_provider": [
+        "groq",
+        "gemini"
+      ],
       "range_prefix": 2,
       "services": [
         "chat",

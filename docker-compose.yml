@@ -490,6 +490,7 @@ services:
     volumes:
       - ./keycloak/realm-nexo.json.template:/opt/keycloak/nexo/realm-nexo.json.template:ro
       - ./keycloak/nexo-entrypoint.sh:/opt/keycloak/nexo/nexo-entrypoint.sh:ro
+      - ./keycloak/themes/nexo:/opt/keycloak/themes/nexo:ro
       - keycloak_dev_data:/opt/keycloak/data
     security_opt: [ "no-new-privileges:true" ]
     networks: [ srv ]
@@ -563,6 +564,7 @@ services:
     volumes:
       - nextcloud_data:/var/www/html
       - ./nextcloud/nexo-oidc-setup.sh:/nexo-oidc-setup.sh:ro
+      - ./nextcloud/login-hint.php:/nexo-login-hint.php:ro
     entrypoint: [ "/bin/sh", "/nexo-oidc-setup.sh" ]
     networks: [ srv ]
 

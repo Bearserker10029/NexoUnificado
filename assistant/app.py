@@ -149,12 +149,15 @@ def index():
     company = tenants().get(tenant)
     if tenant and company is None:
         abort(404)
-    if not user_for(tenant):
+    user = user_for(tenant)
+    if not user:
         return begin_login(tenant)
     provider = provider_for(tenant, company, load_config(tenant))
     status = ""
     if not provider:
         status = "El asistente está deshabilitado para tu empresa."
+    elif not (user.get("assistant") or user.get("admin")):
+        status = "El administrador de tu empresa no te ha dado acceso al asistente."
     elif not provider.ready:
         status = "El proveedor de IA todavía no está configurado."
     elif (STAGE / "index.html").is_file():
@@ -182,7 +185,7 @@ def stage_index():
     if not user:
         return redirect(assistant_url(tenant))
     provider = provider_for(tenant, tenants().get(tenant), load_config(tenant))
-    if not provider or not provider.ready:
+    if not (user.get("assistant") or user.get("admin")) or not provider or not provider.ready:
         return redirect(assistant_url(tenant))
     index_file = STAGE / "index.html"
     if not index_file.is_file():
@@ -263,6 +266,7 @@ def callback():
     session["user"] = {
         "sub": claims["sub"], "issuer": claims["iss"], "expires": claims["exp"],
         "admin": bool(tenant) and f"{tenant}-administradores" in groups,
+        "assistant": bool(tenant) and f"{tenant}-servicio-asistente-ia" in groups,
     }
     return redirect(assistant_url(tenant))
 
@@ -346,6 +350,8 @@ def api_access(tenant):
     provider = provider_for(tenant, tenants().get(tenant), load_config(tenant))
     if not provider:
         return None, None, (jsonify(error="El asistente está deshabilitado para esta empresa."), 403)
+    if not (user.get("assistant") or user.get("admin")):
+        return None, None, (jsonify(error="El administrador de tu empresa no te ha dado acceso al asistente."), 403)
     if not provider.ready:
         return None, None, (jsonify(error="El proveedor de IA todavía no está configurado."), 503)
     return user, provider, None

@@ -3,22 +3,30 @@ declare(strict_types=1);
 
 namespace OCA\NexoSync\AppInfo;
 
+use OCA\Circles\Events\AddingCircleMemberEvent;
 use OCA\NexoSync\Listener\LoginListener;
+use OCA\NexoSync\Listener\MemberSearchListener;
+use OCA\NexoSync\Listener\TeamsListener;
+use OCA\NexoSync\Listener\UserCreationPolicyListener;
 use OCA\NexoSync\Listener\UserSyncListener;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\Collaboration\AutoComplete\AutoCompleteFilterEvent;
 use OCP\Group\Events\UserAddedEvent;
 use OCP\Group\Events\UserRemovedEvent;
 use OCP\IGroupManager;
+use OCP\AppFramework\Services\IInitialState;
 use OCP\INavigationManager;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
+use OCP\Util;
 use OCP\User\Events\PasswordUpdatedEvent;
 use OCP\User\Events\PostLoginEvent;
 use OCP\User\Events\UserChangedEvent;
 use OCP\User\Events\BeforeUserDeletedEvent;
+use OCP\User\Events\BeforeUserCreatedEvent;
 use OCP\User\Events\UserCreatedEvent;
 use OCP\User\Events\UserDeletedEvent;
 
@@ -36,10 +44,20 @@ class Application extends App implements IBootstrap {
             $context->registerEventListener($event, UserSyncListener::class);
         }
         $context->registerEventListener(PostLoginEvent::class, LoginListener::class);
+        $context->registerEventListener(BeforeUserCreatedEvent::class, UserCreationPolicyListener::class);
+        $context->registerEventListener(AutoCompleteFilterEvent::class, MemberSearchListener::class);
+        $context->registerEventListener(AddingCircleMemberEvent::class, TeamsListener::class);
     }
 
     public function boot(IBootContext $context): void {
         $server = $context->getServerContainer();
+        $user = $server->get(IUserSession::class)->getUser();
+        if ($user !== null && ($tenant = self::tenantOf($server->get(IGroupManager::class), $user)) !== null) {
+            // La vista estándar de Cuentas no permite modificar el UID en el evento de alta.
+            // El script solo actúa en el formulario de creación para anteponer el tenant.
+            $server->get(IInitialState::class)->provideInitialState('accountTenant', $tenant);
+            Util::addScript(self::APP_ID, 'account-prefix');
+        }
         $server->get(INavigationManager::class)->add(function () use ($server) {
             $user = $server->get(IUserSession::class)->getUser();
             if ($user === null || self::tenantOf($server->get(IGroupManager::class), $user) === null) {

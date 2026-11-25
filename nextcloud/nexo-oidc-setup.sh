@@ -51,6 +51,7 @@ sleep 10
 chown www-data:www-data /var/www/html/custom_apps
 
 occ app:install user_oidc 2>/dev/null || occ app:enable user_oidc
+php /nexo-login-hint.php
 occ app:enable external 2>/dev/null || true
 
 # Sin esto, el cliente HTTP de Nextcloud rechaza la llamada al discovery

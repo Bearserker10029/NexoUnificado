@@ -2,7 +2,7 @@
      SPDX-License-Identifier: Apache-2.0 -->
 # Asistente IA
 
-El [registro de empresas](../../tenants/registry.json) configura `ai_provider: "gemini"` para ACME y `ai_provider: null` para BETA. En una empresa registrada, omitir el campo elige Gemini con la clave que el proveedor del servicio define en `GEMINI_API_KEYS`. El acceso desde un realm sin empresa registrada sigue deshabilitado.
+El [registro de empresas](../../tenants/registry.json) permite que el proveedor habilite la función para ACME y BETA con `ai_provider: ["groq", "gemini"]`. Un valor `null` la deshabilita para toda la empresa; omitir el campo elige Gemini. La habilitación no concede acceso por sí sola: el administrador de cada empresa decide desde **Sectores y usuarios** si pueden entrar todos, nadie o solo usuarios seleccionados.
 
 ## Evidencias
 
@@ -16,12 +16,12 @@ Copyright 2026 Kent Lin, Luis Quillas, Jeniffer Castillo. Las evidencias del gru
 
 Arranca con `docker compose up -d --build`. El proveedor del servicio define la clave de Gemini de cada empresa en `GEMINI_API_KEYS` (un objeto JSON en el `.env` del servidor) o una clave única en `GEMINI_API_KEY`; sin clave el asistente avisa de que el proveedor de IA todavía no está configurado. Pocket TTS conserva su modelo de español y la voz Lola. El acceso al asistente sigue por `/airi/` en el proxy HTTPS.
 
-1. Entra en Nextcloud con el proveedor `keycloak-acme` y un usuario del realm `nexo-acme` que pertenezca a uno de los grupos de servicio de ACME.
-2. Abre **Asistente IA · ACME**. Keycloak reutiliza la sesión del navegador. Envía «¿Qué es una central telefónica IP? Responde en dos frases». La respuesta la genera Gemini con la clave de la empresa.
+1. Como administrador de ACME, abre **Sectores y usuarios**, elige **Todos** o **Solo usuarios seleccionados** y guarda el acceso.
+2. Entra con un usuario autorizado del realm `nexo-acme` y abre **Asistente IA · ACME**. Keycloak reutiliza la sesión del navegador. Envía «¿Qué es una central telefónica IP? Responde en dos frases». La respuesta usa el primer proveedor disponible configurado para la empresa.
 3. Reproduce el audio. Si el navegador bloquea el inicio automático, pulsa el control de reproducción. Guarda la grabación o el WAV de la respuesta y una captura de la entrada del menú.
-4. Repite el acceso con `keycloak-beta` y comprueba que BETA muestre el asistente deshabilitado.
+4. Repite la asignación y el acceso con una usuaria de BETA. Comprueba también que una cuenta sin el grupo `beta-servicio-asistente-ia` no ve la entrada y recibe 403 al llamar directamente a la API.
 
-Para desactivar el asistente de una empresa, usa `"ai_provider": null`. Para elegir Gemini, usa `"ai_provider": "gemini"` y registra la clave de esa empresa en `GEMINI_API_KEYS`, un objeto JSON en el `.env` del servidor. Ejemplo con un valor de muestra: `GEMINI_API_KEYS='{"acme":"CLAVE_DE_ACME"}'`. Si defines ese mapa, cada empresa con Gemini requiere su propia entrada. `GEMINI_API_KEY` sigue disponible para despliegues que usan una sola clave y omiten el mapa. `GEMINI_MODEL` conserva el valor predeterminado `gemini-3.5-flash-lite`.
+Para retirar la función a toda una empresa, el proveedor usa `"ai_provider": null`. Para elegir Gemini, usa `"ai_provider": "gemini"` y registra la clave de esa empresa en `GEMINI_API_KEYS`, un objeto JSON en el `.env` del servidor. Ejemplo con un valor de muestra: `GEMINI_API_KEYS='{"acme":"CLAVE_DE_ACME"}'`. Si defines ese mapa, cada empresa con Gemini requiere su propia entrada. `GEMINI_API_KEY` sigue disponible para despliegues que usan una sola clave y omiten el mapa. `GEMINI_MODEL` conserva el valor predeterminado `gemini-3.5-flash-lite`.
 
 ## Quién configura el asistente
 

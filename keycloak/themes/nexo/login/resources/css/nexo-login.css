@@ -1,0 +1,5 @@
+/* Edge ya incorpora un botón; se conserva únicamente el botón accesible de Keycloak. */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}

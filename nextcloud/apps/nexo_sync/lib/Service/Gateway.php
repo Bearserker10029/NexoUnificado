@@ -43,9 +43,14 @@ class Gateway {
         return $tenants;
     }
 
-    /** @return string|null empresa si el grupo es empresa-area-* o empresa-servicio-*. */
+    /** @return string|null empresa si el grupo es empresa-area-*, empresa-servicio-* o empresa-administradores. */
     public static function tenantOfGroup(string $gid): ?string {
-        return preg_match('/^([a-z][a-z0-9-]*?)-(?:area-.+|servicio-[a-z0-9-]+)$/', $gid, $m) ? $m[1] : null;
+        return preg_match('/^([a-z][a-z0-9-]*?)-(?:area-.+|servicio-[a-z0-9-]+|administradores)$/', $gid, $m) ? $m[1] : null;
+    }
+
+    /** UID compatible con Keycloak y aislado por tenant para el login OIDC de Nextcloud. */
+    public static function validTenantUsername(string $tenant, string $uid): bool {
+        return preg_match('/^' . preg_quote($tenant, '/') . '[._-][a-z0-9][a-z0-9._-]{0,58}$/D', $uid) === 1;
     }
 
     public function call(string $tenant, string $action, array $fields = []): bool {

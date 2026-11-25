@@ -8,16 +8,23 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Group\Events\UserAddedEvent;
 use OCP\Group\Events\UserRemovedEvent;
+use OCP\IAppConfig;
 use OCP\IGroupManager;
 use OCP\User\Events\PasswordUpdatedEvent;
 use OCP\User\Events\UserChangedEvent;
 use OCP\User\Events\BeforeUserDeletedEvent;
 use OCP\User\Events\UserCreatedEvent;
 use OCP\User\Events\UserDeletedEvent;
+use Psr\Log\LoggerInterface;
 
 /** Replica a Keycloak las altas, bajas y cambios de sector hechos desde Cuentas de Nextcloud. */
 class UserSyncListener implements IEventListener {
-    public function __construct(private Gateway $gateway, private IGroupManager $groups) {
+    public function __construct(
+        private Gateway $gateway,
+        private IGroupManager $groups,
+        private IAppConfig $config,
+        private LoggerInterface $logger,
+    ) {
     }
 
     public function handle(Event $event): void {
@@ -70,18 +77,41 @@ class UserSyncListener implements IEventListener {
         $uid = $user->getUID();
         $password = Gateway::pending($uid);
         if ($member && $password !== null) {
+            if (!Gateway::validTenantUsername($tenant, $uid)) {
+                $this->logger->error('nexo_sync: alta detenida; el UID ' . $uid . ' no cumple el formato de usuario de ' . $tenant);
+                return;
+            }
             $created = $this->gateway->call($tenant, 'ensure_user', [
                 'username' => $uid,
                 'display_name' => $user->getDisplayName(),
                 'email' => $user->getEMailAddress() ?: null,
                 'password' => $password,
             ]);
-            Gateway::forget($uid);
-            if ($created) {
-                $this->lockLocalPassword($user);
+            if (!$created) {
+                $this->logger->error('nexo_sync: no se pudo aprovisionar ' . $uid . ' en Keycloak; no se sincronizaron sus grupos');
+                return;
             }
+            Gateway::forget($uid);
+            $this->lockLocalPassword($user);
         }
-        $this->gateway->call($tenant, 'set_membership', ['username' => $uid, 'group' => $gid, 'member' => $member]);
+        if (!$this->gateway->call($tenant, 'set_membership', ['username' => $uid, 'group' => $gid, 'member' => $member])) {
+            $this->logger->error('nexo_sync: no se pudo sincronizar el grupo ' . $gid . ' para ' . $uid);
+        }
+        if ($member && preg_match('/-(?:area-.+|administradores)$/', $gid)) {
+            $this->inheritAssistant($user, $tenant);
+        }
+    }
+
+    /** En modo Todos, cada usuario nuevo de la empresa hereda el acceso al asistente. */
+    private function inheritAssistant($user, string $tenant): void {
+        $raw = $this->config->getValueString('nexo_sync', 'assistant_auto', '');
+        if (!in_array($tenant, array_filter(array_map('trim', explode(',', $raw))), true)) {
+            return;
+        }
+        $group = $this->groups->get($tenant . '-servicio-asistente-ia');
+        if ($group !== null && !$group->inGroup($user)) {
+            $group->addUser($user);
+        }
     }
 
     /**

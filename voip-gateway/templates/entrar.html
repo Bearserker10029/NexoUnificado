@@ -44,7 +44,7 @@
                         <h2>Acceder a su cuenta</h2>
                         <p>Un solo acceso a archivos, chat, videollamadas y telefonía.</p>
                         <label>Nombre de cuenta o correo electrónico
-                            <input type="text" name="identifier" autocomplete="username" maxlength="254" required autofocus>
+                            <input type="text" name="identifier" autocomplete="username" maxlength="254" required autofocus value="{{ identifier|default('') }}">
                         </label>
                         <button type="submit" class="primary">Continuar</button>
                         {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}

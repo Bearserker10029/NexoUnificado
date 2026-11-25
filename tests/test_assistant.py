@@ -75,10 +75,11 @@ class AssistantTest(unittest.TestCase):
     def post(self, path, payload, origin=ORIGIN):
         return self.client.post(path, base_url=ORIGIN, json=payload, headers={"Origin": origin})
 
-    def login_as(self, tenant):
+    def login_as(self, tenant, assistant_access=True):
         with self.client.session_transaction(base_url=ORIGIN) as session:
             session["user"] = {"issuer": assistant.issuer(tenant),
-                               "sub": "test-user", "expires": time.time() + 60}
+                               "sub": "test-user", "expires": time.time() + 60,
+                               "assistant": assistant_access}
 
     def test_login_selects_tenant_realm_and_uses_pkce(self):
         response = self.client.get("/airi/?tenant=acme", base_url=ORIGIN)
@@ -92,13 +93,32 @@ class AssistantTest(unittest.TestCase):
 
     def test_disabled_and_cross_tenant_requests_do_not_reach_provider(self):
         messages = {"messages": [{"role": "user", "text": "Hola"}]}
-        self.login_as("beta")
-        self.assertIn("deshabilitado", self.client.get("/airi/?tenant=beta", base_url=ORIGIN).text)
-        self.assertEqual(self.post("/airi/api/beta/chat", messages).status_code, 403)
-        self.assertEqual(self.post("/airi/api/acme/chat", messages).status_code, 401)
-        self.login_as("acme")
-        self.assertEqual(self.post("/airi/api/acme/chat", messages, "https://otro.test").status_code, 403)
+        companies = {"beta": {"ai_provider": None}, "acme": {"ai_provider": "gemini"}}
+        with patch.object(assistant, "tenants", return_value=companies):
+            self.login_as("beta")
+            self.assertIn("deshabilitado", self.client.get("/airi/?tenant=beta", base_url=ORIGIN).text)
+            self.assertEqual(self.post("/airi/api/beta/chat", messages).status_code, 403)
+            self.assertEqual(self.post("/airi/api/acme/chat", messages).status_code, 401)
+            self.login_as("acme")
+            self.assertEqual(self.post("/airi/api/acme/chat", messages, "https://otro.test").status_code, 403)
         self.provider.reply.assert_not_called()
+
+    def test_user_without_company_grant_cannot_use_the_assistant(self):
+        messages = {"messages": [{"role": "user", "text": "Hola"}]}
+        self.login_as("acme", assistant_access=False)
+        self.assertIn("no te ha dado acceso", self.client.get("/airi/?tenant=acme", base_url=ORIGIN).text)
+        self.assertEqual(self.post("/airi/api/acme/chat", messages).status_code, 403)
+        self.assertEqual(self.client.get("/airi/stage/?tenant=acme", base_url=ORIGIN).status_code, 302)
+        self.provider.reply.assert_not_called()
+
+    def test_company_admin_always_has_assistant_access(self):
+        messages = {"messages": [{"role": "user", "text": "Hola"}]}
+        with self.client.session_transaction(base_url=ORIGIN) as session:
+            session["user"] = {"issuer": assistant.issuer("acme"), "sub": "admin",
+                               "expires": time.time() + 60, "assistant": False, "admin": True}
+        response = self.post("/airi/api/acme/chat", messages)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json()["text"], "Hola desde Nexo.")
 
     def test_speech_ticket_only_applies_to_the_exact_reply(self):
         self.login_as("acme")
@@ -128,7 +148,7 @@ class AssistantTest(unittest.TestCase):
         self.assertEqual(response.mimetype, "text/event-stream")
         self.assertIn("Hola desde Nexo.", response.text)
         self.assertTrue(response.text.endswith("data: [DONE]\n\n"))
-        self.provider.reply.assert_called_once_with([{"role": "user", "text": "Hola"}])
+        self.provider.reply.assert_called_once_with([{"role": "user", "text": "Hola"}], None)
 
     def test_airi_voice_uses_pocket_tts(self):
         self.login_as("acme")
